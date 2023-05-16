@@ -7,6 +7,7 @@ name = "noshow"
 version = "0.1.0"
 authors = [
   { name="Ruben Peters", email="r.peters-7@umcutrecht.nl" },
+  { name="Ingmar Loohuis", email="i.p.loohuis-2@umcutrecht.nl" }
 ]
 description = "No-show prediction model to reduce the amount of no-shows at the clinics"
 readme = "README.md"
@@ -15,7 +16,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
-dependencies =[]
+dependencies =["pandas", "matplotlib"]
 
 [project.optional-dependencies]
 test = ["pytest", "pytest-cov"]

@@ -1,6 +1,6 @@
 # No_Show
 
-Author: Ruben Peters
+Authors: Ruben Peters, Ingmar Loohuis
 Email: r.peters-7@umcutrecht.nl
 
 ## Installation
