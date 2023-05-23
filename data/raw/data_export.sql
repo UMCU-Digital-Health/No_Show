@@ -28,21 +28,12 @@ FROM [DWH].[models].[HealthcareService] JOIN [DWH].[models].[Appointment] ON App
     JOIN [DWH].[models].[Patient_Address] ON [Patient].[identifier_value] = [Patient_Address].[parent_identifier_value] 
         AND [Appointment].[created] BETWEEN [Patient_Address].[address_period_start] AND [Patient_Address].[address_period_end]
 WHERE 1 = 1
-    AND [Appointment].[identifier_value] = 2024608413
     AND HealthcareService.specialty_code in (
         'KAP', -- Kinderen
         'REV', -- Revalidatie
         'SPO', -- Sport
         'LON' -- Longen
     )
-    -- AND [partOf_HealthcareService_value] IN (
-    --  'A00006', -- Longziekten
-    --  'A00069', -- Algemeen Blauw
-    --  'A20150') -- Revalidatie en Sport
-    -- AND location1_Location_value IN (
-    --     '0000006456', -- Sport en revalidatie
-    --     '0000006330', -- Longziekte
-    --     '0000006425') -- Poli blauw
     AND afspraak_zonder_patient <> 1
     AND [Appointment].[created] >= CONVERT(DATE, '2015-01-01')
     AND [Appointment].[status] <> 'booked'
