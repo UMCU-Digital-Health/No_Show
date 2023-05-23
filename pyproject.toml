@@ -4,19 +4,26 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "noshow"
-version = "0.1.0"
+version = "0.1.1"
 authors = [
   { name="Ruben Peters", email="r.peters-7@umcutrecht.nl" },
   { name="Ingmar Loohuis", email="i.p.loohuis-2@umcutrecht.nl" }
 ]
 description = "No-show prediction model to reduce the amount of no-shows at the clinics"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
-dependencies =["pandas", "matplotlib"]
+dependencies =[
+  "pandas~=2.0",
+  "matplotlib~=3.7",
+  "numpy~=1.24",
+  "imbalanced-learn~=0.10",
+  "scikit-learn~=1.2",
+  "pyarrow~=12.0"
+]
 
 [project.optional-dependencies]
 test = ["pytest", "pytest-cov"]
