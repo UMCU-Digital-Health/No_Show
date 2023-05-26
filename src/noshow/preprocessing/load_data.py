@@ -49,6 +49,8 @@ def process_appointments(appointment_path: Union[str, Path]) -> pd.DataFrame:
         appointments_df["soort_consult"] != "Telefonisch"
     ]
 
+    appointments_df = appointments_df.set_index(["pseudo_id", "start"])
+
     return appointments_df
 
 
