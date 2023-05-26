@@ -29,11 +29,11 @@ def add_patient_features(
 
     appointments_df["dist_umcu"] = appointments_df.apply(
         lambda x: haversine_distance(x["latitude"], x["longitude"]), axis="columns"
-    ).drop(columns=["latitude", "longitude"])
+    )
 
     appointments_df["age"] = (
         appointments_df.index.get_level_values("start").year
         - appointments_df["BIRTH_YEAR"]
     )
-
+    appointments_df = appointments_df.drop(columns=["latitude", "longitude"])
     return appointments_df
