@@ -1,0 +1,6 @@
+[cache]
+    dir = /mapr/no_show/no_show_datamanager
+[core]
+    remote = remote
+['remote "remote"']
+    url = /mapr/no_show/no_show_dvc_user
