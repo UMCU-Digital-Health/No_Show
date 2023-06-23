@@ -1,2 +1,2 @@
-model_name: RidgeClassifier()
-classifier__alpha: 0.5
+model_name: RandomForestClassifier()
+classifier__n_estimators: 100

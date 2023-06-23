@@ -7,9 +7,9 @@ from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import Pipeline
 from sklearn.base import BaseEstimator
 from sklearn.compose import ColumnTransformer
-from sklearn.linear_model import RidgeClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV, train_test_split
-from sklearn.preprocessing import OneHotEncoder, RobustScaler
+from sklearn.preprocessing import OneHotEncoder
 
 
 def train_cv_model(
@@ -58,7 +58,6 @@ def train_cv_model(
             steps=[
                 ("preprocessor", preprocessor),
                 ("smotesampling", oversampler),
-                ("scaling", RobustScaler()),
                 ("classifier", classifier),
             ]
         )
@@ -71,6 +70,7 @@ def train_cv_model(
             scoring=["roc_auc", "precision", "recall"],
             verbose=2,
             refit="roc_auc",
+            n_jobs=3,
         )
         grid.fit(X_train, y_train)
 
@@ -92,6 +92,6 @@ if __name__ == "__main__":
         / "processed"
         / "featuretable.parquet",
         output_path=Path(__file__).parents[3] / "output",
-        classifier=RidgeClassifier(),
-        param_grid={"classifier__alpha": [0.5, 1, 2]},
+        classifier=RandomForestClassifier(),
+        param_grid={"classifier__n_estimators": [100]},
     )
