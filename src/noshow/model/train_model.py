@@ -5,14 +5,18 @@ import pandas as pd
 from dvclive import Live
 from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import Pipeline
+from sklearn.base import BaseEstimator
 from sklearn.compose import ColumnTransformer
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.preprocessing import OneHotEncoder
 
 
 def train_cv_model(
-    featuretable_path: Union[Path, str], output_path: Union[Path, str], param_grid: Dict
+    featuretable_path: Union[Path, str],
+    output_path: Union[Path, str],
+    classifier: BaseEstimator,
+    param_grid: Dict,
 ) -> None:
     """Use Cross validation to train a model and save results and parameters to dvclive
 
@@ -54,7 +58,7 @@ def train_cv_model(
             steps=[
                 ("preprocessor", preprocessor),
                 ("smotesampling", oversampler),
-                ("classifier", RandomForestClassifier()),
+                ("classifier", classifier),
             ]
         )
 
@@ -87,5 +91,9 @@ if __name__ == "__main__":
         / "processed"
         / "featuretable.parquet",
         output_path=Path(__file__).parents[3] / "output",
-        param_grid={"classifier__n_estimators": [75, 100]},
+        classifier=GradientBoostingClassifier(),
+        param_grid={
+            "classifier__n_estimators": [100, 150],
+            "classifier__learning_rate": [0.01, 0.1],
+        },
     )
