@@ -7,9 +7,9 @@ from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import Pipeline
 from sklearn.base import BaseEstimator
 from sklearn.compose import ColumnTransformer
-from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.linear_model import RidgeClassifier
 from sklearn.model_selection import GridSearchCV, train_test_split
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder, RobustScaler
 
 
 def train_cv_model(
@@ -58,6 +58,7 @@ def train_cv_model(
             steps=[
                 ("preprocessor", preprocessor),
                 ("smotesampling", oversampler),
+                ("scaling", RobustScaler()),
                 ("classifier", classifier),
             ]
         )
@@ -91,9 +92,6 @@ if __name__ == "__main__":
         / "processed"
         / "featuretable.parquet",
         output_path=Path(__file__).parents[3] / "output",
-        classifier=GradientBoostingClassifier(),
-        param_grid={
-            "classifier__n_estimators": [100, 150],
-            "classifier__learning_rate": [0.01, 0.1],
-        },
+        classifier=RidgeClassifier(),
+        param_grid={"classifier__alpha": [0.5, 1, 2]},
     )

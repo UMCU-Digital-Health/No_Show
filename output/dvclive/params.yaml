@@ -1,3 +1,2 @@
-model_name: GradientBoostingClassifier()
-classifier__learning_rate: 0.1
-classifier__n_estimators: 150
+model_name: RidgeClassifier()
+classifier__alpha: 0.5
