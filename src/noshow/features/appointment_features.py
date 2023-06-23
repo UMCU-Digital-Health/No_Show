@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 
+from noshow.features.cumulative_features import calc_cumulative_features
+
 
 def add_days_since_created(appointments_df: pd.DataFrame) -> pd.DataFrame:
     """Add the number of days since appointment was created
@@ -89,13 +91,11 @@ def add_minutes_early(appointments_df: pd.DataFrame, cutoff: int = 60) -> pd.Dat
     appointments_df.loc[appointments_df["minutes_early"] > cutoff, "minutes_early"] = 0
     appointments_df.loc[appointments_df["minutes_early"] < -cutoff, "minutes_early"] = 0
 
-    appointments_df = appointments_df.sort_index(level="start")
+    appointments_df = calc_cumulative_features(
+        appointments_df, "minutes_early", "prev_minutes_early"
+    )
     appointments_df["prev_minutes_early"] = (
-        appointments_df.groupby(level="pseudo_id")["minutes_early"]
-        .shift(1, fill_value=0)
-        .groupby(level="pseudo_id")
-        .cumsum()
-        / appointments_df["earlier_appointments"]
+        appointments_df["prev_minutes_early"] / appointments_df["earlier_appointments"]
     )
 
     appointments_df["prev_minutes_early"] = appointments_df[
