@@ -1,3 +1,4 @@
+import pickle
 from pathlib import Path
 from typing import Dict, Union
 
@@ -17,7 +18,7 @@ def train_cv_model(
     output_path: Union[Path, str],
     classifier: BaseEstimator,
     param_grid: Dict,
-) -> None:
+) -> BaseEstimator:
     """Use Cross validation to train a model and save results and parameters to dvclive
 
     Parameters
@@ -38,7 +39,7 @@ def train_cv_model(
         X, y, test_size=0.2, random_state=0, shuffle=False
     )
 
-    with Live(save_dvc_exp=True, dir=Path(output_path) / "dvclive") as live:
+    with Live(save_dvc_exp=True, dir=str(Path(output_path) / "dvclive")) as live:
         oversampler = SMOTE()
 
         # Define the categorical columns in your feature matrix
@@ -84,14 +85,22 @@ def train_cv_model(
             "mean_recall", grid.cv_results_["mean_test_recall"][grid.best_index_]
         )
 
+        return grid.best_estimator_
+
 
 if __name__ == "__main__":
-    train_cv_model(
-        featuretable_path=Path(__file__).parents[3]
+    project_folder = Path(__file__).parents[3]
+    best_model = train_cv_model(
+        featuretable_path=project_folder
         / "data"
         / "processed"
         / "featuretable.parquet",
-        output_path=Path(__file__).parents[3] / "output",
+        output_path=project_folder / "output",
         classifier=RandomForestClassifier(),
         param_grid={"classifier__n_estimators": [100]},
     )
+
+    with open(
+        project_folder / "output" / "models" / "no_show_model_cv.pickle", "wb"
+    ) as f:
+        pickle.dump(best_model, f)
