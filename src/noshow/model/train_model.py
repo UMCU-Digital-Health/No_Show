@@ -18,7 +18,7 @@ def train_cv_model(
     output_path: Union[Path, str],
     classifier: BaseEstimator,
     param_grid: Dict,
-) -> BaseEstimator:
+) -> None:
     """Use Cross validation to train a model and save results and parameters to dvclive
 
     Parameters
@@ -85,7 +85,10 @@ def train_cv_model(
             "mean_recall", grid.cv_results_["mean_test_recall"][grid.best_index_]
         )
 
-        return grid.best_estimator_
+        model_path = Path(output_path) / "models" / "no_show_model_cv.pickle"
+        with open(model_path, "wb") as f:
+            pickle.dump(grid.best_estimator_, f)
+        live.log_artifact(str(model_path), type="model")
 
 
 if __name__ == "__main__":
@@ -99,8 +102,3 @@ if __name__ == "__main__":
         classifier=RandomForestClassifier(),
         param_grid={"classifier__n_estimators": [100]},
     )
-
-    with open(
-        project_folder / "output" / "models" / "no_show_model_cv.pickle", "wb"
-    ) as f:
-        pickle.dump(best_model, f)

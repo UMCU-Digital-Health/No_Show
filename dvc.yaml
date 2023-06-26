@@ -1,0 +1,18 @@
+# Read about DVC pipeline configuration (https://dvc.org/doc/user-guide/project-structure/dvcyaml-files#stages)
+# to customize your stages even more
+stages:
+  feature_building:
+    cmd: python src/noshow/features/feature_pipeline.py
+    deps:
+    - data/raw/NL.txt
+    - data/raw/poliafspraken_no_show.csv
+    - src/noshow/features/feature_pipeline.py
+    outs:
+    - data/processed/featuretable.parquet
+  train:
+    cmd: python src/noshow/model/train_model.py
+    deps:
+    - src/noshow/model/train_model.py
+    - data/processed/featuretable.parquet
+    outs:
+    - output/models/no_show_model_cv.pickle
