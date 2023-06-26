@@ -18,7 +18,7 @@ def train_cv_model(
     output_path: Union[Path, str],
     classifier: BaseEstimator,
     param_grid: Dict,
-) -> BaseEstimator:
+) -> None:
     """Use Cross validation to train a model and save results and parameters to dvclive
 
     Parameters
@@ -35,7 +35,7 @@ def train_cv_model(
 
     X, y = featuretable.drop(columns="no_show"), featuretable["no_show"]
 
-    X_train, _, y_train, _ = train_test_split(
+    X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=0, shuffle=False
     )
 
@@ -75,6 +75,11 @@ def train_cv_model(
         )
         grid.fit(X_train, y_train)
 
+        y_pred = grid.best_estimator_.predict_proba(X_test)
+
+        live.log_sklearn_plot("roc", y_test, y_pred[:, 1])
+        live.log_sklearn_plot("calibration", y_test, y_pred[:, 1])
+        live.log_sklearn_plot("precision_recall", y_test, y_pred[:, 1])
         live.log_param("model_name", str(pipeline[-1]))
         live.log_params(grid.best_params_)
         live.log_metric("best_score", grid.best_score_)
@@ -85,7 +90,9 @@ def train_cv_model(
             "mean_recall", grid.cv_results_["mean_test_recall"][grid.best_index_]
         )
 
-        return grid.best_estimator_
+        model_path = Path(output_path) / "models" / "no_show_model_cv.pickle"
+        with open(model_path, "wb") as f:
+            pickle.dump(grid.best_estimator_, f)
 
 
 if __name__ == "__main__":
@@ -99,8 +106,3 @@ if __name__ == "__main__":
         classifier=RandomForestClassifier(),
         param_grid={"classifier__n_estimators": [100]},
     )
-
-    with open(
-        project_folder / "output" / "models" / "no_show_model_cv.pickle", "wb"
-    ) as f:
-        pickle.dump(best_model, f)

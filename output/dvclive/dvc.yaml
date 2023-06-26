@@ -5,3 +5,24 @@ metrics:
 plots:
 - plots/metrics:
     x: step
+- plots/sklearn/roc.json:
+    template: simple
+    x: fpr
+    y: tpr
+    title: Receiver operating characteristic (ROC)
+    x_label: False Positive Rate
+    y_label: True Positive Rate
+- plots/sklearn/calibration.json:
+    template: simple
+    x: prob_pred
+    y: prob_true
+    title: Calibration Curve
+    x_label: Mean Predicted Probability
+    y_label: Fraction of Positives
+- plots/sklearn/precision_recall.json:
+    template: simple
+    x: recall
+    y: precision
+    title: Precision-Recall Curve
+    x_label: Recall
+    y_label: Precision

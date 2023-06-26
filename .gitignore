@@ -7,6 +7,9 @@
 *.csv
 *.txt
 
+# Output images
+*.png
+
 # DVClive report
 output/dvclive/report.html
 

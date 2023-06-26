@@ -46,6 +46,7 @@ def create_features(
         .pipe(add_minutes_early, minutes_early_cutoff)
         .pipe(add_time_features)
         .pipe(add_patient_features, all_postal_codes)
+        .sort_index(level="start")
     )
 
     return appointments_features
