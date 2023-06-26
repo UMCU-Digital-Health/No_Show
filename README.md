@@ -11,6 +11,15 @@ To install the noshow package use:
 pip install -e .
 ```
 
+## Run pipelines
+
+The no-show code uses DVC pipelines. To run the feature-building and model stages, use:
+
+```{bash}
+dvc pull
+dvc exp run
+```
+
 ## Deploying to PositConnect
 
 To deploy to PositConnect install rsconnect (`pip install rsconnect-python`) and run (in case of a dash app):

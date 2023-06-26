@@ -35,7 +35,7 @@ def train_cv_model(
 
     X, y = featuretable.drop(columns="no_show"), featuretable["no_show"]
 
-    X_train, _, y_train, _ = train_test_split(
+    X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=0, shuffle=False
     )
 
@@ -75,6 +75,11 @@ def train_cv_model(
         )
         grid.fit(X_train, y_train)
 
+        y_pred = grid.best_estimator_.predict_proba(X_test)
+
+        live.log_sklearn_plot("roc", y_test, y_pred[:, 1])
+        live.log_sklearn_plot("calibration", y_test, y_pred[:, 1])
+        live.log_sklearn_plot("precision_recall", y_test, y_pred[:, 1])
         live.log_param("model_name", str(pipeline[-1]))
         live.log_params(grid.best_params_)
         live.log_metric("best_score", grid.best_score_)
@@ -88,7 +93,6 @@ def train_cv_model(
         model_path = Path(output_path) / "models" / "no_show_model_cv.pickle"
         with open(model_path, "wb") as f:
             pickle.dump(grid.best_estimator_, f)
-        live.log_artifact(str(model_path), type="model")
 
 
 if __name__ == "__main__":
