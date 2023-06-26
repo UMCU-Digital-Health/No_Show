@@ -1,0 +1,4 @@
+outs:
+- md5: dd63407d87c2f55dce6833ed485720d1
+  size: 342346930
+  path: no_show_model_cv.pickle

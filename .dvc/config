@@ -1,6 +1,6 @@
-[cache]
-    dir = /mapr/no_show/no_show_datamanager
 [core]
-    remote = remote
-['remote "remote"']
+    remote = data
+['remote "model"']
     url = /mapr/no_show/no_show_dvc_user
+['remote "data"']
+    url = /mapr/no_show/no_show_onderzoeker/dvc_data

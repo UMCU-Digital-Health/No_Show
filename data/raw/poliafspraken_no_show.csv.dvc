@@ -1,4 +1,4 @@
 outs:
 - md5: 2282c964ec34727ea06e2fb22df437b4
   size: 132031176
-  path: /mapr/no_show/no_show_datamanager/poliafspraken_no_show.csv
+  path: poliafspraken_no_show.csv
