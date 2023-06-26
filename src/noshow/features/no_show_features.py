@@ -1,5 +1,7 @@
 import pandas as pd
 
+from noshow.features.cumulative_features import calc_cumulative_features
+
 
 def prev_no_show_features(appointments_df: pd.DataFrame) -> pd.DataFrame:
     """Add previous no-show features to the dataframe
@@ -20,20 +22,17 @@ def prev_no_show_features(appointments_df: pd.DataFrame) -> pd.DataFrame:
     pd.DataFrame
         The input dataframe with added feature columns
     """
-    appointments_df["prev_no_show"] = appointments_df["no_show"].replace(
+    appointments_df.loc[:, "prev_no_show"] = appointments_df["no_show"].replace(
         {"no_show": 1, "show": 0}
     )
-    appointments_df = appointments_df.sort_index(level="start")
-    appointments_df["prev_no_show"] = (
-        appointments_df.groupby("pseudo_id", sort=False)["prev_no_show"]
-        .shift(1, fill_value=0)
-        .groupby("pseudo_id", sort=False)
-        .cumsum()
+
+    appointments_df = calc_cumulative_features(
+        appointments_df, "prev_no_show", "prev_no_show"
     )
 
-    appointments_df["earlier_appointments"] = appointments_df.groupby(
-        "pseudo_id", sort=False
-    )["no_show"].cumcount()
+    appointments_df = calc_cumulative_features(
+        appointments_df, "no_show", "earlier_appointments", cumfunc="count"
+    )
 
     appointments_df["prev_no_show_perc"] = (
         appointments_df["prev_no_show"] / appointments_df["earlier_appointments"]

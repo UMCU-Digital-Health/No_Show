@@ -51,6 +51,9 @@ def process_appointments(appointment_path: Union[str, Path]) -> pd.DataFrame:
 
     appointments_df = appointments_df.set_index(["pseudo_id", "start"])
 
+    # Rolling features can't be calculated on non-unique index
+    appointments_df = appointments_df[~appointments_df.index.duplicated(keep="last")]
+
     return appointments_df
 
 
