@@ -36,7 +36,7 @@ async def predict(input: List[Dict]):
     Dict[str, Any]
         Prediction output in FHIR format
     """
-    data_path = '/mapr/no_show/no_show_onderzoeker/iloohui2/No_Show/data/raw/'
+    data_path = './data/raw/'
     input_df = load_appointment_json(input)
     appointments_df = process_appointments(input_df)
     all_postalcodes = process_postal_codes(data_path + "NL.txt")
@@ -61,7 +61,7 @@ async def predict(input: List[Dict]):
         ]
     ]
     with open(
-        "/mapr/no_show/no_show_onderzoeker/iloohui2/No_Show/output/models/no_show_model_cv.pickle", "rb"
+        "./output/models/no_show_model_cv.pickle", "rb"
     ) as f:
         model = pickle.load(f)
     prediction_probs = create_prediction(model, appointments_df, all_postalcodes)
