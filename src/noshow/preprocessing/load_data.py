@@ -1,10 +1,21 @@
 from pathlib import Path
-from typing import Union
+from typing import Union, List, Dict
 
 import pandas as pd
 
+def load_appointment_json(input: List[Dict]):
+    appointments_df = pd.DataFrame.from_records(input)#,convert_dates=['created','end','gearriveerd'])
+    appointments_df[['created','end','gearriveerd']]= appointments_df[['created','end','gearriveerd']].apply(pd.to_datetime)
+    return appointments_df
+    
+def load_appointment_csv(csv_path: Union[str, Path])-> pd.DataFrame:
+    appointments_df = pd.read_csv(
+            csv_path,
+            parse_dates=["created"],
+        )
+    return appointments_df
 
-def process_appointments(appointment_path: Union[str, Path]) -> pd.DataFrame:
+def process_appointments(appointments_df: pd.DataFrame) -> pd.DataFrame:
     """Process the appointments csv from the Data Platform
 
     The query used to create this CSV can be found in the data folder
@@ -19,10 +30,6 @@ def process_appointments(appointment_path: Union[str, Path]) -> pd.DataFrame:
     pd.DataFrame
         Cleaned appointment DataFrame that can be used for feature building
     """
-    appointments_df = pd.read_csv(
-        appointment_path,
-        parse_dates=["created"],
-    )
     appointments_df["start"] = pd.to_datetime(appointments_df["start"], errors="coerce")
     appointments_df["end"] = pd.to_datetime(appointments_df["end"], errors="coerce")
     appointments_df["gearriveerd"] = pd.to_datetime(

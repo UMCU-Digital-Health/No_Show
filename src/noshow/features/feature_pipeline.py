@@ -10,8 +10,7 @@ from noshow.features.appointment_features import (
 )
 from noshow.features.no_show_features import prev_no_show_features
 from noshow.features.patient_features import add_patient_features
-from noshow.preprocessing.load_data import process_appointments, process_postal_codes
-
+from noshow.preprocessing.load_data import process_appointments, process_postal_codes, load_appointment_csv
 
 def create_features(
     appointments_df: pd.DataFrame,
@@ -55,8 +54,8 @@ def create_features(
 if __name__ == "__main__":
     data_path = Path(__file__).parents[3] / "data" / "raw"
     output_path = Path(__file__).parents[3] / "data" / "processed"
-
-    appointments_df = process_appointments(data_path / "poliafspraken_no_show.csv")
+    appointments_df = load_appointment_csv(data_path / "poliafspraken_no_show.csv")
+    appointments_df = process_appointments(appointments_df)
     all_postalcodes = process_postal_codes(data_path / "NL.txt")
     appointments_features = create_features(appointments_df, all_postalcodes)
 

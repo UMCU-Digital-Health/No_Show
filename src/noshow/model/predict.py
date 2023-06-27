@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 from noshow.features.feature_pipeline import create_features
-from noshow.preprocessing.load_data import process_appointments, process_postal_codes
+from noshow.preprocessing.load_data import process_appointments, process_postal_codes, load_appointment_csv
 
 
 def create_prediction(
@@ -41,8 +41,8 @@ if __name__ == "__main__":
     project_folder = Path(__file__).parents[3]
     data_path = project_folder / "data" / "raw"
     output_path = project_folder / "data" / "processed"
-
-    appointments_df = process_appointments(data_path / "poliafspraken_no_show.csv")
+    appointments_df = load_appointment_csv(data_path / "poliafspraken_no_show.csv")
+    appointments_df = process_appointments(appointments_df)
     all_postal_codes = process_postal_codes(data_path / "NL.txt")
     with open(
         project_folder / "output" / "models" / "no_show_model_cv.pickle", "rb"
