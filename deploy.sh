@@ -15,7 +15,7 @@ done
 rm -rf test_env_rsconnect
 mkdir test_env_rsconnect
 mkdir -p test_env_rsconnect/data/raw/
-for VAR in src entrypoint.py output requirements.txt setup.cfg pyproject.toml data/raw/NL.txt
+for VAR in src run output requirements.txt setup.cfg pyproject.toml data/raw/NL.txt
 do
     cp -R $VAR test_env_rsconnect/$VAR
 done
@@ -27,7 +27,7 @@ rsconnect deploy fastapi \
     --server https://rsc.ds.umcutrecht.nl/ \
     --insecure \
     --exclude "**/__pycache__/*" \
-    --entrypoint entrypoint:app \
+    --entrypoint run.app:app \
     --app-id $TEST_ENDPOINT \
     .
     
@@ -35,7 +35,7 @@ rsconnect deploy fastapi \
 # Update manifest file
 rsconnect write-manifest api \
     --exclude "**/__pycache__/*" \
-    --entrypoint entrypoint:app \
+    --entrypoint run.app:app \
     --overwrite \
     .
 
@@ -52,7 +52,7 @@ cd ..
 rm -rf production_env_rsconnect
 mkdir production_env_rsconnect
 mkdir -p production_env_rsconnect/data/raw/
-for VAR in src entrypoint.py output requirements.txt setup.cfg pyproject.toml data/raw/NL.txt
+for VAR in src run output requirements.txt setup.cfg pyproject.toml data/raw/NL.txt
 do
     cp -R $VAR production_env_rsconnect/$VAR
 done
@@ -63,13 +63,13 @@ rsconnect deploy fastapi \
     --server https://rsc.ds.umcutrecht.nl/ \
     --insecure \
     --exclude "**/__pycache__/*" \
-    --entrypoint entrypoint:app \
+    --entrypoint run.app:app \
     --app-id $PRODUCTION_ENDPOINT \
     .
 
 # Update manifest file
 rsconnect write-manifest api \
     --exclude "**/__pycache__/*" \
-    --entrypoint entrypoint:app \
+    --entrypoint run.app:app \
     --overwrite \
     .
