@@ -7,12 +7,12 @@ stages:
       md5: 5788706fcb9d434734e7671b9b40190f
       size: 18146931
     - path: src/noshow/model/train_model.py
-      md5: ea31b8866c105411217fc4ef35b76c66
-      size: 3799
+      md5: 708cd4532886a56b22b9f125f63099a0
+      size: 3962
     outs:
     - path: output/models/no_show_model_cv.pickle
-      md5: 3c6a79e99c1be17e9d07d46a6e268cc9
-      size: 328748146
+      md5: aa55dd84098bc0af82d6a28409271365
+      size: 328128226
   feature_building:
     cmd: python src/noshow/features/feature_pipeline.py
     deps:
