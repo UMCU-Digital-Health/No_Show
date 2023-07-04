@@ -4,8 +4,6 @@ numpy==1.24.3
 pandas==2.0.1
 pyarrow==12.0.0
 scikit-learn==1.2.2
-dvc==2.7.3
-rsconnect-python
-fastapi
-uvicorn
+dvc==2.58.2
+fastapi==0.99.1
 -e .

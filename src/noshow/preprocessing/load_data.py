@@ -1,29 +1,58 @@
 from pathlib import Path
-from typing import Union, List, Dict
+from typing import Dict, List, Union
 
 import pandas as pd
 
-def load_appointment_json(input: List[Dict]):
-    appointments_df = pd.DataFrame.from_records(input)#,convert_dates=['created','end','gearriveerd'])
-    appointments_df[['created','end','gearriveerd']]= appointments_df[['created','end','gearriveerd']].apply(pd.to_datetime)
-    return appointments_df
-    
-def load_appointment_csv(csv_path: Union[str, Path])-> pd.DataFrame:
-    appointments_df = pd.read_csv(
-            csv_path,
-            parse_dates=["created"],
-        )
+
+def load_appointment_json(input: List[Dict]) -> pd.DataFrame:
+    """Load prediction data from a JSON dictionary
+
+    Parameters
+    ----------
+    input : List[Dict]
+        The input data as a dictionary in the records orientation
+        (every dictionary corresponds to a row)
+
+    Returns
+    -------
+    pd.DataFrame
+        The loaded JSON data as pandas dataframe
+    """
+    appointments_df = pd.DataFrame.from_records(input, coerce_float=True)
+    appointments_df = appointments_df.replace("NULL", None)
+    appointments_df["created"] = pd.to_datetime(appointments_df["created"])
     return appointments_df
 
-def process_appointments(appointments_df: pd.DataFrame) -> pd.DataFrame:
-    """Process the appointments csv from the Data Platform
+
+def load_appointment_csv(csv_path: Union[str, Path]) -> pd.DataFrame:
+    """Load data from a csv file
 
     The query used to create this CSV can be found in the data folder
 
     Parameters
     ----------
-    appointment_path : Union[str, Path]
-        Path to the CSV containing all appointment info
+    csv_path : Union[str, Path]
+        The path to the csv file
+
+    Returns
+    -------
+    pd.DataFrame
+        The pandas dataframe from the csv file
+    """
+    appointments_df = pd.read_csv(
+        csv_path,
+        parse_dates=["created"],
+    )
+    return appointments_df
+
+
+def process_appointments(appointments_df: pd.DataFrame) -> pd.DataFrame:
+    """Process the appointments data
+
+    Parameters
+    ----------
+    appointments_df : Union[str, Path]
+        The pandas dataframe with appointments data from either csv or json
 
     Returns
     -------

@@ -6,7 +6,11 @@ import numpy as np
 import pandas as pd
 
 from noshow.features.feature_pipeline import create_features
-from noshow.preprocessing.load_data import process_appointments, process_postal_codes, load_appointment_csv
+from noshow.preprocessing.load_data import (
+    load_appointment_csv,
+    process_appointments,
+    process_postal_codes,
+)
 
 
 def create_prediction(

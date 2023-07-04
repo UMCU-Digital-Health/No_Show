@@ -1,17 +1,20 @@
 import configparser
-import os
+import pickle
 import sys
-from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
-import pickle
-import pandas as pd
 
+import pandas as pd
 from fastapi import FastAPI
-import json
-from noshow.model.predict import create_prediction
-from noshow.preprocessing.load_data import process_appointments, process_postal_codes, load_appointment_json
+
 from noshow.features.feature_pipeline import create_features
+from noshow.model.predict import create_prediction
+from noshow.preprocessing.load_data import (
+    load_appointment_json,
+    process_appointments,
+    process_postal_codes,
+)
+
 sys.path.append("./src")
 
 app = FastAPI()
@@ -36,37 +39,19 @@ async def predict(input: List[Dict]):
     Dict[str, Any]
         Prediction output in FHIR format
     """
-    data_path = './data/raw/'
+    project_path = Path(__file__).parents[3]
     input_df = load_appointment_json(input)
     appointments_df = process_appointments(input_df)
-    all_postalcodes = process_postal_codes(data_path + "NL.txt")
-    appointments_df['address_postalCodeNumbersNL'] = pd.to_numeric(appointments_df['address_postalCodeNumbersNL'], errors='coerce')
-    appointments_df.address_postalCodeNumbersNL.astype('float')
-    appointments_features = create_features(appointments_df, all_postalcodes)
-    appointments_features = appointments_features[
-        [
-            "hour",
-            "weekday",
-            "specialty_code",
-            "minutesDuration",
-            "no_show",
-            "prev_no_show",
-            "prev_no_show_perc",
-            "age",
-            "dist_umcu",
-            "prev_minutes_early",
-            "earlier_appointments",
-            "appointments_same_day",
-            "days_since_created",
-        ]
-    ]
+    all_postalcodes = process_postal_codes(project_path / "data" / "raw" / "NL.txt")
+
     with open(
-        "./output/models/no_show_model_cv.pickle", "rb"
+        project_path / "output" / "models" / "no_show_model_cv.pickle", "rb"
     ) as f:
         model = pickle.load(f)
     prediction_probs = create_prediction(model, appointments_df, all_postalcodes)
 
     return prediction_probs
+
 
 @app.get("/")
 async def root():
