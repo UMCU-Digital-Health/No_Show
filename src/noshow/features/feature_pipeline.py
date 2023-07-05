@@ -10,7 +10,12 @@ from noshow.features.appointment_features import (
 )
 from noshow.features.no_show_features import prev_no_show_features
 from noshow.features.patient_features import add_patient_features
-from noshow.preprocessing.load_data import process_appointments, process_postal_codes, load_appointment_csv
+from noshow.preprocessing.load_data import (
+    load_appointment_csv,
+    process_appointments,
+    process_postal_codes,
+)
+
 
 def create_features(
     appointments_df: pd.DataFrame,
