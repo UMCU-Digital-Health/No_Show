@@ -25,7 +25,7 @@ API_VERSION = config["api"]["version"]
 
 
 @app.post("/predict")
-async def predict(input: List[Dict]):
+async def predict(input: List[Dict]) -> List[Dict]:
     """
     Predict the probability of a patient having a no-show.
 
@@ -48,9 +48,11 @@ async def predict(input: List[Dict]):
         project_path / "output" / "models" / "no_show_model_cv.pickle", "rb"
     ) as f:
         model = pickle.load(f)
-    prediction_probs = create_prediction(model, appointments_df, all_postalcodes)
+    prediction_df = create_prediction(
+        model, appointments_df, all_postalcodes, filter_only_booked=True
+    )
 
-    return prediction_probs
+    return prediction_df.reset_index().to_dict(orient="records")
 
 
 @app.get("/")

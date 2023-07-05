@@ -17,9 +17,12 @@ def create_prediction(
     model: Any,
     appointments_df: pd.DataFrame,
     all_postal_codes: pd.DataFrame,
-) -> np.ndarray:
+    filter_only_booked: bool = False,
+) -> pd.DataFrame:
     featuretable = create_features(appointments_df, all_postal_codes)
 
+    if filter_only_booked:
+        featuretable = featuretable.loc[featuretable["status"] == "booked"]
     featuretable = featuretable[
         [
             "hour",
@@ -38,7 +41,10 @@ def create_prediction(
         ]
     ]
     prediction_probs: np.ndarray = model.predict_proba(featuretable)
-    return prediction_probs
+    prediction_df = pd.DataFrame(
+        prediction_probs[:, 1], index=featuretable.index, columns=["prediction"]
+    )
+    return prediction_df
 
 
 if __name__ == "__main__":
