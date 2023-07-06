@@ -3,8 +3,10 @@ from pathlib import Path
 import pandas as pd
 
 from noshow.features.appointment_features import (
+    add_appointments_last_days,
     add_appointments_same_day,
     add_days_since_created,
+    add_days_since_last_appointment,
     add_minutes_early,
     add_time_features,
 )
@@ -42,7 +44,9 @@ def create_features(
     appointments_features = (
         appointments_df.pipe(prev_no_show_features)
         .pipe(add_appointments_same_day)
+        .pipe(add_days_since_last_appointment)
         .pipe(add_days_since_created)
+        .pipe(add_appointments_last_days, 14)
         .pipe(add_minutes_early, minutes_early_cutoff)
         .pipe(add_time_features)
         .pipe(add_patient_features, all_postal_codes)
@@ -74,6 +78,8 @@ if __name__ == "__main__":
             "prev_minutes_early",
             "earlier_appointments",
             "appointments_same_day",
+            "appointments_last_days",
             "days_since_created",
+            "days_since_last_appointment",
         ]
     ].to_parquet(output_path / "featuretable.parquet")

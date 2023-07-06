@@ -37,6 +37,64 @@ def add_days_since_created(appointments_df: pd.DataFrame) -> pd.DataFrame:
     return appointments_df
 
 
+def add_days_since_last_appointment(appointments_df: pd.DataFrame) -> pd.DataFrame:
+    """Add the amount of days since the last appointment
+
+    Note that the last appointment can also be an appointment that hasn't happened
+    yet (booked status) Therefore this function resturns the days since the last
+    (booked) appointment.
+
+    Parameters
+    ----------
+    appointments_df : pd.DataFrame
+        The dataframe with appointent information, needs to contain a `start`
+        and `pseudo_id` index
+
+    Returns
+    -------
+    pd.DataFrame
+        The input dataframe with an extra column `days_since_last_appointment`
+    """
+    appointments_df = appointments_df.sort_index(level="start")
+    appointments_df["start_time"] = appointments_df.index.get_level_values("start")
+    appointments_df["days_since_last_appointment"] = (
+        appointments_df.groupby(level="pseudo_id")["start_time"].diff().dt.days
+    ).replace(np.nan, 0)
+    appointments_df = appointments_df.drop(columns="start_time")
+    return appointments_df
+
+
+def add_appointments_last_days(
+    appointments_df: pd.DataFrame, days: int = 14
+) -> pd.DataFrame:
+    """Add the amount of appointments in the last x days
+
+    Adds the amount of appointments planned in the last `day` days.
+
+    Parameters
+    ----------
+    appointments_df : pd.DataFrame
+        Dataframe with a index on the startdate and a column `APP_ID`
+    days : int, optional
+        The amount of days to include in the count, by default 14
+
+    Returns
+    -------
+    pd.DataFrame
+        The input dataframe with an added column `appointments_last_days`
+    """
+    appointments_df = appointments_df.sort_index(level="start")
+    appointments_df["appointments_last_days"] = (
+        appointments_df.reset_index()
+        .set_index("start")
+        .groupby("pseudo_id")["APP_ID"]
+        .rolling(f"{days}D")
+        .count()
+    )
+
+    return appointments_df
+
+
 def add_appointments_same_day(appointments_df: pd.DataFrame) -> pd.DataFrame:
     """Add the number of appointments on the same day
 
