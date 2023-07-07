@@ -5,7 +5,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from noshow.features.feature_pipeline import create_features
+from noshow.features.feature_pipeline import create_features, select_feature_columns
 from noshow.preprocessing.load_data import (
     load_appointment_csv,
     process_appointments,
@@ -23,23 +23,8 @@ def create_prediction(
 
     if filter_only_booked:
         featuretable = featuretable.loc[featuretable["status"] == "booked"]
-    featuretable = featuretable[
-        [
-            "hour",
-            "weekday",
-            "specialty_code",
-            "minutesDuration",
-            "no_show",
-            "prev_no_show",
-            "prev_no_show_perc",
-            "age",
-            "dist_umcu",
-            "prev_minutes_early",
-            "earlier_appointments",
-            "appointments_same_day",
-            "days_since_created",
-        ]
-    ]
+    featuretable = select_feature_columns(featuretable)
+
     prediction_probs: np.ndarray = model.predict_proba(featuretable)
     prediction_df = pd.DataFrame(
         prediction_probs[:, 1], index=featuretable.index, columns=["prediction"]

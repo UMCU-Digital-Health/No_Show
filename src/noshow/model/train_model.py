@@ -14,22 +14,23 @@ from sklearn.preprocessing import OneHotEncoder
 
 
 def train_cv_model(
-    featuretable_path: Union[Path, str],
+    featuretable: pd.DataFrame,
     output_path: Union[Path, str],
     classifier: BaseEstimator,
     param_grid: Dict,
+    save_dvc_exp: bool = True,
 ) -> None:
     """Use Cross validation to train a model and save results and parameters to dvclive
 
     Parameters
     ----------
-    featuretable_path : Union[Path, str]
-        Path to the featuretable
+    featuretable : pd.DataFrame
+        The featuretable
     output_path : Union[Path, str]
         Path to the output folder where to store the dvc results
+    save_dvc_exp : bool
+        If we want to save the experiment in DVC, by default True
     """
-
-    featuretable = pd.read_parquet(featuretable_path)
 
     featuretable["no_show"] = featuretable["no_show"].replace({"no_show": 1, "show": 0})
 
@@ -39,7 +40,9 @@ def train_cv_model(
         X, y, test_size=0.2, random_state=0, shuffle=False
     )
 
-    with Live(save_dvc_exp=True, dir=str(Path(output_path) / "dvclive")) as live:
+    with Live(
+        save_dvc_exp=save_dvc_exp, dir=str(Path(output_path) / "dvclive")
+    ) as live:
         oversampler = SMOTE()
 
         # Define the categorical columns in your feature matrix
@@ -97,11 +100,12 @@ def train_cv_model(
 
 if __name__ == "__main__":
     project_folder = Path(__file__).parents[3]
+
+    featuretable = pd.read_parquet(
+        project_folder / "data" / "processed" / "featuretable.parquet"
+    )
     best_model = train_cv_model(
-        featuretable_path=project_folder
-        / "data"
-        / "processed"
-        / "featuretable.parquet",
+        featuretable=featuretable,
         output_path=project_folder / "output",
         classifier=RandomForestClassifier(),
         param_grid={"classifier__n_estimators": [100]},
