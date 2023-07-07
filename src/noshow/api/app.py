@@ -1,11 +1,11 @@
 import configparser
-import pickle
 import sys
 from pathlib import Path
 from typing import Dict, List
 
 from fastapi import FastAPI
 
+from noshow.api.app_helpers import load_model
 from noshow.model.predict import create_prediction
 from noshow.preprocessing.load_data import (
     load_appointment_json,
@@ -42,10 +42,7 @@ async def predict(input: List[Dict]) -> List[Dict]:
     appointments_df = process_appointments(input_df)
     all_postalcodes = process_postal_codes(project_path / "data" / "raw" / "NL.txt")
 
-    with open(
-        project_path / "output" / "models" / "no_show_model_cv.pickle", "rb"
-    ) as f:
-        model = pickle.load(f)
+    model = load_model()
     prediction_df = create_prediction(
         model, appointments_df, all_postalcodes, filter_only_booked=True
     )

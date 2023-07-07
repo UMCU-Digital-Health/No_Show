@@ -27,8 +27,8 @@ dependencies =[
 ]
 
 [project.optional-dependencies]
-test = ["pytest", "pytest-cov"]
-dev = ["black", "flake8", "flake8-bugbear", "isort", "rsconnect-python", "uvicorn"]
+test = ["pytest", "pytest-cov", "pytest-asyncio"]
+dev = ["black", "flake8", "isort", "rsconnect-python", "uvicorn"]
 
 [tool.isort]
 profile = "black"
