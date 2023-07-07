@@ -23,7 +23,9 @@ dependencies =[
   "imbalanced-learn~=0.10",
   "scikit-learn~=1.2",
   "pyarrow~=12.0",
-  "fastapi~=0.99"
+  "fastapi~=0.99",
+  "dvc~=2.58",
+  "dvclive~=2.11"
 ]
 
 [project.optional-dependencies]
