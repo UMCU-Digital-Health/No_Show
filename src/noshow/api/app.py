@@ -2,12 +2,10 @@ import configparser
 import pickle
 import sys
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Dict, List
 
-import pandas as pd
 from fastapi import FastAPI
 
-from noshow.features.feature_pipeline import create_features
 from noshow.model.predict import create_prediction
 from noshow.preprocessing.load_data import (
     load_appointment_json,
