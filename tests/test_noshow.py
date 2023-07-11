@@ -7,11 +7,15 @@ import pandas as pd
 
 
 class FakeModel:
-    def predict_proba(feature_table):
+    def predict_proba(self, feature_table):
         return np.zeros((len(feature_table), 2))
 
 
-def fake_postal_codes(_) -> pd.DataFrame:
+def fake_postal_codes(_=None) -> pd.DataFrame:
+    """Mock function for `process_postal_codes`
+
+    Needs to accept a parameter, but this parameter will be ignored
+    """
     return pd.DataFrame(
         {
             "postalcode": [3994, 2034],
@@ -22,7 +26,11 @@ def fake_postal_codes(_) -> pd.DataFrame:
 
 
 def fake_model(_=None):
-    return FakeModel
+    """Mock function for returning `load_model`
+
+    Needs to accept a parameter, but this parameter will be ignored
+    """
+    return FakeModel()
 
 
 def fake_appointments() -> List[Dict]:

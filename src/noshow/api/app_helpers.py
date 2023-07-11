@@ -1,9 +1,9 @@
 import pickle
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Union
 
 
-def load_model(model_path: Optional[Union[str, Path]]) -> Any:
+def load_model(model_path: Union[str, Path, None] = None) -> Any:
     if model_path is None:
         model_path = (
             Path(__file__).parents[3] / "output" / "models" / "no_show_model_cv.pickle"
