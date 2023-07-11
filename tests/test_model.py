@@ -16,11 +16,11 @@ def test_create_prediction():
     appointments_df["created"] = pd.to_datetime(appointments_df["created"])
     appointments_df = process_appointments(appointments_df)
 
-    preds = create_prediction(FakeModel, appointments_df, fake_postal_codes(None))
+    preds = create_prediction(FakeModel(), appointments_df, fake_postal_codes(None))
     assert preds.shape == (3, 1)
 
     preds_booked = create_prediction(
-        FakeModel, appointments_df, fake_postal_codes(None), filter_only_booked=True
+        FakeModel(), appointments_df, fake_postal_codes(None), filter_only_booked=True
     )
     assert preds_booked.shape == (2, 1)
 
