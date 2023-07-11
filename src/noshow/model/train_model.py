@@ -9,7 +9,7 @@ from imblearn.pipeline import Pipeline
 from sklearn.base import BaseEstimator
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import GridSearchCV, train_test_split
+from sklearn.model_selection import GridSearchCV, StratifiedGroupKFold, train_test_split
 from sklearn.preprocessing import OneHotEncoder
 
 
@@ -40,6 +40,8 @@ def train_cv_model(
         X, y, test_size=0.2, random_state=0, shuffle=False
     )
 
+    train_groups = X_train.index.get_level_values("pseudo_id")
+
     with Live(
         save_dvc_exp=save_dvc_exp, dir=str(Path(output_path) / "dvclive")
     ) as live:
@@ -66,17 +68,19 @@ def train_cv_model(
             ]
         )
 
+        cv = StratifiedGroupKFold()
+
         # Train the pipeline on the training data
         grid = GridSearchCV(
             pipeline,
             param_grid=param_grid,
-            cv=5,
+            cv=cv,
             scoring=["roc_auc", "precision", "recall"],
             verbose=2,
             refit="roc_auc",
             n_jobs=3,
         )
-        grid.fit(X_train, y_train)
+        grid.fit(X_train, y_train, groups=train_groups)
 
         y_pred = grid.best_estimator_.predict_proba(X_test)
 
