@@ -39,7 +39,7 @@ def train_cv_model(
         X, y, test_size=0.2, random_state=0, shuffle=False
     )
 
-    train_groups = X.index.get_level_values("pseudo_id")[0 : len(X_train)]
+    train_groups = X_train.index.get_level_values("pseudo_id")
 
     with Live(save_dvc_exp=True, dir=str(Path(output_path) / "dvclive")) as live:
         oversampler = SMOTE()

@@ -4,6 +4,8 @@
 - **Leaderboard:** Current best scores can be found [here](../output/dvclive/metrics.json)
 - **Point of Contact:** [Ruben Peters](mailto:r.peters-7@umcutrecht.nl)
 
+Based on the dataset card template from huggingface, which can be found [here](https://github.com/huggingface/datasets/blob/main/templates/README_guide.md#table-of-contents).
+
 ### Dataset Summary
 
 The dataset consists of all appointments created between January 2015 and May 2023. It combines data from different Data platform tables, namely Appointment, HealthCareService, Polyklinisch_consult, Patient and Patient_address. It uses HealthCareService specialtycodes to filter on clinic and excludes appointments that are booked.
@@ -20,7 +22,7 @@ The dataset is mostly Dutch. However, some columns (that follow FHIR standards) 
 
 ### Data Instances
 
-The prediction data is structured as follows:
+The input data for the prediction is structured as follows:
 
 ```{json}
 {
@@ -54,9 +56,8 @@ Every observation contains all the information of a single appointment. When pre
 
 ### Data Fields
 
-Below you can find the datafields present in the dataset:
+Below you can find the datafields present in the dataset. The datafields are the result of running the query on the dataplatform, most of the fields are the names from the columns in the data platform, some are changed in the query (like `HCS_ID`):
 
-- `example_field`: description of `example_field`
 - `HCS_ID`: string with the identifier of the HealthCareService
 - `APP_ID`: string with the identifier of the Appointment
 - `pseudo_id`: string of the hashed patient id
@@ -115,14 +116,17 @@ The data consists of all patients of the participating clinics at the UMC Utrech
 ### Annotations
 
 The target variable of no-shows should be inferred from the data as follows:
-If the appointment was cancelled and the cancellationReasonCode is on of: "M", "C2", "C3", "0000000010", "D1", "N", "E1", than the status is no-show.
-Appointments that have status `booked` are in the future and therefore should be predicted. All other observations are `show`.
+If the appointment was cancelled and the cancellationReasonCode is on of: "M", "C2", "C3", "0000000010", "D1", "N", "E1", than the status is no-show. All other observations are `show`.
+
+Appointments that have status `booked` and are excluded from the train data. When predicting all appointments should have status `booked`.
 
 ### Personal and Sensitive Information
 
 The data contains identity categories like the birthyear, postalcode and information on the outpatient clinic where they have their appointment. The outpatient clinic data could be considered sensitive. Individuals can't be directly identified from the dataset, but when linking it to other datasets it might be possible to infer the individuals. Therefore this data is not shared outside the UMC Utrecht or with other departments within the UMCU. 
 
-In an effort to increaze the anonymity of the patients, only the birthyear is used instead of the birth date and the first 4 numbers of the postalcode. Furthermore we use specialization instead of the specific clinic, so it is harder to infer which treatment the patient received.
+In an effort to increaze the anonymity of the patients, only the birthyear is used instead of the birth date and the first 4 numbers of the postalcode. Another reason for only using the first 4 numbers of the postal code is to reduce bias in the model. Furthermore we use specialization instead of the specific clinic, so it is harder to infer which treatment the patient received. Finally to prevent identification on the patient identifier number, we hash the patient id with a salt.
+
+The data is not shared within or outside the UMCU and can only be accessed by the development team working on the no-show project.
 
 ## Considerations for Using the Data
 
@@ -131,8 +135,6 @@ The dataset could impact society by reducing waiting times for clinic appointmen
 Please discuss some of the ways you believe the use of this dataset will impact society.
 
 The statement should include both positive outlooks, such as outlining how technologies developed through its use may improve people's lives, and discuss the accompanying risks. These risks may range from making important decisions more opaque to people who are affected by the technology, to reinforcing existing harmful biases (whose specifics should be discussed in the next section), among other considerations.
-
-Also describe in this section if the proposed dataset contains a low-resource or under-represented language. If this is the case or if this task has any impact on underserved communities, please elaborate here.
 
 ### Discussion of Biases
 While a lot of care has been given to reducing (sensitive) personal data and focus mostly on behavioural data (number of no shows, minutes late for appointment etc.), it might still be possible to infer specific demographic information based on postalcode and age. 

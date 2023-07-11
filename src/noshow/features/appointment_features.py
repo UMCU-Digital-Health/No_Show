@@ -70,6 +70,9 @@ def add_appointments_last_days(
     """Add the amount of appointments in the last x days
 
     Adds the amount of appointments planned in the last `day` days.
+    Note that the days are calculated as 24 hours, so if an appointment
+    was planned on the previous day, but less than 24 hours ago, it counts
+    as the same day.
 
     Parameters
     ----------
