@@ -22,12 +22,15 @@ dependencies =[
   "numpy~=1.24",
   "imbalanced-learn~=0.10",
   "scikit-learn~=1.2",
-  "pyarrow~=12.0"
+  "pyarrow~=12.0",
+  "fastapi~=0.99",
+  "dvc~=2.58",
+  "dvclive~=2.11"
 ]
 
 [project.optional-dependencies]
-test = ["pytest", "pytest-cov"]
-dev = ["black", "flake8", "flake8-bugbear", "isort"]
+test = ["pytest", "pytest-cov", "pytest-asyncio"]
+dev = ["black", "flake8", "isort", "rsconnect-python", "uvicorn"]
 
 [tool.isort]
 profile = "black"

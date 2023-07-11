@@ -149,6 +149,7 @@ def add_minutes_early(appointments_df: pd.DataFrame, cutoff: int = 60) -> pd.Dat
         - appointments_df["gearriveerd"]
     ).dt.total_seconds() / 60
 
+    appointments_df.loc[appointments_df["gearriveerd"].isna(), "minutes_early"] = 0
     appointments_df.loc[appointments_df["minutes_early"] > cutoff, "minutes_early"] = 0
     appointments_df.loc[appointments_df["minutes_early"] < -cutoff, "minutes_early"] = 0
 

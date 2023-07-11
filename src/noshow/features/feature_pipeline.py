@@ -12,7 +12,11 @@ from noshow.features.appointment_features import (
 )
 from noshow.features.no_show_features import prev_no_show_features
 from noshow.features.patient_features import add_patient_features
-from noshow.preprocessing.load_data import process_appointments, process_postal_codes
+from noshow.preprocessing.load_data import (
+    load_appointment_csv,
+    process_appointments,
+    process_postal_codes,
+)
 
 
 def create_features(
@@ -56,15 +60,8 @@ def create_features(
     return appointments_features
 
 
-if __name__ == "__main__":
-    data_path = Path(__file__).parents[3] / "data" / "raw"
-    output_path = Path(__file__).parents[3] / "data" / "processed"
-
-    appointments_df = process_appointments(data_path / "poliafspraken_no_show.csv")
-    all_postalcodes = process_postal_codes(data_path / "NL.txt")
-    appointments_features = create_features(appointments_df, all_postalcodes)
-
-    appointments_features[
+def select_feature_columns(featuretable: pd.DataFrame) -> pd.DataFrame:
+    return featuretable[
         [
             "hour",
             "weekday",
@@ -82,4 +79,17 @@ if __name__ == "__main__":
             "days_since_created",
             "days_since_last_appointment",
         ]
-    ].to_parquet(output_path / "featuretable.parquet")
+    ]
+
+
+if __name__ == "__main__":
+    data_path = Path(__file__).parents[3] / "data" / "raw"
+    output_path = Path(__file__).parents[3] / "data" / "processed"
+    appointments_df = load_appointment_csv(data_path / "poliafspraken_no_show.csv")
+    appointments_df = process_appointments(appointments_df)
+    all_postalcodes = process_postal_codes(data_path / "NL.txt")
+    appointments_features = (
+        create_features(appointments_df, all_postalcodes)
+        .pipe(select_feature_columns)
+        .to_parquet(output_path / "featuretable.parquet")
+    )

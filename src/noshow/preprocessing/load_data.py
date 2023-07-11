@@ -1,28 +1,64 @@
 from pathlib import Path
-from typing import Union
+from typing import Dict, List, Union
 
 import pandas as pd
 
 
-def process_appointments(appointment_path: Union[str, Path]) -> pd.DataFrame:
-    """Process the appointments csv from the Data Platform
+def load_appointment_json(input: List[Dict]) -> pd.DataFrame:
+    """Load prediction data from a JSON dictionary
+
+    Parameters
+    ----------
+    input : List[Dict]
+        The input data as a dictionary in the records orientation
+        (every dictionary corresponds to a row)
+
+    Returns
+    -------
+    pd.DataFrame
+        The loaded JSON data as pandas dataframe
+    """
+    appointments_df = pd.DataFrame.from_records(input, coerce_float=True)
+    appointments_df = appointments_df.replace("NULL", None)
+    appointments_df["created"] = pd.to_datetime(appointments_df["created"])
+    return appointments_df
+
+
+def load_appointment_csv(csv_path: Union[str, Path]) -> pd.DataFrame:
+    """Load data from a csv file
 
     The query used to create this CSV can be found in the data folder
 
     Parameters
     ----------
-    appointment_path : Union[str, Path]
-        Path to the CSV containing all appointment info
+    csv_path : Union[str, Path]
+        The path to the csv file
+
+    Returns
+    -------
+    pd.DataFrame
+        The pandas dataframe from the csv file
+    """
+    appointments_df = pd.read_csv(
+        csv_path,
+        parse_dates=["created"],
+    )
+    return appointments_df
+
+
+def process_appointments(appointments_df: pd.DataFrame) -> pd.DataFrame:
+    """Process the appointments data
+
+    Parameters
+    ----------
+    appointments_df : Union[str, Path]
+        The pandas dataframe with appointments data from either csv or json
 
     Returns
     -------
     pd.DataFrame
         Cleaned appointment DataFrame that can be used for feature building
     """
-    appointments_df = pd.read_csv(
-        appointment_path,
-        parse_dates=["created"],
-    )
     appointments_df["start"] = pd.to_datetime(appointments_df["start"], errors="coerce")
     appointments_df["end"] = pd.to_datetime(appointments_df["end"], errors="coerce")
     appointments_df["gearriveerd"] = pd.to_datetime(
