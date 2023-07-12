@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    permissions: read-all
     name: File warnings
     runs-on: ubuntu-latest
     steps:
