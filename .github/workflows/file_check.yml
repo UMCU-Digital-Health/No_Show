@@ -2,6 +2,9 @@ name: Check for files and notebook output
 
 on:
   pull_request:
+    branches: main
+  push:
+    branches: '**'
 
 jobs:
   build:
