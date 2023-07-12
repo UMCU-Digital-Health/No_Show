@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-#    permissions: write-all
+    permissions: write-all
     name: File warnings
     runs-on: ubuntu-latest
     steps:
