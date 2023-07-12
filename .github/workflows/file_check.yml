@@ -2,9 +2,6 @@ name: Check for files and notebook output
 
 on:
   pull_request:
-    branches: main
-  push:
-    branches: '**'
 
 jobs:
   build:
@@ -12,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: LFS-warning
+      token: ${{ secrets.GITHUB_TOKEN }}
       uses: ppremk/lfs-warning@v3.2
       with:
         filesizelimit: 1MB
