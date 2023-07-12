@@ -8,10 +8,11 @@ on:
 
 jobs:
   build:
-    permissions: write-all
+#    permissions: write-all
     name: File warnings
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v3
     - name: LFS-warning
       uses: ppremk/lfs-warning@v3.2
       with:
