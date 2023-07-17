@@ -29,13 +29,8 @@ The input data for the prediction is structured as follows:
   "HCS_ID": "1234",
   "APP_ID": "5678",
   "pseudo_id": "1ch5k",
-  "name": "Jan Klaassen",
-  "partOf_HealthcareService_value": "A12345",
-  "location1_Location_value": "0000007362",
   "specialty_code": "REV",
   "specialty_display": "Revalidatie",
-  "appointmentType_code": "ROUTINE",
-  "appointmentType_display": "Routine appointment",
   "soort_consult": "Eerste",
   "start": "2023-01-01T09:00:00",
   "end": "2023-01-01T09:30:00",
@@ -46,9 +41,10 @@ The input data for the prediction is structured as follows:
   "status_code_original": "J",
   "cancelationReason_code": "NULL",
   "cancelationReason_display": "NULL",
-  "verwijzer_zorgverlenerrol_identifier_value": "38072",
   "BIRTH_YEAR": "1994",
-  "address_postalCodeNumbersNL": "3994"
+  "address_postalCodeNumbersNL": "3994",
+  "name": "HD",
+  "description": "receptie 54"
 }
 ```
 
@@ -61,13 +57,8 @@ Below you can find the datafields present in the dataset. The datafields are the
 - `HCS_ID`: string with the identifier of the HealthCareService
 - `APP_ID`: string with the identifier of the Appointment
 - `pseudo_id`: string of the hashed patient id
-- `name`: string with the name of the HealthCareService provider
-- `partOf_HealthcareService_value`: string with name of the overarching HealthCareService provider
-- `location1_Location_value`: string with the location of the HealthCareService, not used since this can differ between clinics
 - `specialty_code`: string with the specialty code of the HealthCareService, for this pilot: REV, KAP, SPO, LON
 - `specialty_display`: string with the complete name of the specialty of the HealthCareService, for this pilot: Revalidatie, Algemene pediatrie, Sportgeneeskunde, Longgeneeskunde
-- `appointmentType_code`: string with the type of the appointment, currently not used because of data leakage
-- `appointmentType_display`: string with the name of the appointment type, currently not used because of data leakage
 - `soort_consult`: string with consult type, mainly used to filter out phone appointments
 - `start`: datetime in isoformat with the start date of the appointment
 - `end`: datetime in isoformat with the end date of the appointment
@@ -78,9 +69,10 @@ Below you can find the datafields present in the dataset. The datafields are the
 - `status_code_original`: string with the status of the appointent.
 - `cancelationReason_code`: string with the code of the reason of cancelation
 - `cancelationReason_display`: string with the reason of cancelation
-- `verwijzer_zorgverlenerrol_identifier_value`: string with the identifier of the healthcare provider who reffered the patient. Currently not used.
 - `BIRTH_YEAR`: integer containing the birthyear of the patient
 - `address_postalCodeNumbersNL`: integer containing the first 4 digits of the postalcode of the patient
+- `name`: Code of the outpatient clinic reception. The first letter usually represents the area in the UMCU
+- `description`: Description of the outpatient clinic reception. 
 
 ### Data Splits
 
@@ -91,7 +83,7 @@ The sizes of the splits are as follows:
 
 |                       | train  | test  |
 |-----------------------|-------:|------:|
-| Total dataset         | 216724 | 54182 |
+| Total dataset         | 269215 | 67403 |
 
 ## Dataset Creation
 

@@ -55,7 +55,11 @@ def train_cv_model(
         preprocessor = ColumnTransformer(
             transformers=[
                 ("num", "passthrough", num_cols),
-                ("cat", OneHotEncoder(handle_unknown="ignore"), categorical_cols),
+                (
+                    "cat",
+                    OneHotEncoder(handle_unknown="ignore", max_categories=15),
+                    categorical_cols,
+                ),
             ]
         )
 
