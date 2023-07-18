@@ -9,6 +9,7 @@ rsconnect-python/
 *.pickle
 *.csv
 *.txt
+*.db
 
 # Output images
 *.png
