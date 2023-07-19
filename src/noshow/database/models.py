@@ -49,8 +49,11 @@ class ApiSensitiveInfo(Base):
     __table_args__ = {"schema": "no_show"}
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, init=False)
-    patient_name: Mapped[str]
-    phone_number: Mapped[str]
+    full_name: Mapped[str]
+    first_name: Mapped[str] = mapped_column(String, nullable=True)
+    mobile_phone: Mapped[str] = mapped_column(String, nullable=True)
+    home_phone: Mapped[str] = mapped_column(String, nullable=True)
+    other_phone: Mapped[str] = mapped_column(String, nullable=True)
     clinic_reception: Mapped[str]
     clinic_phone_number: Mapped[str]
     prediction_id: Mapped[int] = mapped_column(

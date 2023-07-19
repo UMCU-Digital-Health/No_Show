@@ -2,7 +2,7 @@ import configparser
 import os
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, cast
 
 from fastapi import Depends, FastAPI
 from sqlalchemy import create_engine, select
@@ -77,7 +77,11 @@ async def predict(input: List[Dict], db: Session = Depends(get_db)) -> List[Dict
 
     model = load_model()
     prediction_df = create_prediction(
-        model, appointments_df, all_postalcodes, filter_only_booked=True
+        model,
+        appointments_df,
+        all_postalcodes,
+        filter_only_last=True,
+        add_sensitive_info=True,
     )
 
     prediction_df = prediction_df.sort_values(
@@ -97,11 +101,15 @@ async def predict(input: List[Dict], db: Session = Depends(get_db)) -> List[Dict
         runtime=(end_time - start_time).total_seconds(),
     )
     for idx, row in prediction_df.iterrows():
+        idx = cast(int, idx)
         apisensitive = ApiSensitiveInfo(
-            patient_name="harry",
-            phone_number="0638294759",
-            clinic_reception="receptie longgeneeskunde",
-            clinic_phone_number="0582",
+            full_name=row["name_text"],
+            first_name=row["name_given1_callMe"],
+            mobile_phone=row["telecom1_value"],
+            home_phone=row["telecom2_value"],
+            other_phone=row["telecom3_value"],
+            clinic_reception=row["description"],
+            clinic_phone_number="0582",  # TODO: find way to get number
         )
         apiprediction = ApiPrediction(
             patient_id=row["pseudo_id"],
