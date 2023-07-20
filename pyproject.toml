@@ -26,7 +26,9 @@ dependencies =[
   "fastapi~=0.99",
   "dvc~=2.58",
   "dvclive~=2.11",
-  "sqlalchemy~=2.0"
+  "sqlalchemy~=2.0",
+  "python-dotenv~=1.0",
+  "pymssql~=2.2"
 ]
 
 [project.optional-dependencies]

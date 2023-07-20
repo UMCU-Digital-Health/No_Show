@@ -4,6 +4,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, cast
 
+from dotenv import load_dotenv
 from fastapi import Depends, FastAPI
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session, sessionmaker
@@ -16,6 +17,8 @@ from noshow.preprocessing.load_data import (
     process_appointments,
     process_postal_codes,
 )
+
+load_dotenv()
 
 app = FastAPI()
 
@@ -32,7 +35,7 @@ DB_DATABASE = os.getenv("DB_DATABASE", "")
 if DB_USER == "":
     print("Using debug SQLite database...")
     SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
-    execution_options = {"schema_translate_map": {"no_show": None}}
+    execution_options = {"schema_translate_map": {"noshow": None}}
 else:
     SQLALCHEMY_DATABASE_URL = (
         rf"mssql+pymssql://{DB_USER}:{DB_PASSWD}@{DB_HOST}:{DB_PORT}/{DB_DATABASE}"

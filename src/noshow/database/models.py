@@ -16,7 +16,7 @@ class Base(DeclarativeBase, MappedAsDataclass):
 
 class ApiRequest(Base):
     __tablename__ = "apirequest"
-    __table_args__ = {"schema": "no_show"}
+    __table_args__ = {"schema": "noshow"}
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, init=False)
     timestamp: Mapped[datetime] = mapped_column(DateTime)
@@ -29,10 +29,10 @@ class ApiRequest(Base):
 
 class ApiPrediction(Base):
     __tablename__ = "apiprediction"
-    __table_args__ = {"schema": "no_show"}
+    __table_args__ = {"schema": "noshow"}
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, init=False)
-    patient_id: Mapped[str] = mapped_column(String, index=True)
+    patient_id: Mapped[str] = mapped_column(String(64), index=True)
     prediction: Mapped[float]
     call_order: Mapped[int]
     start_time: Mapped[datetime] = mapped_column(DateTime, index=True)
@@ -46,7 +46,7 @@ class ApiPrediction(Base):
 
 class ApiSensitiveInfo(Base):
     __tablename__ = "apisensitiveinfo"
-    __table_args__ = {"schema": "no_show"}
+    __table_args__ = {"schema": "noshow"}
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, init=False)
     full_name: Mapped[str]
@@ -63,7 +63,7 @@ class ApiSensitiveInfo(Base):
 
 class ApiCallResponse(Base):
     __tablename__ = "apicallresponse"
-    __table_args__ = {"schema": "no_show"}
+    __table_args__ = {"schema": "noshow"}
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, init=False)
     call_status: Mapped[str]
