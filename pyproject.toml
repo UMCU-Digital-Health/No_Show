@@ -28,7 +28,8 @@ dependencies =[
   "dvclive~=2.11",
   "sqlalchemy~=2.0",
   "python-dotenv~=1.0",
-  "pymssql~=2.2"
+  "pymssql~=2.2",
+  "streamlit~=1.24"
 ]
 
 [project.optional-dependencies]
