@@ -2,11 +2,11 @@ import configparser
 import os
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, cast
+from typing import Dict, List, cast
 
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from noshow.api.app_helpers import load_model
