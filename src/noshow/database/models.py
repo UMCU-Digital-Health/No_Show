@@ -69,6 +69,4 @@ class ApiCallResponse(Base):
     call_status: Mapped[str]
     call_outcome: Mapped[str]
     remarks: Mapped[str]
-    prediction_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey(ApiPrediction.id), init=False
-    )
+    prediction_id: Mapped[int] = mapped_column(Integer, ForeignKey(ApiPrediction.id))
