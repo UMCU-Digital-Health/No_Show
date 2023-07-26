@@ -9,13 +9,13 @@
     "version": "3.8.16",
     "package_manager": {
       "name": "pip",
-      "version": "23.1.2",
+      "version": "23.2",
       "package_file": "requirements.txt"
     }
   },
   "files": {
     "requirements.txt": {
-      "checksum": "4b3f29f53a820aef96308ecf0d870d62"
+      "checksum": "99ac30a1af9813d2cae725df62f717ac"
     },
     ".dvc/.gitignore": {
       "checksum": "a5d6c4bb3813b904789a8a68767d076c"
@@ -27,16 +27,19 @@
       "checksum": "34659c119a2634fe318cd6a4822df435"
     },
     ".gitignore": {
-      "checksum": "b9bea7c2021e9af03a47d3eb8c4aa565"
+      "checksum": "f9168b7308d17055278fd750ed5b7a31"
     },
     "README.md": {
       "checksum": "6beeb637238cc9a8f1896000c45c5662"
     },
     "data/dataset_card.md": {
-      "checksum": "6b7e14063b8f214a72ff977030125379"
+      "checksum": "40bc5549276a4614e32622efa851a5cc"
     },
     "data/processed/.gitkeep": {
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "data/raw/NL.txt": {
+      "checksum": "6dd4fc6184a20b756821d48bd39488f0"
     },
     "data/raw/NL.txt.dvc": {
       "checksum": "f3e37287e3ecb53c3d0230c7c042035d"
@@ -45,13 +48,13 @@
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
     "data/raw/poliafspraken_no_show.csv.dvc": {
-      "checksum": "1a1704a87aa0d752183a7418e101cebe"
+      "checksum": "f28c72b44544c99d0c9a6645f460669b"
     },
     "deploy.sh": {
-      "checksum": "1d1d2d770825f79111ac3a2229ad1ff4"
+      "checksum": "f9799b89dae7656d5db366fb22855eba"
     },
     "dvc.lock": {
-      "checksum": "e6768519c949451ed03825ce271455e6"
+      "checksum": "3291dd1eca25cb9f6e93d4123141847b"
     },
     "dvc.yaml": {
       "checksum": "a533dd40bbbf5fe7a2e80fe3290d6e85"
@@ -66,28 +69,34 @@
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
     "output/models/no_show_model_cv.pickle": {
-      "checksum": "80a11eeb517e83d87b983c81f82afdaa"
+      "checksum": "1ec50caf1b29cb115a96da73140181c4"
     },
     "output/visualisations/.gitkeep": {
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
     "pyproject.toml": {
-      "checksum": "bed05cd07482eca4bc60b9e2bbd005cf"
+      "checksum": "5cc08ebf6cd75e9d5caf9e3f2d63178e"
     },
     "run/app.py": {
       "checksum": "07ea1ee70ce2cfdd157a5d234a54cbfb"
     },
     "setup.cfg": {
-      "checksum": "d263c983c14b0f2cd7cdc148ad9a3dd3"
+      "checksum": "3817bbc60ff220a4c47a743d75574fc5"
     },
     "src/noshow/__init__.py": {
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
     "src/noshow/api/app.py": {
-      "checksum": "0d7dfa2d780fe65dcf0078899b3c49b4"
+      "checksum": "1d4b4376e9b6103de262066220d6420d"
     },
     "src/noshow/api/app_helpers.py": {
       "checksum": "a23a82c73c04c1101f5bd0f8692c5a3d"
+    },
+    "src/noshow/database/__init__.py": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "src/noshow/database/models.py": {
+      "checksum": "c9dbb7ddd4bd9e8c865a7f00d14266a1"
     },
     "src/noshow/features/appointment_features.py": {
       "checksum": "08c7c0bab41ff2ad9dcb244185652dc5"
@@ -108,10 +117,10 @@
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
     "src/noshow/model/predict.py": {
-      "checksum": "83301c9ba50381f4be43e139f0cac86d"
+      "checksum": "bc48735805fdf2da620c862526fba167"
     },
     "src/noshow/model/train_model.py": {
-      "checksum": "f174753b772797d8825c711bbd9b95f6"
+      "checksum": "986e65ae98e9e34617381cf20cdf89c6"
     },
     "src/noshow/preprocessing/__init__.py": {
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
@@ -129,10 +138,10 @@
       "checksum": "10351af697f4f1939c07aa92cf8da43b"
     },
     "tests/data/test_appointments.json": {
-      "checksum": "acf6156da7d1e3e6e5341a79247315b6"
+      "checksum": "e08532e9f138967ecacdf47b51c32c4c"
     },
     "tests/test_api.py": {
-      "checksum": "a0c954dc0e8bab6597374cba162bedb6"
+      "checksum": "56e50531e9471ed2647eb3dfccec77c9"
     },
     "tests/test_appointment_features.py": {
       "checksum": "cb5db345fd46ce13da3093b7bcae524e"
@@ -141,7 +150,7 @@
       "checksum": "42dec12ef6dfa8011f585b96a15b503e"
     },
     "tests/test_model.py": {
-      "checksum": "d13bd0dea16ad2a9bbe6ba2757aef12c"
+      "checksum": "d7157b92d59338835328c66923701021"
     },
     "tests/test_noshow.py": {
       "checksum": "fb396b69f54042fdc4c1da963cd66818"

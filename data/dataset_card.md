@@ -39,16 +39,21 @@ The input data for the prediction is structured as follows:
   "minutesDuration": "30",
   "status": "fulfilled",
   "status_code_original": "J",
-  "cancelationReason_code": "NULL",
-  "cancelationReason_display": "NULL",
+  "cancelationReason_code": null,
+  "cancelationReason_display": null,
   "BIRTH_YEAR": "1994",
   "address_postalCodeNumbersNL": "3994",
-  "name": "HD",
-  "description": "receptie 54"
-}
+  "name": "Q5",
+  "description": "receptie op Q5",
+  "name_text": "C. Kent",
+  "name_given1_callMe": "Clark",
+  "telecom1_value": "0683726384",
+  "telecom2_value": "112",
+  "telecom3_value": null
+  }
 ```
 
-Every observation contains all the information of a single appointment. When predicting for a single appointment all the previous appointments of the patient also need to be included as they can be used for feature engineering.
+Every observation contains all the information of a single appointment. When predicting for a single appointment all the previous appointments of the patient also need to be included as they can be used for feature engineering. The last 7 fields are considered sensitive and are only stored for the purspose of calling and overwritten when a new prediction is made.
 
 ### Data Fields
 
@@ -71,8 +76,13 @@ Below you can find the datafields present in the dataset. The datafields are the
 - `cancelationReason_display`: string with the reason of cancelation
 - `BIRTH_YEAR`: integer containing the birthyear of the patient
 - `address_postalCodeNumbersNL`: integer containing the first 4 digits of the postalcode of the patient
-- `name`: Code of the outpatient clinic reception. The first letter usually represents the area in the UMCU
-- `description`: Description of the outpatient clinic reception. 
+- `name`: Code of the outpatient clinic reception. The first letter usually represents the area in the UMCU, *only used during prediction* 
+- `description`: Description of the outpatient clinic reception, *only used during prediction*
+- `name_text`: The name of the patient, *only used during prediction*
+- `name_given1_callMe`: The first name of the patient, *only used during prediction*
+- `telecom1_value`: The mobile phone number of the patient (if known), *only used during prediction*
+- `telecom2_value`: The home phone number of the patient (if known), *only used during prediction*
+- `telecom3_value`: The other phone number of the patient (if known), *only used during prediction*
 
 ### Data Splits
 
@@ -119,6 +129,8 @@ The data contains identity categories like the birthyear, postalcode and informa
 In an effort to increaze the anonymity of the patients, only the birthyear is used instead of the birth date and the first 4 numbers of the postalcode. Another reason for only using the first 4 numbers of the postal code is to reduce bias in the model. Furthermore we use specialization instead of the specific clinic, so it is harder to infer which treatment the patient received. Finally to prevent identification on the patient identifier number, we hash the patient id with a salt.
 
 The data is not shared within or outside the UMCU and can only be accessed by the development team working on the no-show project.
+
+The prediction data does contain sensitive info, like the name and phone number of the patient. This is only used to call the patient and those data is removed after each day.
 
 ## Considerations for Using the Data
 

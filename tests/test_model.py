@@ -20,7 +20,7 @@ def test_create_prediction():
     assert preds.shape == (3, 1)
 
     preds_booked = create_prediction(
-        FakeModel(), appointments_df, fake_postal_codes(None), filter_only_booked=True
+        FakeModel(), appointments_df, fake_postal_codes(None), filter_only_last=True
     )
     assert preds_booked.shape == (2, 1)
 
