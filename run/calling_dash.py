@@ -31,23 +31,14 @@ def highlight_row(row: pd.Series) -> List[str]:
         return [""] * len(row)
 
 
-def next_patient(list_len: int, Session: sessionmaker, pred_id: int) -> None:
-    with Session() as session:
-        call_response = session.scalar(
-            select(ApiCallResponse).where(ApiCallResponse.prediction_id == pred_id)
-        )
-        if not call_response:
-            call_response = ApiCallResponse(
-                call_status=st.session_state.status_input,
-                call_outcome=st.session_state.res_input,
-                remarks=st.session_state.opm_input,
-                prediction_id=int(pred_id),
-            )
-        else:
-            call_response.call_status = st.session_state.status_input
-            call_response.call_outcome = st.session_state.res_input
-            call_response.remarks = st.session_state.opm_input
+def next_patient(
+    list_len: int, Session: sessionmaker, call_response: ApiCallResponse
+) -> None:
+    call_response.call_status = st.session_state.status_input
+    call_response.call_outcome = st.session_state.res_input
+    call_response.remarks = st.session_state.opm_input
 
+    with Session() as session:
         session.merge(call_response)
         session.commit()
     if st.session_state["name_idx"] + 1 < list_len:
@@ -114,13 +105,18 @@ def main():
 
     st.header(f"Gesprek met {all_predictions_df.iloc[st.session_state['name_idx'], 2]}")
     with Session() as session:
-        current_response = session.scalar(
-            select(ApiCallResponse).where(ApiCallResponse.prediction_id == pred_id)
-        )
+        current_response = session.get(ApiPrediction, pred_id).callresponse_relation
 
+    if not current_response:
+        current_response = ApiCallResponse(
+            call_status="Niet gebeld",
+            call_outcome="Geen",
+            remarks="",
+            prediction_id=pred_id,
+        )
     with st.form("patient_form"):
         status_list = ["Niet gebeld", "Gebeld", "Onbereikbaar"]
-        res_list = ["Herinnerd", "Verzet/Geannuleerd"]
+        res_list = ["Herinnerd", "Verzet/Geannuleerd", "Geen"]
         st.selectbox(
             "Status gesprek:",
             options=status_list,
@@ -140,7 +136,7 @@ def main():
             args=(
                 len(all_predictions_df),
                 Session,
-                pred_id,
+                current_response,
             ),
             type="primary",
         )

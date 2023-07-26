@@ -6,7 +6,7 @@ from typing import Dict, List, cast
 
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, delete
 from sqlalchemy.orm import Session, sessionmaker
 
 from noshow.api.app_helpers import load_model
@@ -92,7 +92,7 @@ async def predict(input: List[Dict], db: Session = Depends(get_db)) -> List[Dict
     ).reset_index()
 
     # Remove all previous sensitive info like name, phonenumber
-    db.query(ApiSensitiveInfo).delete()
+    db.execute(delete(ApiSensitiveInfo))
 
     end_time = datetime.now()
     apirequest = ApiRequest(
