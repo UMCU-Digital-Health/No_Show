@@ -2,11 +2,11 @@ import configparser
 import os
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, cast
+from typing import Dict, List, cast
 
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from noshow.api.app_helpers import load_model
@@ -132,15 +132,3 @@ async def predict(input: List[Dict], db: Session = Depends(get_db)) -> List[Dict
 async def root():
     """Return a standard response."""
     return {"message": "UMCU <3"}
-
-
-@app.get("/database")
-async def debug_db(db: Session = Depends(get_db)) -> List[Dict[str, Any]]:
-    """Prints all the ApiPredictions from the database
-    TODO: REMOVE BEFORE GOING LIVE!!
-    """
-    result_json = []
-    for result in db.scalars(select(ApiPrediction)):
-        result_json.append({"db_entry": str(result)})
-
-    return result_json
