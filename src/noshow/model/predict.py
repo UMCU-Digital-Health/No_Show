@@ -1,6 +1,6 @@
 import pickle
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
@@ -17,18 +17,15 @@ def create_prediction(
     model: Any,
     appointments_df: pd.DataFrame,
     all_postal_codes: pd.DataFrame,
-    filter_only_last: bool = False,
+    prediction_start_date: Optional[str] = None,
     add_sensitive_info: bool = False,
 ) -> pd.DataFrame:
     featuretable = create_features(appointments_df, all_postal_codes)
 
-    if filter_only_last:
-        featuretable = (
-            featuretable.reset_index()
-            .groupby("pseudo_id", as_index=False)
-            .last()
-            .set_index(["pseudo_id", "start"])
-        )
+    if prediction_start_date:
+        featuretable = featuretable.sort_index().loc[
+            (slice(None), slice(prediction_start_date, None)), :
+        ]
     featuretable = select_feature_columns(featuretable)
 
     prediction_probs: np.ndarray = model.predict_proba(featuretable)
@@ -36,6 +33,7 @@ def create_prediction(
         prediction_probs[:, 1], index=featuretable.index, columns=["prediction"]
     )
     if add_sensitive_info:
+        app_ids = appointments_df["APP_ID"].drop_duplicates()
         sensitive_info = (
             appointments_df[
                 [
@@ -46,12 +44,13 @@ def create_prediction(
                     "telecom3_value",
                     "name",
                     "description",
+                    "birthDate",
                 ]
             ]
             .droplevel(level="start")
             .drop_duplicates()
         )
-        prediction_df = prediction_df.join(sensitive_info)
+        prediction_df = prediction_df.join(sensitive_info).join(app_ids)
     return prediction_df
 
 

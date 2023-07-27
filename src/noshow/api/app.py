@@ -2,7 +2,7 @@ import configparser
 import os
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, cast
+from typing import Dict, List
 
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI
@@ -10,7 +10,13 @@ from sqlalchemy import create_engine, delete
 from sqlalchemy.orm import Session, sessionmaker
 
 from noshow.api.app_helpers import load_model
-from noshow.database.models import ApiPrediction, ApiRequest, ApiSensitiveInfo, Base
+from noshow.database.models import (
+    ApiCallResponse,
+    ApiPrediction,
+    ApiRequest,
+    ApiSensitiveInfo,
+    Base,
+)
 from noshow.model.predict import create_prediction
 from noshow.preprocessing.load_data import (
     load_appointment_json,
@@ -44,7 +50,7 @@ else:
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL, execution_options=execution_options)
 Base.metadata.create_all(engine)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+SessionLocal = sessionmaker(bind=engine)
 
 
 def get_db():
@@ -57,7 +63,9 @@ def get_db():
 
 
 @app.post("/predict")
-async def predict(input: List[Dict], db: Session = Depends(get_db)) -> List[Dict]:
+async def predict(
+    input: List[Dict], start_date: str, db: Session = Depends(get_db)
+) -> List[Dict]:
     """
     Predict the probability of a patient having a no-show.
 
@@ -83,7 +91,7 @@ async def predict(input: List[Dict], db: Session = Depends(get_db)) -> List[Dict
         model,
         appointments_df,
         all_postalcodes,
-        filter_only_last=True,
+        prediction_start_date=start_date,
         add_sensitive_info=True,
     )
 
@@ -103,28 +111,47 @@ async def predict(input: List[Dict], db: Session = Depends(get_db)) -> List[Dict
         endpoint="predict",
         runtime=(end_time - start_time).total_seconds(),
     )
-    for idx, row in prediction_df.iterrows():
-        idx = cast(int, idx)
-        apisensitive = ApiSensitiveInfo(
-            full_name=row["name_text"],
-            first_name=row["name_given1_callMe"],
-            mobile_phone=row["telecom1_value"],
-            home_phone=row["telecom2_value"],
-            other_phone=row["telecom3_value"],
-            clinic_reception=row["description"],
-            clinic_phone_number="0582",  # TODO: find way to get number
-        )
-        apiprediction = ApiPrediction(
-            patient_id=row["pseudo_id"],
-            prediction=row["prediction"],
-            call_order=idx,
-            start_time=row["start"],
-            request_relation=apirequest,
-            sensitiveinfo_relation=apisensitive,
-        )
-        db.add(apiprediction)
+    db.add(apirequest)
+    for _, row in prediction_df.iterrows():
+        apisensitive = db.get(ApiSensitiveInfo, row["pseudo_id"])
 
-    db.commit()
+        if not apisensitive:
+            apisensitive = ApiSensitiveInfo(
+                patient_id=row["pseudo_id"],
+                full_name=row["name_text"],
+                first_name=row["name_given1_callMe"],
+                birth_date=row["birthDate"],
+                mobile_phone=row["telecom1_value"],
+                home_phone=row["telecom2_value"],
+                other_phone=row["telecom3_value"],
+            )
+        else:
+            apisensitive.mobile_phone = row["telecom1_value"]
+            apisensitive.home_phone = row["telecom2_value"]
+            apisensitive.other_phone = row["telecom3_value"]
+
+        apiprediction = db.get(ApiPrediction, row["APP_ID"])
+        if not apiprediction:
+            apiprediction = ApiPrediction(
+                id=row["APP_ID"],
+                patient_id=row["pseudo_id"],
+                prediction=row["prediction"],
+                start_time=row["start"],
+                request_relation=apirequest,
+                clinic_reception=row["description"],
+                clinic_phone_number="0582",  # TODO: find way to get number
+            )
+        else:
+            apiprediction.prediction = row["prediction"]
+            apiprediction.start_time = row["start"]
+            apiprediction.request_relation = apirequest
+            apiprediction.clinic_reception = row["description"]
+            apiprediction.clinic_phone_number = "0582"
+
+        db.merge(apisensitive)
+        db.merge(apiprediction)
+        db.commit()
+
     return prediction_df.reset_index().to_dict(orient="records")
 
 
@@ -132,3 +159,12 @@ async def predict(input: List[Dict], db: Session = Depends(get_db)) -> List[Dict
 async def root():
     """Return a standard response."""
     return {"message": "UMCU <3"}
+
+
+@app.get("/delete")
+async def delete_db(db: Session = Depends(get_db)):
+    db.execute(delete(ApiCallResponse))
+    db.execute(delete(ApiPrediction))
+    db.execute(delete(ApiRequest))
+    db.execute(delete(ApiSensitiveInfo))
+    db.commit()
