@@ -16,6 +16,9 @@ class FakeDB(Session):
     def commit(self):
         print("committed")
 
+    def merge(self):
+        print("merged")
+
     def add(self, tmp):
         print(f"{tmp} added")
 
@@ -29,6 +32,6 @@ async def test_predict_endpoint(monkeypatch):
     appointments_json = fake_appointments()
     monkeypatch.setattr(app, "process_postal_codes", fake_postal_codes)
     monkeypatch.setattr(app, "load_model", fake_model)
-    output = await predict(appointments_json, FakeDB())
+    output = await predict(appointments_json, "2023-01-05", FakeDB())
     output_df = pd.DataFrame(output)
     assert output_df.shape == (2, 11)
