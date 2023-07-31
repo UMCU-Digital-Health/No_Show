@@ -7,24 +7,22 @@ import noshow.api.app as app
 from noshow.api.app import predict
 
 
-class FakeQuery:
-    def delete(self):
-        print("data deleted...")
-
-
 class FakeDB(Session):
     def commit(self):
         print("committed")
 
-    def merge(self):
-        print("merged")
+    def merge(self, table):
+        print(f"{table} merged...")
 
     def add(self, tmp):
         print(f"{tmp} added")
 
-    def query(self, tmp):
-        print(f"table {tmp} queried...")
-        return FakeQuery()
+    def execute(self, stmt):
+        print(f"{stmt} executed...")
+
+    def get(self, table, index):
+        print(f"Requesting {table} at index {index}...")
+        return None
 
 
 @pytest.mark.asyncio
@@ -32,6 +30,7 @@ async def test_predict_endpoint(monkeypatch):
     appointments_json = fake_appointments()
     monkeypatch.setattr(app, "process_postal_codes", fake_postal_codes)
     monkeypatch.setattr(app, "load_model", fake_model)
+    monkeypatch.setattr(app, "delete", lambda x: x)
     output = await predict(appointments_json, "2023-01-05", FakeDB())
     output_df = pd.DataFrame(output)
-    assert output_df.shape == (2, 11)
+    assert output_df.shape == (4, 13)

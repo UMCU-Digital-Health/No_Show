@@ -17,12 +17,18 @@ def test_create_prediction():
     appointments_df = process_appointments(appointments_df)
 
     preds = create_prediction(FakeModel(), appointments_df, fake_postal_codes(None))
-    assert preds.shape == (3, 1)
+    assert preds.shape == (5, 1)  # 5 appointments in test data
 
     preds_booked = create_prediction(
-        FakeModel(), appointments_df, fake_postal_codes(None), filter_only_last=True
+        FakeModel(),
+        appointments_df,
+        fake_postal_codes(None),
+        prediction_start_date="2023-01-05",
     )
-    assert preds_booked.shape == (2, 1)
+    # First patient has 2 appointments on same day
+    # second has 1 on the day and one in the future
+    assert preds_booked.shape == (4, 1)
+    assert all(preds_booked.index.get_level_values("start") >= "2023-01-05")
 
 
 def test_train_model():
