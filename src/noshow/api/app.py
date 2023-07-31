@@ -10,13 +10,7 @@ from sqlalchemy import create_engine, delete
 from sqlalchemy.orm import Session, sessionmaker
 
 from noshow.api.app_helpers import load_model
-from noshow.database.models import (
-    ApiCallResponse,
-    ApiPrediction,
-    ApiRequest,
-    ApiSensitiveInfo,
-    Base,
-)
+from noshow.database.models import ApiPrediction, ApiRequest, ApiSensitiveInfo, Base
 from noshow.model.predict import create_prediction
 from noshow.preprocessing.load_data import (
     load_appointment_json,
@@ -159,12 +153,3 @@ async def predict(
 async def root():
     """Return a standard response."""
     return {"message": "UMCU <3"}
-
-
-@app.get("/delete")
-async def delete_db(db: Session = Depends(get_db)):
-    db.execute(delete(ApiCallResponse))
-    db.execute(delete(ApiPrediction))
-    db.execute(delete(ApiRequest))
-    db.execute(delete(ApiSensitiveInfo))
-    db.commit()
