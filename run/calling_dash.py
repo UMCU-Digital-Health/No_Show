@@ -31,9 +31,9 @@ if "pred_idx" not in st.session_state:
     st.session_state["pred_idx"] = 0
 
 date_3_days = datetime.today() + timedelta(days=3)
-if date_3_days.weekday() == 5:
+if date_3_days.weekday() == 5:  # Saturday
     date_3_days = date_3_days + timedelta(days=2)
-elif date_3_days.weekday() == 6:
+elif date_3_days.weekday() == 6:  # Sunday
     date_3_days = date_3_days + timedelta(days=1)
 
 
@@ -53,7 +53,7 @@ def main():
         patient_ids = get_patient_list(session, date_input)
         if not patient_ids:
             st.header(f"Geen afspraken op {date_input}")
-            return
+            return None
 
         current_patient = session.get(
             ApiSensitiveInfo, patient_ids[st.session_state["name_idx"]]
@@ -74,6 +74,12 @@ def main():
         ).all()
 
     all_predictions_df = pd.DataFrame(patient_predictions)
+    all_predictions_df.loc[
+        all_predictions_df["call_status"] == "Gebeld", "call_status"
+    ] = "🟢"
+    all_predictions_df.loc[
+        all_predictions_df["call_status"] != "🟢", "call_status"
+    ] = "🔴"
     pred_id = int(all_predictions_df.iat[st.session_state["pred_idx"], 0])
     col1, col2 = st.columns(2)
     with col1:

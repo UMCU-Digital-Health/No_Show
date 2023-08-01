@@ -120,6 +120,7 @@ async def predict(
                 other_phone=row["telecom3_value"],
             )
         else:
+            # name and birthdate can't change, but phone number might
             apisensitive.mobile_phone = row["telecom1_value"]
             apisensitive.home_phone = row["telecom2_value"]
             apisensitive.other_phone = row["telecom3_value"]
@@ -136,6 +137,7 @@ async def predict(
                 clinic_phone_number="0582",  # TODO: find way to get number
             )
         else:
+            # All values of a prediction can be updated except the ID fields
             apiprediction.prediction = row["prediction"]
             apiprediction.start_time = row["start"]
             apiprediction.request_relation = apirequest
