@@ -1,6 +1,6 @@
-from datetime import datetime
+from datetime import date, datetime
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String
+from sqlalchemy import Date, DateTime, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import (
     DeclarativeBase,
     Mapped,
@@ -31,16 +31,17 @@ class ApiPrediction(Base):
     __tablename__ = "apiprediction"
     __table_args__ = {"schema": "noshow"}
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, init=False)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     patient_id: Mapped[str] = mapped_column(String(64), index=True)
-    prediction: Mapped[float]
-    call_order: Mapped[int]
+    prediction: Mapped[float] = mapped_column(Float, nullable=True)
     start_time: Mapped[datetime] = mapped_column(DateTime, index=True)
+    clinic_reception: Mapped[str]
+    clinic_phone_number: Mapped[str]
     request_id: Mapped[int] = mapped_column(
         Integer, ForeignKey(ApiRequest.id), init=False
     )
+
     request_relation: Mapped["ApiRequest"] = relationship()
-    sensitiveinfo_relation: Mapped["ApiSensitiveInfo"] = relationship()
     callresponse_relation: Mapped["ApiCallResponse"] = relationship(init=False)
 
 
@@ -48,17 +49,13 @@ class ApiSensitiveInfo(Base):
     __tablename__ = "apisensitiveinfo"
     __table_args__ = {"schema": "noshow"}
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, init=False)
+    patient_id: Mapped[str] = mapped_column(String(64), primary_key=True, index=True)
     full_name: Mapped[str]
     first_name: Mapped[str] = mapped_column(String, nullable=True)
+    birth_date: Mapped[date] = mapped_column(Date, nullable=True)
     mobile_phone: Mapped[str] = mapped_column(String, nullable=True)
     home_phone: Mapped[str] = mapped_column(String, nullable=True)
     other_phone: Mapped[str] = mapped_column(String, nullable=True)
-    clinic_reception: Mapped[str]
-    clinic_phone_number: Mapped[str]
-    prediction_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey(ApiPrediction.id), init=False
-    )
 
 
 class ApiCallResponse(Base):
@@ -69,6 +66,4 @@ class ApiCallResponse(Base):
     call_status: Mapped[str]
     call_outcome: Mapped[str]
     remarks: Mapped[str]
-    prediction_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey(ApiPrediction.id), init=False
-    )
+    prediction_id: Mapped[int] = mapped_column(Integer, ForeignKey(ApiPrediction.id))
