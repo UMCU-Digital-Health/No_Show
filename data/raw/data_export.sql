@@ -4,10 +4,11 @@ SELECT
        ,CONVERT(VARCHAR(64), HASHBYTES('SHA2_256', CONCAT([Appointment].[participant_actor_Patient_value], 'noshow')), 2) AS pseudo_id
        ,[HealthcareService].[specialty_code]
        ,[HealthcareService].[specialty_display]
-       ,[Poliklinisch_Consult].[soort_consult]
+       ,[Poliklinisch].[soort_consult]
+       ,[Poliklinisch].[poli_ident]
        ,[Appointment].[start]
        ,[Appointment].[end]
-       ,[Poliklinisch_Consult].[gearriveerd]
+       ,[Poliklinisch].[gearriveerd]
        ,[Appointment].[created]
        ,[Appointment].[minutesDuration]
        ,[Appointment].[status]
@@ -19,11 +20,18 @@ SELECT
        ,Location.name
        ,Location.[description]
 FROM [DWH].[models].[HealthcareService] JOIN [DWH].[models].[Appointment] ON Appointment.participant_actor_HealthcareService_value = HealthcareService.identifier_value
-    JOIN [DWH].[models].Poliklinisch_Consult ON Appointment.identifier_value = Poliklinisch_Consult.afspraak_identifier_value
+    JOIN (
+        SELECT pc.afspraak_identifier_value, pc.polibalie_locatie_identifier_system, pc.polibalie_locatie_identifier_value, pc.soort_consult, pc.gearriveerd, pc.afspraak_zonder_patient, 'Consult' as poli_ident
+        FROM [DWH].[models].Poliklinisch_Consult pc
+        UNION
+        SELECT pv.afspraak_identifier_value, pv.polibalie_locatie_identifier_system, pv.polibalie_locatie_identifier_value, pv.soort_consult, pv.gearriveerd, pv.afspraak_zonder_patient, 'Verrichting' as poli_ident
+        FROM [DWH].[models].Poliklinisch_Verrichting pv
+    ) Poliklinisch
+    ON Appointment.identifier_value = Poliklinisch.afspraak_identifier_value
     JOIN [DWH].[models].Patient ON [Appointment].[participant_actor_Patient_value] = Patient.identifier_value
     JOIN [DWH].[models].[Patient_Address] ON [Patient].[identifier_value] = [Patient_Address].[parent_identifier_value] 
         AND [Appointment].[created] BETWEEN [Patient_Address].[address_period_start] AND [Patient_Address].[address_period_end]
-    LEFT JOIN DWH.models.Location ON Poliklinisch_Consult.polibalie_locatie_identifier_system = [Location].identifier_system AND Poliklinisch_Consult.polibalie_locatie_identifier_value = Location.identifier_value
+    LEFT JOIN DWH.models.Location ON Poliklinisch.polibalie_locatie_identifier_system = [Location].identifier_system AND Poliklinisch.[polibalie_locatie_identifier_value] = Location.identifier_value
 WHERE 1 = 1
     AND afspraak_zonder_patient <> 1
     AND [Appointment].[created] >= CONVERT(DATE, '2015-01-01')

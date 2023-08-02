@@ -78,6 +78,7 @@ def select_feature_columns(featuretable: pd.DataFrame) -> pd.DataFrame:
             "appointments_last_days",
             "days_since_created",
             "days_since_last_appointment",
+            "poli_ident",
         ]
     ]
 
