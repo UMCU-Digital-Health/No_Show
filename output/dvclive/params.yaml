@@ -1,2 +1,2 @@
 model_name: RandomForestClassifier()
-classifier__n_estimators: 100
+classifier__n_estimators: 200

@@ -1,45 +1,56 @@
-SELECT
-    [HealthcareService].[identifier_value] AS HCS_ID
-       ,[Appointment].[identifier_value] AS APP_ID
-       ,CONVERT(VARCHAR(64), HASHBYTES('SHA2_256', CONCAT([Appointment].[participant_actor_Patient_value], 'noshow')), 2) AS pseudo_id
-       ,[HealthcareService].[specialty_code]
-       ,[HealthcareService].[specialty_display]
-       ,[Poliklinisch].[soort_consult]
-       ,[Poliklinisch].[poli_ident]
-       ,[Appointment].[start]
-       ,[Appointment].[end]
-       ,[Poliklinisch].[gearriveerd]
-       ,[Appointment].[created]
-       ,[Appointment].[minutesDuration]
-       ,[Appointment].[status]
-       ,[Appointment].[status_code_original]
-       ,[Appointment].[cancelationReason_code]
-       ,[Appointment].[cancelationReason_display]
-       ,YEAR([Patient].[birthDate]) as BIRTH_YEAR
-       ,address_postalCodeNumbersNL
-       ,Location.name
-       ,Location.[description]
-FROM [DWH].[models].[HealthcareService] JOIN [DWH].[models].[Appointment] ON Appointment.participant_actor_HealthcareService_value = HealthcareService.identifier_value
-    JOIN (
-        SELECT pc.afspraak_identifier_value, pc.polibalie_locatie_identifier_system, pc.polibalie_locatie_identifier_value, pc.soort_consult, pc.gearriveerd, pc.afspraak_zonder_patient, 'Consult' as poli_ident
-        FROM [DWH].[models].Poliklinisch_Consult pc
-        UNION
-        SELECT pv.afspraak_identifier_value, pv.polibalie_locatie_identifier_system, pv.polibalie_locatie_identifier_value, pv.soort_consult, pv.gearriveerd, pv.afspraak_zonder_patient, 'Verrichting' as poli_ident
-        FROM [DWH].[models].Poliklinisch_Verrichting pv
-    ) Poliklinisch
-    ON Appointment.identifier_value = Poliklinisch.afspraak_identifier_value
-    JOIN [DWH].[models].Patient ON [Appointment].[participant_actor_Patient_value] = Patient.identifier_value
-    JOIN [DWH].[models].[Patient_Address] ON [Patient].[identifier_value] = [Patient_Address].[parent_identifier_value] 
-        AND [Appointment].[created] BETWEEN [Patient_Address].[address_period_start] AND [Patient_Address].[address_period_end]
-    LEFT JOIN DWH.models.Location ON Poliklinisch.polibalie_locatie_identifier_system = [Location].identifier_system AND Poliklinisch.[polibalie_locatie_identifier_value] = Location.identifier_value
-WHERE 1 = 1
-    AND afspraak_zonder_patient <> 1
-    AND [Appointment].[created] >= CONVERT(DATE, '2015-01-01')
-    AND [Appointment].[created] <= CONVERT(DATE, '2023-05-16')
-    AND [Appointment].[status] <> 'booked'
-    AND [Location].[name] IN (
-        'UG', 'AAV', 'AZ', 'BN', 'BF', 'ABG', 'BE', 'BO',  'EG', 'BG', --afdeling longziekten
-        'MA', 'MB', -- Sport & revalidatie
-        'WQ', 'WY', 'WV', 'WW', 'WL', 'W12', 'WS', 'K1', 'K5', 'W1', 'WP', 'W2', 'KW', 'WM', 'W#', 'W*', 'WR', 'W4' --WKZ
+SELECT C.identifier_value AS APP_ID
+    ,CONVERT(VARCHAR(64), HASHBYTES('SHA2_256', CONCAT(F.identifier_value, 'noshow')), 2) AS pseudo_id
+    ,B.[name] AS hoofdagenda
+    ,A.specialty_code
+    ,D.type1_display AS soort_consult
+    ,D.type1_code
+    ,C.[start]
+    ,C.[end]
+    ,D.[statusHistory2_period_start] AS gearriveerd
+    ,C.[created]
+    ,C.[minutesDuration]
+    ,C.[status]
+    ,C.[status_code_original]
+    ,C.[cancelationReason_code]
+    ,C.[cancelationReason_display]
+    ,YEAR(F.[birthDate]) as BIRTH_YEAR
+    ,G.[address_postalCodeNumbersNL]
+    ,E.[name]
+    ,E.[description]
+FROM [DWH].[models].[HealthcareService] A JOIN [DWH].[models].[HealthcareService] B 
+        ON A.partOf_HealthcareService_value = B.identifier_value AND A.partOf_HealthcareService_system = B.identifier_system
+    JOIN [DWH].[models].[Appointment] C 
+        ON C.participant_actor_HealthcareService_value = A.identifier_value AND C.participant_actor_HealthcareService_system = A.identifier_system
+    JOIN [DWH].[models].Encounter D 
+        ON D.appointment_Appointment_system = C.identifier_system AND D.appointment_Appointment_value = C.identifier_value
+    JOIN [DWH].[models].Location E 
+        ON D.location_Location_system = E.identifier_system AND D.location_Location_value = E.identifier_value
+    JOIN [DWH].[models].[Patient] F 
+        ON C.[participant_actor_Patient_value] = F.identifier_value
+    LEFT JOIN [DWH].[models].[Patient_Address] G 
+        ON G.[parent_identifier_value] = F.identifier_value 
+WHERE 1=1
+    AND A.active = 1
+    AND A.identifier_value NOT IN (
+        '025224',  -- Behandelaar CMH
+        '028512',  -- Lab longziekten
+        'S00837'   -- Sylvia Toth centrum
     )
-    AND [soort_consult] NOT IN ('Telefonisch', 'Screen to screen', 'E-Mail')
+    AND B.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgenda'
+    AND B.active = 1
+    AND B.identifier_value IN (
+        'A00014', 'A00030', 'A00035', 'A00036',  -- Poli Rood
+        'A00006',  -- Longziekten
+        'A20150')  -- Revalidatie en sport
+    AND C.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
+    AND C.created >= '2015-01-01'
+    AND C.created <= '2023-05-16'
+    AND C.status <> 'booked'
+    AND D.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
+    AND D.type2_code NOT IN ('T', 'S', 'M')
+    AND D.type1_code NOT LIKE 'STS%'
+    AND D.type1_code NOT LIKE 'TC%'
+    AND D.without_patient <> 1
+    AND E.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixLocatie'
+    AND G.address_active = 1
+ORDER BY B.name, A.name, C.start

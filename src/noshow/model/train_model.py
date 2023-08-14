@@ -82,7 +82,7 @@ def train_cv_model(
             scoring=["roc_auc", "precision", "recall"],
             verbose=2,
             refit="roc_auc",
-            n_jobs=3,
+            n_jobs=5,
         )
         grid.fit(X_train, y_train, groups=train_groups)
 
@@ -116,5 +116,5 @@ if __name__ == "__main__":
         featuretable=featuretable,
         output_path=project_folder / "output",
         classifier=RandomForestClassifier(),
-        param_grid={"classifier__n_estimators": [100]},
+        param_grid={"classifier__n_estimators": [100, 200]},
     )
