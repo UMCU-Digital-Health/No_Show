@@ -65,7 +65,6 @@ def select_feature_columns(featuretable: pd.DataFrame) -> pd.DataFrame:
         [
             "hour",
             "weekday",
-            "specialty_code",
             "minutesDuration",
             "no_show",
             "prev_no_show",

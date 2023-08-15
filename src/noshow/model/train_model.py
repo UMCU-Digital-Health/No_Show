@@ -4,13 +4,9 @@ from typing import Dict, Union
 
 import pandas as pd
 from dvclive import Live
-from imblearn.over_sampling import SMOTE
-from imblearn.pipeline import Pipeline
 from sklearn.base import BaseEstimator
-from sklearn.compose import ColumnTransformer
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.model_selection import GridSearchCV, StratifiedGroupKFold, train_test_split
-from sklearn.preprocessing import OneHotEncoder
 
 
 def train_cv_model(
@@ -45,53 +41,28 @@ def train_cv_model(
     with Live(
         save_dvc_exp=save_dvc_exp, dir=str(Path(output_path) / "dvclive")
     ) as live:
-        oversampler = SMOTE()
-
-        # Define the categorical columns in your feature matrix
-        categorical_cols = [col for col in X.columns if X[col].dtype == "object"]
-        num_cols = [col for col in X.columns if X[col].dtype != "object"]
-
-        # Define the preprocessor pipeline for the categorical columns
-        preprocessor = ColumnTransformer(
-            transformers=[
-                ("num", "passthrough", num_cols),
-                (
-                    "cat",
-                    OneHotEncoder(handle_unknown="ignore", max_categories=15),
-                    categorical_cols,
-                ),
-            ]
-        )
-
         # Define the final pipeline with preprocessor and random forest classifier
-        pipeline = Pipeline(
-            steps=[
-                ("preprocessor", preprocessor),
-                ("smotesampling", oversampler),
-                ("classifier", classifier),
-            ]
-        )
 
         cv = StratifiedGroupKFold()
 
         # Train the pipeline on the training data
         grid = GridSearchCV(
-            pipeline,
+            classifier,
             param_grid=param_grid,
             cv=cv,
             scoring=["roc_auc", "precision", "recall"],
             verbose=2,
             refit="roc_auc",
-            n_jobs=3,
+            n_jobs=5,
         )
         grid.fit(X_train, y_train, groups=train_groups)
 
-        y_pred = grid.best_estimator_.predict_proba(X_test)
+        y_pred = grid.best_estimator_.predict_proba(X_test)  # type: ignore
 
         live.log_sklearn_plot("roc", y_test, y_pred[:, 1])
         live.log_sklearn_plot("calibration", y_test, y_pred[:, 1])
         live.log_sklearn_plot("precision_recall", y_test, y_pred[:, 1])
-        live.log_param("model_name", str(pipeline[-1]))
+        live.log_param("model_name", str(classifier))
         live.log_params(grid.best_params_)
         live.log_metric("best_score", grid.best_score_)
         live.log_metric(
@@ -115,6 +86,8 @@ if __name__ == "__main__":
     best_model = train_cv_model(
         featuretable=featuretable,
         output_path=project_folder / "output",
-        classifier=RandomForestClassifier(),
-        param_grid={"classifier__n_estimators": [100]},
+        classifier=HistGradientBoostingClassifier(
+            learning_rate=0.05,
+        ),
+        param_grid={"max_iter": [100, 200, 300]},
     )

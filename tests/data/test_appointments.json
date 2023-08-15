@@ -1,6 +1,5 @@
 [
     {
-        "HCS_ID": "1234",
         "APP_ID": "5678",
         "pseudo_id": "1ch5k",
         "specialty_code": "REV",
@@ -27,7 +26,6 @@
         "telecom3_value": "0682946728"
     },   
     {
-        "HCS_ID": "1235",
         "APP_ID": "5679",
         "pseudo_id": "1ch5k",
         "specialty_code": "REV",
@@ -54,7 +52,6 @@
         "telecom3_value": "0682946728"
     },
     {
-        "HCS_ID": "1235",
         "APP_ID": "5680",
         "pseudo_id": "1ch5k",
         "specialty_code": "REV",
@@ -81,7 +78,6 @@
         "telecom3_value": "0682946728"
     },
     {
-        "HCS_ID": "1236",
         "APP_ID": "5670",
         "pseudo_id": "89t43",
         "specialty_code": "SPO",
@@ -108,7 +104,6 @@
         "telecom3_value": null
     },
     {
-        "HCS_ID": "1236",
         "APP_ID": "5671",
         "pseudo_id": "89t43",
         "specialty_code": "SPO",

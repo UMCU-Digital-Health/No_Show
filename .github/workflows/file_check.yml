@@ -14,7 +14,7 @@ jobs:
     - name: LFS-warning
       uses: ppremk/lfs-warning@v3.2
       with:
-        filesizelimit: 1MB
+        filesizelimit: 2MB
         token: ${{ secrets.GITHUB_TOKEN }}
     - name: Ensure Clean Jupyter Notebooks
       uses: ResearchSoftwareActions/EnsureCleanNotebooksAction@1.1

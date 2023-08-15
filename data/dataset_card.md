@@ -26,7 +26,6 @@ The input data for the prediction is structured as follows:
 
 ```{json}
 {
-  "HCS_ID": "1234",
   "APP_ID": "5678",
   "pseudo_id": "1ch5k",
   "specialty_code": "REV",
@@ -59,7 +58,6 @@ Every observation contains all the information of a single appointment. When pre
 
 Below you can find the datafields present in the dataset. The datafields are the result of running the query on the dataplatform, most of the fields are the names from the columns in the data platform, some are changed in the query (like `HCS_ID`):
 
-- `HCS_ID`: string with the identifier of the HealthCareService
 - `APP_ID`: string with the identifier of the Appointment
 - `pseudo_id`: string of the hashed patient id
 - `specialty_code`: string with the specialty code of the HealthCareService, for this pilot: REV, KAP, SPO, LON
