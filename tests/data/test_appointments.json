@@ -1,6 +1,5 @@
 [
     {
-        "HCS_ID": "1234",
         "APP_ID": "5678",
         "pseudo_id": "1ch5k",
         "specialty_code": "REV",
@@ -20,7 +19,6 @@
         "address_postalCodeNumbersNL": 3994,
         "name": "B3",
         "description": "receptie op b3",
-        "poli_ident": "Consult",
         "name_text": "F. Onderbuik",
         "name_given1_callMe": "Fred",
         "telecom1_value": "0673948271",
@@ -28,7 +26,6 @@
         "telecom3_value": "0682946728"
     },   
     {
-        "HCS_ID": "1235",
         "APP_ID": "5679",
         "pseudo_id": "1ch5k",
         "specialty_code": "REV",
@@ -48,7 +45,6 @@
         "address_postalCodeNumbersNL": 3994,
         "name": "B3",
         "description": "receptie op b3",
-        "poli_ident": "Consult",
         "name_text": "F. Onderbuik",
         "name_given1_callMe": "Fred",
         "telecom1_value": "0673948271",
@@ -56,7 +52,6 @@
         "telecom3_value": "0682946728"
     },
     {
-        "HCS_ID": "1235",
         "APP_ID": "5680",
         "pseudo_id": "1ch5k",
         "specialty_code": "REV",
@@ -76,7 +71,6 @@
         "address_postalCodeNumbersNL": 3994,
         "name": "B3",
         "description": "receptie op b3",
-        "poli_ident": "Consult",
         "name_text": "F. Onderbuik",
         "name_given1_callMe": "Fred",
         "telecom1_value": "0673948271",
@@ -84,7 +78,6 @@
         "telecom3_value": "0682946728"
     },
     {
-        "HCS_ID": "1236",
         "APP_ID": "5670",
         "pseudo_id": "89t43",
         "specialty_code": "SPO",
@@ -104,7 +97,6 @@
         "address_postalCodeNumbersNL": 2034,
         "name": "Q5",
         "description": "receptie op Q5",
-        "poli_ident": "Consult",
         "name_text": "C. Kent",
         "name_given1_callMe": "Clark",
         "telecom1_value": "0683726384",
@@ -112,7 +104,6 @@
         "telecom3_value": null
     },
     {
-        "HCS_ID": "1236",
         "APP_ID": "5671",
         "pseudo_id": "89t43",
         "specialty_code": "SPO",
@@ -132,7 +123,6 @@
         "address_postalCodeNumbersNL": 2034,
         "name": "Q5",
         "description": "receptie op Q5",
-        "poli_ident": "Consult",
         "name_text": "C. Kent",
         "name_given1_callMe": "Clark",
         "telecom1_value": "0683726384",
