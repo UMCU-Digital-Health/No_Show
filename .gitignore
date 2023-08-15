@@ -16,6 +16,7 @@ rsconnect-python/
 
 # DVClive report
 output/dvclive/report.html
+output/dvclive/plots/sklearn/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
