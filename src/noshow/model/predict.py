@@ -27,30 +27,27 @@ def create_prediction(
             (slice(None), slice(prediction_start_date, None)), :
         ]
     featuretable = select_feature_columns(featuretable)
+    featuretable = featuretable.drop(columns="no_show")
 
     prediction_probs: np.ndarray = model.predict_proba(featuretable)
     prediction_df = pd.DataFrame(
         prediction_probs[:, 1], index=featuretable.index, columns=["prediction"]
     )
     if add_sensitive_info:
-        app_ids = appointments_df["APP_ID"].drop_duplicates()
-        sensitive_info = (
-            appointments_df[
-                [
-                    "name_text",
-                    "name_given1_callMe",
-                    "telecom1_value",
-                    "telecom2_value",
-                    "telecom3_value",
-                    "name",
-                    "description",
-                    "birthDate",
-                ]
+        sensitive_info = appointments_df[
+            [
+                "APP_ID",
+                "name_text",
+                "name_given1_callMe",
+                "telecom1_value",
+                "telecom2_value",
+                "telecom3_value",
+                "name",
+                "description",
+                "birthDate",
             ]
-            .droplevel(level="start")
-            .drop_duplicates()
-        )
-        prediction_df = prediction_df.join(sensitive_info).join(app_ids)
+        ]
+        prediction_df = prediction_df.join(sensitive_info)
     return prediction_df
 
 
