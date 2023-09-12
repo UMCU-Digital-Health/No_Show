@@ -1,8 +1,8 @@
 import configparser
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI
@@ -58,7 +58,7 @@ def get_db():
 
 @app.post("/predict")
 async def predict(
-    input: List[Dict], start_date: str, db: Session = Depends(get_db)
+    input: List[Dict], start_date: Optional[str] = None, db: Session = Depends(get_db)
 ) -> List[Dict]:
     """
     Predict the probability of a patient having a no-show.
@@ -67,12 +67,23 @@ async def predict(
     ----------
     input : List[Dict[str, str]]
         List of dictionaries containing the input data of a single patient.
+    start_date: Optional[str]
+        Start date of predictions, predictions will be made from that date,
+        by default the date in 3 days (of after the weekend)
 
     Returns
     -------
     Dict[str, Any]
         Prediction output in FHIR format
     """
+    if start_date is None:
+        start_date_dt = datetime.today() + timedelta(days=3)
+        if start_date_dt.weekday() == 5:
+            start_date_dt = start_date_dt + timedelta(days=2)
+        if start_date_dt.weekday() == 6:
+            start_date_dt = start_date_dt + timedelta(days=1)
+        start_date = start_date_dt.strftime(r"%Y-%m-%d")
+
     project_path = Path(__file__).parents[3]
     start_time = datetime.now()
 
