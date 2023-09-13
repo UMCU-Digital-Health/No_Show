@@ -36,7 +36,7 @@ def fake_model(_=None):
 
 def datetime_to_float(date_str, include_time):
     format = r"%Y-%m-%dT%H:%M:%S" if include_time else r"%Y-%m-%d"
-    return datetime.strptime(date_str, format).timestamp() * 1000
+    return datetime.strptime(date_str, format).timestamp() * 1000  # timestamp in ms
 
 
 def fake_appointments(float_date: bool = False) -> List[Dict]:

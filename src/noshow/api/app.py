@@ -5,7 +5,8 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException, Security
+from fastapi.security.api_key import APIKeyHeader
 from sqlalchemy import create_engine, delete
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -46,6 +47,8 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL, execution_options=execution_opti
 Base.metadata.create_all(engine)
 SessionLocal = sessionmaker(bind=engine)
 
+api_key_header = APIKeyHeader(name="X-API-KEY", auto_error=False)
+
 
 def get_db():
     try:
@@ -56,9 +59,19 @@ def get_db():
         print(e)
 
 
+def get_api_key(api_key_header: str = Security(api_key_header)) -> str:
+    if api_key_header == os.getenv("X_API_KEY", ""):
+        return api_key_header
+    else:
+        raise HTTPException(403, "Unauthorized, Api Key not valid")
+
+
 @app.post("/predict")
 async def predict(
-    input: List[Dict], start_date: Optional[str] = None, db: Session = Depends(get_db)
+    input: List[Dict],
+    start_date: Optional[str] = None,
+    db: Session = Depends(get_db),
+    api_key: str = Depends(get_api_key),
 ) -> List[Dict]:
     """
     Predict the probability of a patient having a no-show.
