@@ -82,7 +82,7 @@ async def predict(
         List of dictionaries containing the input data of a single patient.
     start_date: Optional[str]
         Start date of predictions, predictions will be made from that date,
-        by default the date in 3 days (of after the weekend)
+        by default the date in 3 weekdays (i.e. excluding the weekend)
 
     Returns
     -------
