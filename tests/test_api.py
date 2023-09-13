@@ -27,7 +27,7 @@ class FakeDB(Session):
 
 @pytest.mark.asyncio
 async def test_predict_endpoint(monkeypatch):
-    appointments_json = fake_appointments()
+    appointments_json = fake_appointments(float_date=True)
     monkeypatch.setattr(app, "process_postal_codes", fake_postal_codes)
     monkeypatch.setattr(app, "load_model", fake_model)
     monkeypatch.setattr(app, "delete", lambda x: x)

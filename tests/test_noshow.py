@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, List
 
@@ -33,7 +34,24 @@ def fake_model(_=None):
     return FakeModel()
 
 
-def fake_appointments() -> List[Dict]:
+def datetime_to_float(date_str, include_time):
+    format = r"%Y-%m-%dT%H:%M:%S" if include_time else r"%Y-%m-%d"
+    return datetime.strptime(date_str, format).timestamp() * 1000  # timestamp in ms
+
+
+def fake_appointments(float_date: bool = False) -> List[Dict]:
     with open(Path(__file__).parent / "data" / "test_appointments.json", "r") as f:
         appointments_json = json.load(f)
+    if float_date:
+        for idx, row in enumerate(appointments_json):
+            appointments_json[idx]["start"] = datetime_to_float(row["start"], True)
+            appointments_json[idx]["end"] = datetime_to_float(row["end"], True)
+            if appointments_json[idx]["gearriveerd"] is not None:
+                appointments_json[idx]["gearriveerd"] = datetime_to_float(
+                    row["gearriveerd"], True
+                )
+            appointments_json[idx]["birthDate"] = datetime_to_float(
+                row["birthDate"], False
+            )
+            appointments_json[idx]["created"] = datetime_to_float(row["created"], True)
     return appointments_json
