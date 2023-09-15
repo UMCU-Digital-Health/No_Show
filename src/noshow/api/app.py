@@ -1,6 +1,6 @@
 import configparser
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -18,6 +18,7 @@ from noshow.preprocessing.load_data import (
     process_appointments,
     process_postal_codes,
 )
+from noshow.preprocessing.utils import add_working_days
 
 load_dotenv()
 
@@ -90,11 +91,7 @@ async def predict(
         Prediction output in FHIR format
     """
     if start_date is None:
-        start_date_dt = datetime.today() + timedelta(days=3)
-        if start_date_dt.weekday() == 5:
-            start_date_dt = start_date_dt + timedelta(days=2)
-        if start_date_dt.weekday() == 6:
-            start_date_dt = start_date_dt + timedelta(days=1)
+        start_date_dt = add_working_days(datetime.today(), 3)
         start_date = start_date_dt.strftime(r"%Y-%m-%d")
 
     project_path = Path(__file__).parents[3]

@@ -1,15 +1,16 @@
-DECLARE @today DATE = GETDATE();
-
--- Calculate the date range of 3 to 10 days from now
-DECLARE @start_date DATE = DATEADD(DAY, 3, @today);
-
--- If the @start_date falls on a weekend, adjust it to the next weekday
-WHILE DATEPART(WEEKDAY, @start_date) IN (1, 7) -- 1: Sunday, 7: Saturday
-BEGIN
-    SET @start_date = DATEADD(DAY, 1, @start_date); -- Add 1 day to make it the next day
-END
-
+DECLARE @start_date DATE = GETDATE();
 DECLARE @end_date DATE = DATEADD(DAY, 14, @start_date);
+DECLARE @num_days INT = 3;
+
+-- Calculate the date in 3 working days (excluding weekends)
+WHILE @num_days > 0
+BEGIN
+    SET @start_date = DATEADD(DAY, 1, @start_date);
+    IF DATEPART(WEEKDAY, @start_date) NOT IN (1, 7)
+    BEGIN
+        SET @num_days = @num_days - 1;
+    END
+END
 
 -- Main Query
 SELECT C.identifier_value AS APP_ID
