@@ -1,9 +1,9 @@
-import configparser
 import os
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
 
+import tomli
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, Security
 from fastapi.security.api_key import APIKeyHeader
@@ -24,9 +24,9 @@ load_dotenv()
 
 app = FastAPI()
 
-config = configparser.ConfigParser()
-config.read(Path(__file__).parents[3] / "setup.cfg")
-API_VERSION = config["api"]["version"]
+with open(Path(__file__).parents[3] / "pyproject.toml", "rb") as f:
+    config = tomli.load(f)
+API_VERSION = config["project"]["version"]
 
 DB_USER = os.getenv("DB_USER", "")
 DB_PASSWD = os.getenv("DB_PASSWD", "")
