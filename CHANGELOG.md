@@ -13,4 +13,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - API version is now based on package version from pyproject.toml instead of having a seperate value in setup.cfg
 
 ### Fixed
-- Calculating the day in x working days now works as expected/ Previously it was calculated by adding x days and skipping the weekend, but this results in never calling for appointments on Monday-Wednesday. 
+- Calculating the day in x working days now works as expected. Previously it was calculated by adding x days and skipping the weekend, but this results in never calling for appointments on Monday-Wednesday. Now working days are calculated correctly (e.g. 3 working days from Thursday is Tuesday).
