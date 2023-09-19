@@ -14,7 +14,12 @@ from noshow.dashboard.helper import (
     next_preds,
     previous_preds,
 )
-from noshow.database.models import ApiCallResponse, ApiPrediction, ApiSensitiveInfo
+from noshow.database.models import (
+    ApiCallResponse,
+    ApiPrediction,
+    ApiRequest,
+    ApiSensitiveInfo,
+)
 from noshow.preprocessing.utils import add_working_days
 
 load_dotenv()
@@ -66,8 +71,10 @@ def main():
                 ApiPrediction.clinic_reception,
                 ApiPrediction.clinic_phone_number,
                 ApiCallResponse.call_status,
+                ApiRequest.timestamp,
             )
             .outerjoin(ApiPrediction.callresponse_relation)
+            .outerjoin(ApiPrediction.request_relation)
             .where(ApiPrediction.start_time >= date_input)
             .where(
                 ApiPrediction.patient_id == patient_ids[st.session_state["name_idx"]]
@@ -75,6 +82,8 @@ def main():
             .order_by(ApiPrediction.start_time)
         ).all()
     all_predictions_df = pd.DataFrame(patient_predictions)
+    last_updated = max(all_predictions_df["timestamp"])
+    all_predictions_df = all_predictions_df.drop(columns="timestamp")
     all_predictions_df.loc[
         all_predictions_df["call_status"] == "Gebeld", "call_status"
     ] = "🟢"
@@ -152,6 +161,8 @@ def main():
         "Vorige",
         on_click=previous_preds,
     )
+    st.divider()
+    st.write(f"Laatste update: {last_updated:%Y-%m-%d %H:%M:%S}")
 
 
 if __name__ == "__main__":

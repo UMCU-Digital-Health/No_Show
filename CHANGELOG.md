@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The top-n returned predictions are now based on top-n unique patients, not individual appointments
 - Added clinic name and clinic phone number to api
 - Dashboard now shows clinic name and the patient index
+- Dashboard now displays the timestamp of the last API request per patient per day
 
 ### Fixed
 - Dashboard no longer crashes when trying to display non-existing sensitive patient info. It now shows a message, while still displaying the (anonymized) appointments.
