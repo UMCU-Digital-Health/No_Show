@@ -2,7 +2,7 @@ from datetime import date
 from typing import List
 
 import streamlit as st
-from sqlalchemy import Date, create_engine, select
+from sqlalchemy import Date, create_engine, func, select
 from sqlalchemy.orm import Session, sessionmaker
 
 from noshow.database.models import ApiPrediction
@@ -38,7 +38,7 @@ def init_session(user: str, passwd: str, host: str, port: str, db: str) -> sessi
 
 
 @st.cache_data(ttl=600)
-def get_patient_list(_session: Session, date_input: date) -> List[str]:
+def get_patient_list(_session: Session, date_input: date, top_n: int = 20) -> List[str]:
     """Get the patient list ordered by prediction
 
     This function returns a list of patient ids who need to be called
@@ -48,7 +48,11 @@ def get_patient_list(_session: Session, date_input: date) -> List[str]:
     _session : Session
         Session object used to query the database
     date_input : date
-        The day of the appointments we're calling for (generally today +3)
+        The day of the appointments we're calling for
+        (generally today +3 working days)
+    top_n : int
+        The number of patients to return, ordered by their maximum
+        prediction.
 
     Returns
     -------
@@ -56,11 +60,11 @@ def get_patient_list(_session: Session, date_input: date) -> List[str]:
         List of unique patient ids, sorted by prediction
     """
     call_list = _session.execute(
-        select(ApiPrediction.id, ApiPrediction.patient_id, ApiPrediction.prediction)
+        select(ApiPrediction.patient_id, func.max(ApiPrediction.prediction))
         .where(ApiPrediction.start_time.cast(Date) == date_input)
-        .order_by(ApiPrediction.prediction.desc())
-        .limit(20)
+        .group_by(ApiPrediction.patient_id)
+        .order_by(func.max(ApiPrediction.prediction).desc())
+        .limit(top_n)
     ).all()
     patient_ids = [x.patient_id for x in call_list]
-    patient_ids = list(dict.fromkeys(patient_ids))
     return patient_ids

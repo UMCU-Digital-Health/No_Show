@@ -41,13 +41,16 @@ def main():
         date_input = st.date_input(
             "Voor welke dag wil je bellen (standaard over 3 dagen)", date_3_days
         )
+        number_patients_input = int(
+            st.number_input("Hoeveel patienten wil je bellen?", 5, 50, 20)
+        )
 
     if not date_input:
         return None
     date_input = cast(date, date_input)
     Session = init_session(db_user, db_passwd, db_host, db_port, db_database)
     with Session() as session:
-        patient_ids = get_patient_list(session, date_input)
+        patient_ids = get_patient_list(session, date_input, number_patients_input)
         if not patient_ids:
             st.header(f"Geen afspraken op {date_input}")
             return None
@@ -68,8 +71,8 @@ def main():
             .where(
                 ApiPrediction.patient_id == patient_ids[st.session_state["name_idx"]]
             )
+            .order_by(ApiPrediction.start_time)
         ).all()
-
     all_predictions_df = pd.DataFrame(patient_predictions)
     all_predictions_df.loc[
         all_predictions_df["call_status"] == "Gebeld", "call_status"

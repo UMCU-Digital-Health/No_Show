@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.3] - 2023-09-19
+
+### Changed
+- Predictions in the dashboard are now sorted by date
+- The top-n returned predictions are now based on top-n unique patients, not individual appointments
+
 ## [1.1.2] - 2023-09-18
 
 ### Changed
