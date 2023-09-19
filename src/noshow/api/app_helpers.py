@@ -19,8 +19,14 @@ def add_clinic_phone(clinic_name: str) -> str:
     if clinic_name == "Revalidatie & Sport":
         return "58831"
     elif clinic_name == "Longziekten":
-        return "56192"  # TODO: different numbers
-    elif clinic_name.startswith("Kind-"):
-        return "54070"
+        return "56192"
+    elif clinic_name == "Kind-KNO":
+        return "54902"
+    elif clinic_name == "Kind-Neurologie":
+        return "67370"
+    elif clinic_name == "Kind-Orthopedie":
+        return "67470"
+    elif clinic_name == "Kind-Plastische chirurgie":
+        return "53594"
     else:
         return ""
