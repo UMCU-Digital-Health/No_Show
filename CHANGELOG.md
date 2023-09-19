@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Predictions in the dashboard are now sorted by date
 - The top-n returned predictions are now based on top-n unique patients, not individual appointments
+- Added clinic name and clinic number to api
 
 ## [1.1.2] - 2023-09-18
 

@@ -33,4 +33,4 @@ async def test_predict_endpoint(monkeypatch):
     monkeypatch.setattr(app, "delete", lambda x: x)
     output = await predict(appointments_json, "2023-01-05", FakeDB())
     output_df = pd.DataFrame(output)
-    assert output_df.shape == (4, 13)
+    assert output_df.shape == (4, 14)

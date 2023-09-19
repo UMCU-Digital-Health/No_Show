@@ -35,6 +35,7 @@ class ApiPrediction(Base):
     patient_id: Mapped[str] = mapped_column(String(64), index=True)
     prediction: Mapped[float] = mapped_column(Float, nullable=True)
     start_time: Mapped[datetime] = mapped_column(DateTime, index=True)
+    clinic_name: Mapped[str]
     clinic_reception: Mapped[str]
     clinic_phone_number: Mapped[str]
     request_id: Mapped[int] = mapped_column(

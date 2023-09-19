@@ -13,3 +13,14 @@ def load_model(model_path: Union[str, Path, None] = None) -> Any:
         model = pickle.load(f)
 
     return model
+
+
+def add_clinic_phone(clinic_name: str) -> str:
+    if clinic_name == "Revalidatie en Sport":
+        return "58831"
+    elif clinic_name == "Longziekten":
+        return "56192"  # TODO: different numbers
+    elif clinic_name.startswith("Kind-"):
+        return "54070"
+    else:
+        return ""
