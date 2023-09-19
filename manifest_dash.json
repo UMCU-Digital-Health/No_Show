@@ -27,16 +27,16 @@
       "checksum": "34659c119a2634fe318cd6a4822df435"
     },
     ".gitignore": {
-      "checksum": "f9168b7308d17055278fd750ed5b7a31"
+      "checksum": "9e6e5cb308f057e261eeaabfaaae8bf7"
     },
     ".streamlit/config.toml": {
       "checksum": "99594759045ead1f8535775e35169a3d"
     },
     "README.md": {
-      "checksum": "6beeb637238cc9a8f1896000c45c5662"
+      "checksum": "850345cd576a970a52c28968585f74ff"
     },
     "data/dataset_card.md": {
-      "checksum": "40bc5549276a4614e32622efa851a5cc"
+      "checksum": "6fdbb18f092a686b8b8fb64b6f06df6d"
     },
     "data/processed/.gitkeep": {
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
@@ -51,13 +51,13 @@
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
     "data/raw/poliafspraken_no_show.csv.dvc": {
-      "checksum": "f28c72b44544c99d0c9a6645f460669b"
+      "checksum": "072468ed1a6b4834814eb9a1d15f3e0e"
     },
     "deploy.sh": {
-      "checksum": "f9799b89dae7656d5db366fb22855eba"
+      "checksum": "21971b0584e7574dea4fa31a9b562930"
     },
     "dvc.lock": {
-      "checksum": "3291dd1eca25cb9f6e93d4123141847b"
+      "checksum": "4e5ac1fb176f5653db3a15b3875832b4"
     },
     "dvc.yaml": {
       "checksum": "a533dd40bbbf5fe7a2e80fe3290d6e85"
@@ -72,16 +72,16 @@
       "checksum": "290e9baa6c274e8e68c487d03bbc3813"
     },
     "run/calling_dash.py": {
-      "checksum": "8ec337bdbc3ceda0dac3d8e40d5d62e6"
+      "checksum": "a734f0ab0b681c9a2a2607e31fa5595d"
     },
     "setup.cfg": {
-      "checksum": "3817bbc60ff220a4c47a743d75574fc5"
+      "checksum": "44b6163b15f3d4f4f93d957443134a86"
     },
     "src/noshow/__init__.py": {
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
     "src/noshow/api/app.py": {
-      "checksum": "43673afdc5c544d7cbaf2eb8b7ea11c2"
+      "checksum": "5f16181cad874d32e72f1233fbb40cd6"
     },
     "src/noshow/api/app_helpers.py": {
       "checksum": "a23a82c73c04c1101f5bd0f8692c5a3d"
@@ -108,7 +108,7 @@
       "checksum": "eb2109a96e2c7a10c028a85af658171b"
     },
     "src/noshow/features/feature_pipeline.py": {
-      "checksum": "e28f5e0595c52e2d67b8179681f020e8"
+      "checksum": "021a5503f87fd5ab5ec00a77f7c4c4ab"
     },
     "src/noshow/features/no_show_features.py": {
       "checksum": "b300bc2fbe4362c94447c116e7f614bc"
@@ -120,10 +120,10 @@
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
     "src/noshow/model/predict.py": {
-      "checksum": "1580a52600e2041c4b745e4da4e68c0b"
+      "checksum": "d73f20a4b1f54c444de16d21da8ec2d5"
     },
     "src/noshow/model/train_model.py": {
-      "checksum": "986e65ae98e9e34617381cf20cdf89c6"
+      "checksum": "efeb4be8813e8176a01ce10d0a844b6c"
     },
     "src/noshow/preprocessing/__init__.py": {
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
@@ -132,7 +132,10 @@
       "checksum": "ad3285f5a7f55f0ca27a6c496212a05e"
     },
     "src/noshow/preprocessing/load_data.py": {
-      "checksum": "201fa27aed2f3fe315d83b3c01703d1f"
+      "checksum": "c8f79084c2b44f62de82ebf423f39f32"
+    },
+    "src/noshow/preprocessing/utils.py": {
+      "checksum": "5c84176aa1d08e3c246120ff5e0b1abf"
     },
     "src/noshow/visualisation/__init__.py": {
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
@@ -141,10 +144,10 @@
       "checksum": "10351af697f4f1939c07aa92cf8da43b"
     },
     "tests/data/test_appointments.json": {
-      "checksum": "5d59c3e60bb03b2d31bb5600b4d42e66"
+      "checksum": "fc74187fa004dc806c790f8cba5629d2"
     },
     "tests/test_api.py": {
-      "checksum": "b662e44b9af06d6fc316f04b55230c3a"
+      "checksum": "22b8407a0425b29fee51bb1226e02b2f"
     },
     "tests/test_appointment_features.py": {
       "checksum": "cb5db345fd46ce13da3093b7bcae524e"
@@ -156,7 +159,10 @@
       "checksum": "fb2125386903117fa0fff423d99f7d55"
     },
     "tests/test_noshow.py": {
-      "checksum": "fb396b69f54042fdc4c1da963cd66818"
+      "checksum": "7b0be87637d5e5231203932685692bdc"
+    },
+    "tests/test_utils.py": {
+      "checksum": "7007a9d03ff15bf7930f838230e27192"
     },
     "tests/test_visualisation.py": {
       "checksum": "4fcd3c870898efd0cbff1991f36fdc70"

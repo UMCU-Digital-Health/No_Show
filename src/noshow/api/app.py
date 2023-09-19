@@ -1,9 +1,9 @@
-import configparser
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
 
+import tomli
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, Security
 from fastapi.security.api_key import APIKeyHeader
@@ -18,14 +18,15 @@ from noshow.preprocessing.load_data import (
     process_appointments,
     process_postal_codes,
 )
+from noshow.preprocessing.utils import add_working_days
 
 load_dotenv()
 
 app = FastAPI()
 
-config = configparser.ConfigParser()
-config.read(Path(__file__).parents[3] / "setup.cfg")
-API_VERSION = config["api"]["version"]
+with open(Path(__file__).parents[3] / "pyproject.toml", "rb") as f:
+    config = tomli.load(f)
+API_VERSION = config["project"]["version"]
 
 DB_USER = os.getenv("DB_USER", "")
 DB_PASSWD = os.getenv("DB_PASSWD", "")
@@ -90,11 +91,7 @@ async def predict(
         Prediction output in FHIR format
     """
     if start_date is None:
-        start_date_dt = datetime.today() + timedelta(days=3)
-        if start_date_dt.weekday() == 5:
-            start_date_dt = start_date_dt + timedelta(days=2)
-        if start_date_dt.weekday() == 6:
-            start_date_dt = start_date_dt + timedelta(days=1)
+        start_date_dt = add_working_days(datetime.today(), 3)
         start_date = start_date_dt.strftime(r"%Y-%m-%d")
 
     project_path = Path(__file__).parents[3]

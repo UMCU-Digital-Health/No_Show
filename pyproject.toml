@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "noshow"
-version = "0.1.1"
+version = "0.1.2"
 authors = [
   { name="Ruben Peters", email="r.peters-7@umcutrecht.nl" },
   { name="Ingmar Loohuis", email="i.p.loohuis-2@umcutrecht.nl" }
@@ -29,7 +29,8 @@ dependencies =[
   "sqlalchemy~=2.0",
   "python-dotenv~=1.0",
   "pymssql~=2.2",
-  "streamlit~=1.24"
+  "streamlit~=1.24",
+  "tomli~=2.0"
 ]
 
 [project.optional-dependencies]

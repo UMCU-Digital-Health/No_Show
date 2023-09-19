@@ -1,5 +1,5 @@
 import os
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 from typing import cast
 
 import pandas as pd
@@ -15,6 +15,7 @@ from noshow.dashboard.helper import (
     previous_preds,
 )
 from noshow.database.models import ApiCallResponse, ApiPrediction, ApiSensitiveInfo
+from noshow.preprocessing.utils import add_working_days
 
 load_dotenv()
 
@@ -30,11 +31,7 @@ if "name_idx" not in st.session_state:
 if "pred_idx" not in st.session_state:
     st.session_state["pred_idx"] = 0
 
-date_3_days = datetime.today() + timedelta(days=3)
-if date_3_days.weekday() == 5:  # Saturday
-    date_3_days = date_3_days + timedelta(days=2)
-elif date_3_days.weekday() == 6:  # Sunday
-    date_3_days = date_3_days + timedelta(days=1)
+date_3_days = add_working_days(datetime.today(), 3)
 
 
 def main():
