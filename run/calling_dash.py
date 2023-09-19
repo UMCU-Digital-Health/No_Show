@@ -62,6 +62,7 @@ def main():
             select(
                 ApiPrediction.id,
                 ApiPrediction.start_time,
+                ApiPrediction.clinic_name,
                 ApiPrediction.clinic_reception,
                 ApiPrediction.clinic_phone_number,
                 ApiCallResponse.call_status,
@@ -81,25 +82,29 @@ def main():
         all_predictions_df["call_status"] != "🟢", "call_status"
     ] = "🔴"
     pred_id = int(all_predictions_df.iat[st.session_state["pred_idx"], 0])
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
     with col1:
         st.button(
             "Vorige patient", on_click=navigate_patients, args=(len(patient_ids), False)
         )
     with col2:
+        st.write(f"Patient {st.session_state['name_idx'] + 1}/{len(patient_ids)}")
+    with col3:
         st.button(
             "Volgende patient",
             on_click=navigate_patients,
             args=(len(patient_ids), True),
         )
-
     st.header("Patient-gegevens")
-    st.write(f"- Naam: {current_patient.full_name}")
-    st.write(f"- Voornaam: {current_patient.first_name}")
-    st.write(f"- Geboortedatum: {current_patient.birth_date}")
-    st.write(f"- Mobiel: {current_patient.mobile_phone}")
-    st.write(f"- Thuis: {current_patient.home_phone}")
-    st.write(f"- Overig nummer: {current_patient.other_phone}")
+    if current_patient:
+        st.write(f"- Naam: {current_patient.full_name}")
+        st.write(f"- Voornaam: {current_patient.first_name}")
+        st.write(f"- Geboortedatum: {current_patient.birth_date}")
+        st.write(f"- Mobiel: {current_patient.mobile_phone}")
+        st.write(f"- Thuis: {current_patient.home_phone}")
+        st.write(f"- Overig nummer: {current_patient.other_phone}")
+    else:
+        st.write("Patientgegevens zijn verwijderd.")
 
     st.header("Afspraakoverzicht")
     st.dataframe(
