@@ -7,6 +7,12 @@ import noshow.api.app as app
 from noshow.api.app import predict
 
 
+class FakeExecute:
+    def all(self):
+        print("requested all results...")
+        return []
+
+
 class FakeDB(Session):
     def commit(self):
         print("committed")
@@ -18,7 +24,9 @@ class FakeDB(Session):
         print(f"{tmp} added")
 
     def execute(self, stmt):
+        execute_res = FakeExecute()
         print(f"{stmt} executed...")
+        return execute_res
 
     def get(self, table, index):
         print(f"Requesting {table} at index {index}...")

@@ -10,7 +10,11 @@ from fastapi.security.api_key import APIKeyHeader
 from sqlalchemy import create_engine, delete
 from sqlalchemy.orm import Session, sessionmaker
 
-from noshow.api.app_helpers import add_clinic_phone, load_model
+from noshow.api.app_helpers import (
+    add_clinic_phone,
+    fix_outdated_appointments,
+    load_model,
+)
 from noshow.database.models import ApiPrediction, ApiRequest, ApiSensitiveInfo, Base
 from noshow.model.predict import create_prediction
 from noshow.preprocessing.load_data import (
@@ -157,6 +161,7 @@ async def predict(
                 clinic_name=row["hoofdagenda"],
                 clinic_reception=row["description"],
                 clinic_phone_number=add_clinic_phone(row["hoofdagenda"]),
+                active=True,
             )
         else:
             # All values of a prediction can be updated except the ID fields
@@ -166,10 +171,13 @@ async def predict(
             apiprediction.clinic_name = row["hoofdagenda"]
             apiprediction.clinic_reception = row["description"]
             apiprediction.clinic_phone_number = add_clinic_phone(row["hoofdagenda"])
+            apiprediction.active = True
 
         db.merge(apisensitive)
         db.merge(apiprediction)
         db.commit()
+
+    fix_outdated_appointments(db, prediction_df["APP_ID"], start_date)
 
     return prediction_df.reset_index().to_dict(orient="records")
 

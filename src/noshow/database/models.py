@@ -41,6 +41,7 @@ class ApiPrediction(Base):
     request_id: Mapped[int] = mapped_column(
         Integer, ForeignKey(ApiRequest.id), init=False
     )
+    active: Mapped[bool]
 
     request_relation: Mapped["ApiRequest"] = relationship()
     callresponse_relation: Mapped["ApiCallResponse"] = relationship(init=False)

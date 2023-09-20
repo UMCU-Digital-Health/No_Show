@@ -79,6 +79,7 @@ def main():
             .where(
                 ApiPrediction.patient_id == patient_ids[st.session_state["name_idx"]]
             )
+            .where(ApiPrediction.active)
             .order_by(ApiPrediction.start_time)
         ).all()
     all_predictions_df = pd.DataFrame(patient_predictions)

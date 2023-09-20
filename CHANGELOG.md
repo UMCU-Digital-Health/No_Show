@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Dashboard no longer crashes when trying to display non-existing sensitive patient info. It now shows a message, while still displaying the (anonymized) appointments.
+- API now sets appointments that are removed or rescheduled to inactive, so they don't show up in the dashboard
 
 ## [1.1.2] - 2023-09-18
 
