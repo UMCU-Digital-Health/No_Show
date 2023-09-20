@@ -24,8 +24,11 @@ class FakeDB(Session):
         print(f"{tmp} added")
 
     def execute(self, stmt):
-        execute_res = FakeExecute()
         print(f"{stmt} executed...")
+
+    def scalars(self, stmt):
+        execute_res = FakeExecute()
+        print(f"{stmt} executed (with scalars)...")
         return execute_res
 
     def get(self, table, index):
