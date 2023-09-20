@@ -1,6 +1,6 @@
 import pickle
 from pathlib import Path
-from typing import Any, List, Union
+from typing import Any, Union
 
 from pandas import Series
 from sqlalchemy import select
@@ -39,7 +39,7 @@ def add_clinic_phone(clinic_name: str) -> str:
 
 
 def fix_outdated_appointments(
-    session: Session, app_ids: Union[List, Series], start_date: str
+    session: Session, app_ids: Series, start_date: str
 ) -> None:
     """Set the status of outdated appointments on inactive
 
@@ -57,10 +57,14 @@ def fix_outdated_appointments(
     start_date : str
         start date from which the predictions are made
     """
-    all_ids = session.execute(
-        select(ApiPrediction.id).where(ApiPrediction.start_time > start_date)
-    ).all()
-    inactive_ids = set(all_ids).difference(app_ids)
+    all_ids = (
+        session.execute(
+            select(ApiPrediction.id).where(ApiPrediction.start_time > start_date)
+        )
+        .scalars()
+        .all()
+    )
+    inactive_ids = set(all_ids).difference(app_ids.astype(int))
     for app_id in inactive_ids:
         apiprediction = session.get(ApiPrediction, app_id)
         if apiprediction:
