@@ -97,7 +97,7 @@ def main():
     all_predictions_df.loc[
         all_predictions_df["call_status"] != "🟢", "call_status"
     ] = "🔴"
-    pred_id = int(all_predictions_df.iat[st.session_state["pred_idx"], 0])
+    pred_id = all_predictions_df.iat[st.session_state["pred_idx"], 0]
     col1, col2, col3 = st.columns(3)
     with col1:
         st.button(
