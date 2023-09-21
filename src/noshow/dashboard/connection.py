@@ -62,6 +62,7 @@ def get_patient_list(_session: Session, date_input: date, top_n: int = 20) -> Li
     call_list = _session.execute(
         select(ApiPrediction.patient_id, func.max(ApiPrediction.prediction))
         .where(ApiPrediction.start_time.cast(Date) == date_input)
+        .where(ApiPrediction.active)
         .group_by(ApiPrediction.patient_id)
         .order_by(func.max(ApiPrediction.prediction).desc())
         .limit(top_n)

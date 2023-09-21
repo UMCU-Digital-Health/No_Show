@@ -15,10 +15,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added clinic name and clinic phone number to api
 - Dashboard now shows clinic name and the patient index
 - Dashboard now displays the timestamp of the last API request per patient per day
+- Dashboard now has the option to show Appointment IDs and pseudonymized patient IDs for debug purposes
+- Added a Get Help link to send support e-mail and added a page icon
 
 ### Fixed
 - Dashboard no longer crashes when trying to display non-existing sensitive patient info. It now shows a message, while still displaying the (anonymized) appointments.
 - API now sets appointments that are removed or rescheduled to inactive, so they don't show up in the dashboard
+- Patients are removed from the dashboard if all their appointments have status inactive
+- Set the column type of the prediction id to varchar, to prevent integer overflow
 
 ## [1.1.2] - 2023-09-18
 

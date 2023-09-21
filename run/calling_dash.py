@@ -40,7 +40,12 @@ date_3_days = add_working_days(datetime.today(), 3)
 
 
 def main():
-    st.set_page_config(page_title="No Show bel-dashboard")
+    support_message = os.getenv("SUPPORT", None)
+    st.set_page_config(
+        page_title="No Show bel-dashboard",
+        page_icon=":chair:",
+        menu_items={"Get help": f"{support_message}"},
+    )
 
     with st.sidebar:
         date_input = st.date_input(
@@ -49,6 +54,7 @@ def main():
         number_patients_input = int(
             st.number_input("Hoeveel patienten wil je bellen?", 5, 50, 20)
         )
+        enable_dev_mode = st.toggle("Toon ID's")
 
     if not date_input:
         return None
@@ -106,6 +112,8 @@ def main():
             args=(len(patient_ids), True),
         )
     st.header("Patient-gegevens")
+    if enable_dev_mode:
+        st.write(f"- ID: {patient_ids[st.session_state['name_idx']]}")
     if current_patient:
         st.write(f"- Naam: {current_patient.full_name}")
         st.write(f"- Voornaam: {current_patient.first_name}")
@@ -117,8 +125,10 @@ def main():
         st.write("Patientgegevens zijn verwijderd.")
 
     st.header("Afspraakoverzicht")
+    if not enable_dev_mode:
+        all_predictions_df = all_predictions_df.drop(columns="id")
     st.dataframe(
-        all_predictions_df.drop(columns="id").style.apply(highlight_row, axis=1),
+        all_predictions_df.style.apply(highlight_row, axis=1),
         use_container_width=True,
         hide_index=True,
     )
