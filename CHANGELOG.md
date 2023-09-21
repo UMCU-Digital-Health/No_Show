@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - API now sets appointments that are removed or rescheduled to inactive, so they don't show up in the dashboard
 - Patients are removed from the dashboard if all their appointments have status inactive
 - Set the column type of the prediction id to varchar, to prevent integer overflow
+- Going to a diffent day in the dashboard will reset the patient index, preventing a out of bounds exception
 
 ## [1.1.2] - 2023-09-18
 

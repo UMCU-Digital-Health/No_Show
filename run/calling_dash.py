@@ -25,6 +25,7 @@ from noshow.preprocessing.utils import add_working_days
 load_dotenv()
 
 
+# Global and env variables
 db_user = os.environ["DB_USER"]
 db_passwd = os.environ["DB_PASSWD"]
 db_host = os.environ["DB_HOST"]
@@ -39,7 +40,15 @@ if "pred_idx" not in st.session_state:
 date_3_days = add_working_days(datetime.today(), 3)
 
 
+def reset_name_index() -> None:
+    """Reset the name index when changing the date"""
+    st.session_state["name_idx"] = 0
+
+
 def main():
+    """Main function of the streamlit dashboard"""
+
+    # Page config and sidebar
     support_message = os.getenv("SUPPORT", None)
     st.set_page_config(
         page_title="No Show bel-dashboard",
@@ -49,7 +58,9 @@ def main():
 
     with st.sidebar:
         date_input = st.date_input(
-            "Voor welke dag wil je bellen (standaard over 3 dagen)", date_3_days
+            "Voor welke dag wil je bellen (standaard over 3 dagen)",
+            date_3_days,
+            on_change=reset_name_index,
         )
         number_patients_input = int(
             st.number_input("Hoeveel patienten wil je bellen?", 5, 50, 20)
@@ -59,6 +70,8 @@ def main():
     if not date_input:
         return None
     date_input = cast(date, date_input)
+
+    # Retrieve data from application database
     Session = init_session(db_user, db_passwd, db_host, db_port, db_database)
     with Session() as session:
         patient_ids = get_patient_list(session, date_input, number_patients_input)
@@ -98,6 +111,8 @@ def main():
         all_predictions_df["call_status"] != "🟢", "call_status"
     ] = "🔴"
     pred_id = all_predictions_df.iat[st.session_state["pred_idx"], 0]
+
+    # Main content of streamlit app
     col1, col2, col3 = st.columns(3)
     with col1:
         st.button(
