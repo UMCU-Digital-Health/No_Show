@@ -62,7 +62,7 @@ def fix_outdated_appointments(
         .where(ApiPrediction.start_time >= start_date)
         .where(ApiPrediction.active)
     ).all()
-    inactive_ids = set(all_ids).difference(app_ids.astype(int))
+    inactive_ids = set(all_ids).difference(app_ids)
     for app_id in inactive_ids:
         apiprediction = session.get(ApiPrediction, app_id)
         if apiprediction:
