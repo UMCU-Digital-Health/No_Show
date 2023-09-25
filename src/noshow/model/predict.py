@@ -37,6 +37,7 @@ def create_prediction(
         sensitive_info = appointments_df[
             [
                 "APP_ID",
+                "hoofdagenda",
                 "name_text",
                 "name_given1_callMe",
                 "telecom1_value",

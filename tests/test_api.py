@@ -7,6 +7,12 @@ import noshow.api.app as app
 from noshow.api.app import predict
 
 
+class FakeExecute:
+    def all(self):
+        print("requested all results...")
+        return []
+
+
 class FakeDB(Session):
     def commit(self):
         print("committed")
@@ -19,6 +25,11 @@ class FakeDB(Session):
 
     def execute(self, stmt):
         print(f"{stmt} executed...")
+
+    def scalars(self, stmt):
+        execute_res = FakeExecute()
+        print(f"{stmt} executed (with scalars)...")
+        return execute_res
 
     def get(self, table, index):
         print(f"Requesting {table} at index {index}...")
@@ -33,4 +44,4 @@ async def test_predict_endpoint(monkeypatch):
     monkeypatch.setattr(app, "delete", lambda x: x)
     output = await predict(appointments_json, "2023-01-05", FakeDB())
     output_df = pd.DataFrame(output)
-    assert output_df.shape == (4, 13)
+    assert output_df.shape == (4, 14)
