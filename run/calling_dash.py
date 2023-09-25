@@ -58,12 +58,17 @@ def main():
 
     with st.sidebar:
         date_input = st.date_input(
-            "Voor welke dag wil je bellen (standaard over 3 dagen)",
+            "Voor welke dag wil je bellen (standaard over 3 werkdagen)",
             date_3_days,
             on_change=reset_name_index,
         )
         number_patients_input = int(
-            st.number_input("Hoeveel patienten wil je bellen?", 5, 50, 20)
+            st.number_input(
+                label="Hoeveel patienten wil je bellen?",
+                min_value=5,
+                max_value=50,
+                value=20,
+            )
         )
         enable_dev_mode = st.toggle("Toon ID's")
 

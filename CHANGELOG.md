@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.1.3] - 2023-09-19
+## [0.1.3] - 2023-09-19
 
 ### Changed
 - Predictions in the dashboard are now sorted by date
@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set the column type of the prediction id to varchar, to prevent integer overflow
 - Going to a diffent day in the dashboard will reset the patient index, preventing a out of bounds exception
 
-## [1.1.2] - 2023-09-18
+## [0.1.2] - 2023-09-18
 
 ### Changed
 - API version is now based on package version from pyproject.toml instead of having a seperate value in setup.cfg
