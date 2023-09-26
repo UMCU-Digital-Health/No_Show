@@ -72,6 +72,9 @@ WHERE 1=1
     AND D.type1_code NOT LIKE 'TC%'
     AND D.without_patient <> 1
     AND E.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixLocatie'
+    AND E.identifier_value NOT IN (
+        '0000010175', -- Dutch Scoliosis Center in Zeist
+        '0000006340')  -- afdeling longziekten / B3
     AND G.address_active = 1
     AND C.participant_actor_Patient_value IN (
         SELECT J.participant_actor_Patient_value
@@ -105,5 +108,8 @@ WHERE 1=1
             AND K.type1_code NOT LIKE 'TC%'
             AND K.without_patient <> 1
             AND L.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixLocatie'
+            AND L.identifier_value NOT IN (
+                '0000010175', -- Dutch Scoliosis Center in Zeist
+                '0000006340')  -- afdeling longziekten / B3
     )
     ORDER BY pseudo_id, C.start;

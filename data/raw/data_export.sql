@@ -52,5 +52,8 @@ WHERE 1=1
     AND D.type1_code NOT LIKE 'TC%'
     AND D.without_patient <> 1
     AND E.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixLocatie'
+    AND E.identifier_value NOT IN (
+        '0000010175', -- Dutch Scoliosis Center in Zeist
+        '0000006340')  -- afdeling longziekten / B3
     AND G.address_active = 1
 ORDER BY B.name, A.name, C.start
