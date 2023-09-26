@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [1.0.0] - 2023-09-26
-This is the first full release of the no-show project. This release will be used during the pilot-phase.
+This is the first full release of the no-show project. This release will be used during the pilot-phase and
+shared as an open-source repo.
 
 ### Changed
 - Dashboard displays unknown patient fields as "Onbekend" instead of "None"
@@ -16,6 +17,7 @@ This is the first full release of the no-show project. This release will be used
 - Updated README
 - Updated all package dependencies
 - Retrained classifier
+- Added a LICENSE
 
 ## [0.1.3] - 2023-09-19
 
