@@ -4,15 +4,15 @@ stages:
     cmd: python src/noshow/model/train_model.py
     deps:
     - path: data/processed/featuretable.parquet
-      md5: 485baaaaf79cd78f6a33fbca4822e666
-      size: 23748747
+      md5: 27892d1e4c3eacd316af1e3b891e4eb1
+      size: 23896910
     - path: src/noshow/model/train_model.py
       md5: efeb4be8813e8176a01ce10d0a844b6c
       size: 3086
     outs:
     - path: output/models/no_show_model_cv.pickle
-      md5: 8910af60b5589e1e0a2bf1851cbbc1be
-      size: 680932
+      md5: 3bfd04dd5028945d507af4d98c899308
+      size: 729716
   feature_building:
     cmd: python src/noshow/features/feature_pipeline.py
     deps:
@@ -27,5 +27,5 @@ stages:
       size: 2911
     outs:
     - path: data/processed/featuretable.parquet
-      md5: 485baaaaf79cd78f6a33fbca4822e666
-      size: 23748747
+      md5: 27892d1e4c3eacd316af1e3b891e4eb1
+      size: 23896910

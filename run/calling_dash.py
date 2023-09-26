@@ -135,12 +135,12 @@ def main():
     if enable_dev_mode:
         st.write(f"- ID: {patient_ids[st.session_state['name_idx']]}")
     if current_patient:
-        st.write(f"- Naam: {current_patient.full_name}")
-        st.write(f"- Voornaam: {current_patient.first_name}")
-        st.write(f"- Geboortedatum: {current_patient.birth_date}")
-        st.write(f"- Mobiel: {current_patient.mobile_phone}")
-        st.write(f"- Thuis: {current_patient.home_phone}")
-        st.write(f"- Overig nummer: {current_patient.other_phone}")
+        st.write(f"- Naam: {current_patient.full_name or 'Onbekend'}")
+        st.write(f"- Voornaam: {current_patient.first_name or 'Onbekend'}")
+        st.write(f"- Geboortedatum: {current_patient.birth_date or 'Onbekend'}")
+        st.write(f"- Mobiel: {current_patient.mobile_phone or 'Onbekend'}")
+        st.write(f"- Thuis: {current_patient.home_phone or 'Onbekend'}")
+        st.write(f"- Overig nummer: {current_patient.other_phone or 'Onbekend'}")
     else:
         st.write("Patientgegevens zijn verwijderd.")
 
