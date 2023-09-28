@@ -93,7 +93,7 @@ The sizes of the splits are as follows:
 
 |                       | train  | test  |
 |-----------------------|-------:|------:|
-| Total dataset         | 300447 | 75112 |
+| Total dataset         | 298142 | 74536 |
 
 ## Dataset Creation
 
