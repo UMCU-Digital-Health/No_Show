@@ -19,6 +19,9 @@ shared as an open-source repo.
 - Retrained classifier
 - Added a LICENSE
 
+### Fixed
+- Filtered out wrong location for outpatient clinics
+
 ## [0.1.3] - 2023-09-19
 
 ### Changed
