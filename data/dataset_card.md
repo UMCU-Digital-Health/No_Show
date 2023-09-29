@@ -28,8 +28,8 @@ The input data for the prediction is structured as follows:
 {
   "APP_ID": "5678",
   "pseudo_id": "1ch5k",
+  "hoofdagenda": "Revalidatie en Sport",
   "specialty_code": "REV",
-  "specialty_display": "Revalidatie",
   "soort_consult": "Eerste",
   "start": "2023-01-01T09:00:00",
   "end": "2023-01-01T09:30:00",
@@ -48,7 +48,8 @@ The input data for the prediction is structured as follows:
   "name_given1_callMe": "Clark",
   "telecom1_value": "0683726384",
   "telecom2_value": "112",
-  "telecom3_value": null
+  "telecom3_value": null,
+  "birthDate: "1994-01-01:"
   }
 ```
 
@@ -60,8 +61,8 @@ Below you can find the datafields present in the dataset. The datafields are the
 
 - `APP_ID`: string with the identifier of the Appointment
 - `pseudo_id`: string of the hashed patient id
+- `hoofdagenda`: string with the name of the main HiXagenda
 - `specialty_code`: string with the specialty code of the HealthCareService, for this pilot: REV, KAP, SPO, LON
-- `specialty_display`: string with the complete name of the specialty of the HealthCareService, for this pilot: Revalidatie, Algemene pediatrie, Sportgeneeskunde, Longgeneeskunde
 - `soort_consult`: string with consult type, mainly used to filter out phone appointments
 - `start`: datetime in isoformat with the start date of the appointment
 - `end`: datetime in isoformat with the end date of the appointment
@@ -81,6 +82,7 @@ Below you can find the datafields present in the dataset. The datafields are the
 - `telecom1_value`: The mobile phone number of the patient (if known), *only used during prediction*
 - `telecom2_value`: The home phone number of the patient (if known), *only used during prediction*
 - `telecom3_value`: The other phone number of the patient (if known), *only used during prediction*
+- `birthDate`: The birthdate of the patient, needed for validation when calling, *only used during prediction*
 
 ### Data Splits
 
@@ -91,7 +93,7 @@ The sizes of the splits are as follows:
 
 |                       | train  | test  |
 |-----------------------|-------:|------:|
-| Total dataset         | 269215 | 67403 |
+| Total dataset         | 298142 | 74536 |
 
 ## Dataset Creation
 
