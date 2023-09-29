@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2023-09-29
+
+### Fixed
+- When predicting with a given start-date, predictions are only made on appointments with status 'booked'. This prevents appointments with status 'cancelled'/'proposed'/'waiting_list' from showing up in the dashboard. 
+
 ## [1.0.0] - 2023-09-26
 This is the first full release of the no-show project. This release will be used during the pilot-phase and
 shared as an open-source repo.
