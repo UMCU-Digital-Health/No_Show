@@ -55,7 +55,8 @@ WHERE 1=1
     AND A.identifier_value NOT IN (
         '025224',  -- Behandelaar CMH
         '028512',  -- Lab longziekten
-        'S00837'   -- Sylvia Toth centrum
+        'S00837',   -- Sylvia Toth centrum
+        '024550', 'S21716', 'S21739', 'S22403', 'S22890'  -- Hartgroepen 1 t/m 5
     )
     AND B.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgenda'
     AND B.active = 1
@@ -91,7 +92,8 @@ WHERE 1=1
             AND H.identifier_value NOT IN (
                 '025224',  -- Behandelaar CMH
                 '028512',  -- Lab longziekten
-                'S00837'   -- Sylvia Toth centrum
+                'S00837',   -- Sylvia Toth centrum
+                '024550', 'S21716', 'S21739', 'S22403', 'S22890'  -- Hartgroepen 1 t/m 5
             )
             AND I.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgenda'
             AND I.active = 1
