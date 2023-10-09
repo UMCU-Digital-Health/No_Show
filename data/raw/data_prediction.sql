@@ -53,10 +53,10 @@ FROM [PUB].[no_show].[HealthcareService] A JOIN [PUB].[no_show].[HealthcareServi
 WHERE 1=1
     AND A.active = 1
     AND A.identifier_value NOT IN (
-        '025224',  -- Behandelaar CMH
-        '028512',  -- Lab longziekten
-        'S00837',   -- Sylvia Toth centrum
-        '024550', 'S21716', 'S21739', 'S22403', 'S22890'  -- Hartgroepen 1 t/m 5
+        '025224',  -- Behandelaar CMH (REV)
+        '028512',  -- Lab longziekten (LON)
+        'S00837',   -- Sylvia Toth centrum (Kind-Neurologie)
+        '024550', 'S21716', 'S21739', 'S22403', 'S22890'  -- Hartgroepen 1 t/m 5 (REV)
     )
     AND B.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgenda'
     AND B.active = 1
@@ -74,8 +74,8 @@ WHERE 1=1
     AND D.without_patient <> 1
     AND E.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixLocatie'
     AND E.identifier_value NOT IN (
-        '0000010175', -- Dutch Scoliosis Center in Zeist
-        '0000006340')  -- afdeling longziekten / B3
+        '0000010175', -- Dutch Scoliosis Center in Zeist (REV)
+        '0000006340')  -- afdeling longziekten / B3 (LON)
     AND G.address_active = 1
     AND C.participant_actor_Patient_value IN (
         SELECT J.participant_actor_Patient_value
@@ -90,10 +90,10 @@ WHERE 1=1
         WHERE 1=1
             AND H.active = 1
             AND H.identifier_value NOT IN (
-                '025224',  -- Behandelaar CMH
-                '028512',  -- Lab longziekten
-                'S00837',   -- Sylvia Toth centrum
-                '024550', 'S21716', 'S21739', 'S22403', 'S22890'  -- Hartgroepen 1 t/m 5
+                '025224',  -- Behandelaar CMH (REV)
+                '028512',  -- Lab longziekten (LON)
+                'S00837',   -- Sylvia Toth centrum (Kind-Neurologie)
+                '024550', 'S21716', 'S21739', 'S22403', 'S22890'  -- Hartgroepen 1 t/m 5 (REV)
             )
             AND I.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgenda'
             AND I.active = 1
@@ -111,7 +111,7 @@ WHERE 1=1
             AND K.without_patient <> 1
             AND L.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixLocatie'
             AND L.identifier_value NOT IN (
-                '0000010175', -- Dutch Scoliosis Center in Zeist
-                '0000006340')  -- afdeling longziekten / B3
+                '0000010175', -- Dutch Scoliosis Center in Zeist (REV)
+                '0000006340')  -- afdeling longziekten / B3 (LON)
     )
     ORDER BY pseudo_id, C.start;
