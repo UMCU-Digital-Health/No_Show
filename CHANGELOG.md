@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.3] - 2023-10-09
 
 ### Changed
-- Increase max patients in dashboard to 150, since the previous upper limit of 50 was not enough.
+- Remove max patients limit, since the previous upper limit of 50 was not enough.
 
 ## [1.0.2] - 2023-10-05
 
