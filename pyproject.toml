@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "noshow"
-version = "1.0.2"
+version = "1.0.3"
 authors = [
   { name="Ruben Peters", email="r.peters-7@umcutrecht.nl" }
 ]
@@ -38,3 +38,24 @@ dev = ["black", "flake8", "isort", "rsconnect-python", "uvicorn"]
 
 [tool.isort]
 profile = "black"
+
+[tool.ruff]
+src = ["src"]
+ignore = []
+line-length = 88
+select = [
+    "B",
+    "E",
+    "F",
+    "W",
+    "C90",
+    "I",
+]
+
+[tool.ruff.flake8-bugbear]
+extend-immutable-calls = [
+    "Depends",
+    "fastapi.Depends",
+    "fastapi.params.Depends",
+    "Security",
+]

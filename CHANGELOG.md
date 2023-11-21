@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.3] - 2023-10-09
+
+### Changed
+- Remove max patients limit, since the previous upper limit of 50 was not enough.
+- Updated queries to match pilot
+- Added notebooks for evaluating the pilot
+- Updated linter to ruff
+
 ## [1.0.2] - 2023-10-05
 
 ### Fixed
