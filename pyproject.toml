@@ -41,8 +41,6 @@ profile = "black"
 
 [tool.ruff]
 src = ["src"]
-ignore = []
-line-length = 88
 select = [
     "B",
     "E",
