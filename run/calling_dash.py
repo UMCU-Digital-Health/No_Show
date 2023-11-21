@@ -65,8 +65,7 @@ def main():
         number_patients_input = int(
             st.number_input(
                 label="Hoeveel patienten wil je bellen?",
-                min_value=5,
-                max_value=50,
+                min_value=1,
                 value=20,
             )
         )

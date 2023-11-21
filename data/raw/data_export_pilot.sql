@@ -44,8 +44,8 @@ WHERE 1=1
         'A00006',  -- Longziekten
         'A20150')  -- Revalidatie en sport
     AND C.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
-    AND C.created >= '2015-01-01'
-    AND C.created <= '2023-05-16'
+    AND CONVERT(DATE, C.start) >= '2015-01-01'
+    AND CONVERT(DATE, C.start) <= '2023-11-01'
     AND C.status <> 'booked'
     AND D.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
     AND D.type2_code NOT IN ('T', 'S', 'M')
