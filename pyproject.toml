@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "noshow"
-version = "1.0.3"
+version = "1.0.4"
 authors = [
   { name="Ruben Peters", email="r.peters-7@umcutrecht.nl" }
 ]
@@ -41,8 +41,6 @@ profile = "black"
 
 [tool.ruff]
 src = ["src"]
-ignore = []
-line-length = 88
 select = [
     "B",
     "E",
