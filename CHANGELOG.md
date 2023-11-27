@@ -7,11 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.4] - 2023-11-27
+## [1.0.5] - 2023-11-27
 
 ### Changed
 - Updated evaluation notebooks
 - Start using nbstripout for removing notebook output
+
+## [1.0.4] - 2023-11-21
+
+### Changed
+- Updated pyarrow dependency because of a security risk (this repo is not affected)
 
 ## [1.0.3] - 2023-10-09
 
