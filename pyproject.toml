@@ -28,7 +28,7 @@ dependencies =[
   "sqlalchemy~=2.0",
   "python-dotenv~=1.0",
   "pymssql~=2.2",
-  "streamlit~=1.27",
+  "streamlit~=1.30",
   "tomli~=2.0"
 ]
 

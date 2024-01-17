@@ -9,6 +9,6 @@ fastapi==0.103.1
 sqlalchemy==2.0.21
 python-dotenv==1.0.0
 pymssql==2.2.8
-streamlit==1.27.0
+streamlit==1.30.0
 tomli==2.0.1
 -e .
