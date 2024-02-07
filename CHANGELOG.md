@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.6] - 2024-02-07
+
+### Changed
+- Bumped Python, DVC, DVCLive and fastapi versions
+
 ## [1.0.5] - 2023-11-27
 
 ### Changed
