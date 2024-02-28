@@ -52,6 +52,7 @@ def next_preds(
     """
     call_response.call_status = st.session_state.status_input
     call_response.call_outcome = st.session_state.res_input
+    call_response.call_number = st.session_state.number_input
     call_response.remarks = st.session_state.opm_input
 
     with Session() as session:

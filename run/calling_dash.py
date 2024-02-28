@@ -116,6 +116,22 @@ def main():
     ] = "🔴"
     pred_id = all_predictions_df.iat[st.session_state["pred_idx"], 0]
 
+    # load information related to call history
+    with Session() as session:
+        current_response = session.get(ApiPrediction, pred_id).callresponse_relation
+    if not current_response:
+        current_response = ApiCallResponse(
+            call_status="Niet gebeld",
+            call_outcome="Geen",
+            call_number=0,
+            remarks="",
+            prediction_id=pred_id,
+        )
+    status_list = ["Niet gebeld", "Gebeld", "Onbereikbaar"]
+    res_list = ["Herinnerd", "Verzet/Geannuleerd", "Geen"]
+    call_number_list = ["Niet van toepassing", "Mobielnummer", "Thuis telefoonnummer",
+                             "Overig telefoonnummer"]
+
     # Main content of streamlit app
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -140,6 +156,9 @@ def main():
         st.write(f"- Mobiel: {current_patient.mobile_phone or 'Onbekend'}")
         st.write(f"- Thuis: {current_patient.home_phone or 'Onbekend'}")
         st.write(f"- Overig nummer: {current_patient.other_phone or 'Onbekend'}")
+        st.write("")
+        call_number_type = call_number_list[current_response.call_number]
+        st.write(f"- Eerder contact ging via: {call_number_type or 'Onbekend'}")
     else:
         st.write("Patientgegevens zijn verwijderd.")
 
@@ -152,18 +171,7 @@ def main():
         hide_index=True,
     )
 
-    with Session() as session:
-        current_response = session.get(ApiPrediction, pred_id).callresponse_relation
-    if not current_response:
-        current_response = ApiCallResponse(
-            call_status="Niet gebeld",
-            call_outcome="Geen",
-            remarks="",
-            prediction_id=pred_id,
-        )
     with st.form("patient_form", clear_on_submit=True):
-        status_list = ["Niet gebeld", "Gebeld", "Onbereikbaar"]
-        res_list = ["Herinnerd", "Verzet/Geannuleerd", "Geen"]
         st.selectbox(
             "Status gesprek:",
             options=status_list,
@@ -175,6 +183,14 @@ def main():
             options=res_list,
             index=res_list.index(current_response.call_outcome),
             key="res_input",
+        )
+        options_idx = [0,1,2,3]
+        st.selectbox(
+            "Contact gemaakt via: ",
+            options=options_idx,
+            format_func=lambda x: call_number_list[x],
+            index=options_idx.index(current_response.call_number),
+            key="number_input",
         )
         st.text_input("Opmerkingen: ", value=current_response.remarks, key="opm_input")
         st.form_submit_button(
