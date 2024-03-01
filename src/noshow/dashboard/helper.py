@@ -4,7 +4,7 @@ import pandas as pd
 import streamlit as st
 from sqlalchemy.orm import sessionmaker
 
-from noshow.database.models import ApiCallResponse
+from noshow.database.models import ApiCallResponse, ApiPatient
 
 
 def highlight_row(row: pd.Series) -> List[str]:
@@ -38,6 +38,7 @@ def next_preds(
     list_len: int,
     Session: sessionmaker,
     call_response: ApiCallResponse,
+    current_patient: ApiPatient,
 ) -> None:
     """Go to the next prediction and save results
 
@@ -49,14 +50,17 @@ def next_preds(
         Session used to save the current call response
     call_response : ApiCallResponse
         call response object that needs to be edited
+    current_patient : ApiPatient
+        current patient object
     """
     call_response.call_status = st.session_state.status_input
     call_response.call_outcome = st.session_state.res_input
-    call_response.call_number = st.session_state.number_input
     call_response.remarks = st.session_state.opm_input
+    current_patient.call_number = st.session_state.number_input
 
     with Session() as session:
         session.merge(call_response)
+        session.merge(current_patient)
         session.commit()
     if st.session_state["pred_idx"] + 1 < list_len:
         st.session_state["pred_idx"] += 1
