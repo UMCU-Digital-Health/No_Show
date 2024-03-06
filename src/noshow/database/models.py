@@ -32,9 +32,11 @@ class ApiPatient(Base):
     __table_args__ = {"schema": "noshow"}
 
     id: Mapped[str] = mapped_column(
-        String(64), primary_key=True, index=True, init=False
+        String(64),
+        primary_key=True,
+        index=True,
     )
-    call_number: Mapped[int]
+    call_number: Mapped[int] = mapped_column(Integer, init=False, nullable=True)
 
 
 class ApiPrediction(Base):
@@ -51,13 +53,15 @@ class ApiPrediction(Base):
         Integer, ForeignKey(ApiRequest.id), init=False
     )
     patient_id: Mapped[str] = mapped_column(
-        String(64), ForeignKey(ApiPatient.id), index=True, init=False
+        String(64),
+        ForeignKey(ApiPatient.id),
+        index=True,
     )
     active: Mapped[bool]
 
     request_relation: Mapped["ApiRequest"] = relationship()
     callresponse_relation: Mapped["ApiCallResponse"] = relationship(init=False)
-    patient_relation: Mapped["ApiPatient"] = relationship(init=False)
+    patient_relation: Mapped["ApiPatient"] = relationship()
 
 
 class ApiSensitiveInfo(Base):

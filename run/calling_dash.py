@@ -120,7 +120,7 @@ def main():
     # load information related to call history
     with Session() as session:
         current_response = session.get(ApiPrediction, pred_id).callresponse_relation
-        current_patient = session.get(
+        current_patient_nmbr = session.get(
             ApiPatient, patient_ids[st.session_state["name_idx"]]
         )
     if not current_response:
@@ -130,8 +130,8 @@ def main():
             remarks="",
             prediction_id=pred_id,
         )
-    if not current_patient:
-        current_patient = ApiPatient(
+    if not current_patient_nmbr:
+        current_patient_nmbr = ApiPatient(
             id=patient_ids[st.session_state["name_idx"]],
             call_number=0,
         )
@@ -169,7 +169,9 @@ def main():
         st.write(f"- Thuis: {current_patient.home_phone or 'Onbekend'}")
         st.write(f"- Overig nummer: {current_patient.other_phone or 'Onbekend'}")
         st.write("")
-        call_number_type = call_number_list[current_patient.call_number]
+        if not current_patient_nmbr.call_number:
+            current_patient_nmbr.call_number = 0
+        call_number_type = call_number_list[current_patient_nmbr.call_number]
         st.write(f"- Eerder contact ging via: {call_number_type or 'Onbekend'}")
     else:
         st.write("Patientgegevens zijn verwijderd.")
@@ -201,14 +203,19 @@ def main():
             "Contact gemaakt via: ",
             options=options_idx,
             format_func=lambda x: call_number_list[x],
-            index=options_idx.index(current_patient.call_number),
+            index=options_idx.index(current_patient_nmbr.call_number),
             key="number_input",
         )
         st.text_input("Opmerkingen: ", value=current_response.remarks, key="opm_input")
         st.form_submit_button(
             "Volgende",
             on_click=next_preds,
-            args=(len(all_predictions_df), Session, current_response, current_patient),
+            args=(
+                len(all_predictions_df),
+                Session,
+                current_response,
+                current_patient_nmbr,
+            ),
             type="primary",
         )
     st.button(

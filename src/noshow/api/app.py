@@ -15,7 +15,13 @@ from noshow.api.app_helpers import (
     fix_outdated_appointments,
     load_model,
 )
-from noshow.database.models import ApiPrediction, ApiRequest, ApiSensitiveInfo, Base
+from noshow.database.models import (
+    ApiPatient,
+    ApiPrediction,
+    ApiRequest,
+    ApiSensitiveInfo,
+    Base,
+)
 from noshow.model.predict import create_prediction
 from noshow.preprocessing.load_data import (
     load_appointment_json,
@@ -150,6 +156,8 @@ async def predict(
             apisensitive.home_phone = row["telecom2_value"]
             apisensitive.other_phone = row["telecom3_value"]
 
+        apipatient = ApiPatient(id=row["pseudo_id"])
+
         apiprediction = db.get(ApiPrediction, row["APP_ID"])
         if not apiprediction:
             apiprediction = ApiPrediction(
@@ -158,6 +166,7 @@ async def predict(
                 prediction=row["prediction"],
                 start_time=row["start"],
                 request_relation=apirequest,
+                patient_relation=apipatient,
                 clinic_name=row["hoofdagenda"],
                 clinic_reception=row["description"],
                 clinic_phone_number=add_clinic_phone(row["hoofdagenda"]),
@@ -175,6 +184,7 @@ async def predict(
 
         db.merge(apisensitive)
         db.merge(apiprediction)
+        db.merge(apipatient)
         db.commit()
 
     fix_outdated_appointments(db, prediction_df["APP_ID"], start_date)
