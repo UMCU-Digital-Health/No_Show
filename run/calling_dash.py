@@ -16,6 +16,7 @@ from noshow.dashboard.helper import (
 )
 from noshow.database.models import (
     ApiCallResponse,
+    ApiPatient,
     ApiPrediction,
     ApiRequest,
     ApiSensitiveInfo,
@@ -111,10 +112,32 @@ def main():
     all_predictions_df.loc[
         all_predictions_df["call_status"] == "Gebeld", "call_status"
     ] = "🟢"
-    all_predictions_df.loc[
-        all_predictions_df["call_status"] != "🟢", "call_status"
-    ] = "🔴"
+    all_predictions_df.loc[all_predictions_df["call_status"] != "🟢", "call_status"] = (
+        "🔴"
+    )
     pred_id = all_predictions_df.iat[st.session_state["pred_idx"], 0]
+
+    # load information related to call history
+    with Session() as session:
+        current_response = session.get(ApiPrediction, pred_id).callresponse_relation
+        current_patient_nmbr = session.get(
+            ApiPatient, patient_ids[st.session_state["name_idx"]]
+        )
+    if not current_response:
+        current_response = ApiCallResponse(
+            call_status="Niet gebeld",
+            call_outcome="Geen",
+            remarks="",
+            prediction_id=pred_id,
+        )
+    status_list = ["Niet gebeld", "Gebeld", "Onbereikbaar"]
+    res_list = ["Herinnerd", "Verzet/Geannuleerd", "Geen"]
+    call_number_list = [
+        "Niet van toepassing",
+        "Mobielnummer",
+        "Thuis telefoonnummer",
+        "Overig telefoonnummer",
+    ]
 
     # Main content of streamlit app
     col1, col2, col3 = st.columns(3)
@@ -140,6 +163,11 @@ def main():
         st.write(f"- Mobiel: {current_patient.mobile_phone or 'Onbekend'}")
         st.write(f"- Thuis: {current_patient.home_phone or 'Onbekend'}")
         st.write(f"- Overig nummer: {current_patient.other_phone or 'Onbekend'}")
+        st.write("")
+        if not current_patient_nmbr.call_number:
+            current_patient_nmbr.call_number = 0
+        call_number_type = call_number_list[current_patient_nmbr.call_number]
+        st.write(f"- Eerder contact ging via: {call_number_type or 'Onbekend'}")
     else:
         st.write("Patientgegevens zijn verwijderd.")
 
@@ -152,18 +180,7 @@ def main():
         hide_index=True,
     )
 
-    with Session() as session:
-        current_response = session.get(ApiPrediction, pred_id).callresponse_relation
-    if not current_response:
-        current_response = ApiCallResponse(
-            call_status="Niet gebeld",
-            call_outcome="Geen",
-            remarks="",
-            prediction_id=pred_id,
-        )
     with st.form("patient_form", clear_on_submit=True):
-        status_list = ["Niet gebeld", "Gebeld", "Onbereikbaar"]
-        res_list = ["Herinnerd", "Verzet/Geannuleerd", "Geen"]
         st.selectbox(
             "Status gesprek:",
             options=status_list,
@@ -176,6 +193,14 @@ def main():
             index=res_list.index(current_response.call_outcome),
             key="res_input",
         )
+        options_idx = [0, 1, 2, 3]
+        st.selectbox(
+            "Contact gemaakt via: ",
+            options=options_idx,
+            format_func=lambda x: call_number_list[x],
+            index=options_idx.index(current_patient_nmbr.call_number),
+            key="number_input",
+        )
         st.text_input("Opmerkingen: ", value=current_response.remarks, key="opm_input")
         st.form_submit_button(
             "Volgende",
@@ -184,6 +209,7 @@ def main():
                 len(all_predictions_df),
                 Session,
                 current_response,
+                current_patient_nmbr,
             ),
             type="primary",
         )
