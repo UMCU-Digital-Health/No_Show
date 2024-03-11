@@ -130,11 +130,6 @@ def main():
             remarks="",
             prediction_id=pred_id,
         )
-    if not current_patient_nmbr:
-        current_patient_nmbr = ApiPatient(
-            id=patient_ids[st.session_state["name_idx"]],
-            call_number=0,
-        )
     status_list = ["Niet gebeld", "Gebeld", "Onbereikbaar"]
     res_list = ["Herinnerd", "Verzet/Geannuleerd", "Geen"]
     call_number_list = [
