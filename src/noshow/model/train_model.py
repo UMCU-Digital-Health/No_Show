@@ -5,8 +5,12 @@ from typing import Dict, Union
 import pandas as pd
 from dvclive import Live
 from sklearn.base import BaseEstimator
-from sklearn.ensemble import HistGradientBoostingClassifier
+from sklearn.ensemble import HistGradientBoostingClassifier, RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV, StratifiedGroupKFold, train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import RobustScaler
+from sklearn.svm import LinearSVC
 
 
 def train_cv_model(
@@ -57,14 +61,20 @@ def train_cv_model(
         )
         grid.fit(X_train, y_train, groups=train_groups)
 
-        y_pred = grid.best_estimator_.predict_proba(X_test)  # type: ignore
+        # y_pred = grid.best_estimator_.predict_proba(X_test)  # type: ignore
 
-        live.log_sklearn_plot("roc", y_test, y_pred[:, 1])
-        live.log_sklearn_plot("calibration", y_test, y_pred[:, 1])
-        live.log_sklearn_plot("precision_recall", y_test, y_pred[:, 1])
+        # live.log_sklearn_plot("roc", y_test, y_pred[:, 1])
+        # live.log_sklearn_plot("calibration", y_test, y_pred[:, 1])
+        # live.log_sklearn_plot("precision_recall", y_test, y_pred[:, 1])
         live.log_param("model_name", str(classifier))
         live.log_params(grid.best_params_)
         live.log_metric("best_score", grid.best_score_)
+        live.log_metric(
+            "mean_roc_auc", grid.cv_results_["mean_test_roc_auc"][grid.best_index_]
+        )
+        live.log_metric(
+            "std_roc_auc", grid.cv_results_["std_test_roc_auc"][grid.best_index_]
+        )
         live.log_metric(
             "mean_precision", grid.cv_results_["mean_test_precision"][grid.best_index_]
         )
@@ -83,11 +93,20 @@ if __name__ == "__main__":
     featuretable = pd.read_parquet(
         project_folder / "data" / "processed" / "featuretable.parquet"
     )
+
+    # model = Pipeline(
+    #     [
+    #         ("scaler", RobustScaler()),
+    #         ("classifier", LinearSVC()),
+    #     ]
+    # )
+    model = HistGradientBoostingClassifier(learning_rate=0.01, max_iter=300)
+
     best_model = train_cv_model(
         featuretable=featuretable,
         output_path=project_folder / "output",
-        classifier=HistGradientBoostingClassifier(
-            learning_rate=0.05,
-        ),
-        param_grid={"max_iter": [100, 200, 300]},
+        classifier=model,
+        param_grid={
+            # "classifier__C": [0.1, 0.5, 1, 1.5],
+        },
     )

@@ -1,2 +1,2 @@
-step	best_score
+step	mean_roc_auc
 0	0.7093921599547527

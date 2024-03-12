@@ -1,2 +1,1 @@
-model_name: HistGradientBoostingClassifier(learning_rate=0.05)
-max_iter: 300
+model_name: HistGradientBoostingClassifier(learning_rate=0.01, max_iter=300)

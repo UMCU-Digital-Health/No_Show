@@ -16,3 +16,10 @@ stages:
     - data/processed/featuretable.parquet
     outs:
     - output/models/no_show_model_cv.pickle
+params:
+- output/dvclive/params.yaml
+metrics:
+- output/dvclive/metrics.json
+plots:
+- output/dvclive/plots/metrics:
+    x: step
