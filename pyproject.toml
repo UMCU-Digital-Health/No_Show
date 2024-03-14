@@ -36,6 +36,11 @@ dependencies =[
 test = ["pytest", "pytest-cov", "pytest-asyncio"]
 dev = ["black", "ruff", "isort", "rsconnect-python", "uvicorn", "nbstripout"]
 
+[tool]
+rye = { dev-dependencies = [
+    "uvicorn~=0.28.0",
+] }
+
 [tool.isort]
 profile = "black"
 
