@@ -34,6 +34,27 @@ def previous_preds():
         st.session_state["pred_idx"] -= 1
 
 
+def start_calling(Session: sessionmaker, call_response: ApiCallResponse):
+    """Log the call status as 'Wordt gebeld' and save the results
+
+    Parameters
+    ----------
+    Session : sessionmaker
+        Session used to save the current call response
+    call_response : ApiCallResponse
+        call response object that needs to be edited
+
+    Returns
+    -------
+    None
+    """
+    call_response.call_status = "Wordt gebeld"
+
+    with Session() as session:
+        session.merge(call_response)
+        session.commit()
+
+
 def next_preds(
     list_len: int,
     Session: sessionmaker,
