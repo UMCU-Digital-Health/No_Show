@@ -9,13 +9,13 @@ stages:
       size: 21477878
     - path: src/noshow/model/train_model.py
       hash: md5
-      md5: c6f365745a7180b9f077c46789a3e09b
-      size: 3710
+      md5: a82de78926c0f074c95737de8ea214fc
+      size: 3412
     outs:
     - path: output/models/no_show_model_cv.pickle
       hash: md5
-      md5: 6509e709ecf068d217ceabfbd4a7b1e8
-      size: 1089200
+      md5: 55c9e4ced7c135cc1d4eb6aeb7c08dd9
+      size: 1166964
   feature_building:
     cmd: python src/noshow/features/feature_pipeline.py
     deps:

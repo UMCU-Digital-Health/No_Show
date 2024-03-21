@@ -5,12 +5,8 @@ from typing import Dict, Union
 import pandas as pd
 from dvclive import Live
 from sklearn.base import BaseEstimator
-from sklearn.ensemble import HistGradientBoostingClassifier, RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.model_selection import GridSearchCV, StratifiedGroupKFold, train_test_split
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import RobustScaler
-from sklearn.svm import LinearSVC
 
 
 def train_cv_model(
@@ -61,11 +57,11 @@ def train_cv_model(
         )
         grid.fit(X_train, y_train, groups=train_groups)
 
-        # y_pred = grid.best_estimator_.predict_proba(X_test)  # type: ignore
+        y_pred = grid.best_estimator_.predict_proba(X_test)  # type: ignore
 
-        # live.log_sklearn_plot("roc", y_test, y_pred[:, 1])
-        # live.log_sklearn_plot("calibration", y_test, y_pred[:, 1])
-        # live.log_sklearn_plot("precision_recall", y_test, y_pred[:, 1])
+        live.log_sklearn_plot("roc", y_test, y_pred[:, 1])
+        live.log_sklearn_plot("calibration", y_test, y_pred[:, 1])
+        live.log_sklearn_plot("precision_recall", y_test, y_pred[:, 1])
         live.log_param("model_name", str(classifier))
         live.log_params(grid.best_params_)
         live.log_metric("best_score", grid.best_score_)
@@ -94,19 +90,14 @@ if __name__ == "__main__":
         project_folder / "data" / "processed" / "featuretable.parquet"
     )
 
-    # model = Pipeline(
-    #     [
-    #         ("scaler", RobustScaler()),
-    #         ("classifier", LinearSVC()),
-    #     ]
-    # )
-    model = HistGradientBoostingClassifier(learning_rate=0.01, max_iter=300)
+    model = HistGradientBoostingClassifier(categorical_features=["hour", "weekday"])
 
     best_model = train_cv_model(
         featuretable=featuretable,
         output_path=project_folder / "output",
         classifier=model,
         param_grid={
-            # "classifier__C": [0.1, 0.5, 1, 1.5],
+            "max_iter": [200, 300, 500],
+            "learning_rate": [0.01, 0.05, 0.1],
         },
     )
