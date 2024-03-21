@@ -135,6 +135,9 @@ def main():
             remarks="",
             prediction_id=pred_id,
         )
+    # convert rows that are initiallised as None to 0
+    if current_patient_nmbr.call_number is None:
+        current_patient_nmbr.call_number = 0
 
     status_list = ["Niet gebeld", "Wordt gebeld", "Gebeld", "Onbereikbaar"]
     res_list = ["Herinnerd", "Verzet/Geannuleerd", "Geen"]
