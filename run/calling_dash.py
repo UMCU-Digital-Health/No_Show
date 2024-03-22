@@ -13,7 +13,7 @@ from noshow.dashboard.helper import (
     navigate_patients,
     next_preds,
     previous_preds,
-    start_calling,
+    render_patient_info,
 )
 from noshow.database.models import (
     ApiCallResponse,
@@ -168,32 +168,13 @@ def main():
     if enable_dev_mode:
         st.write(f"- ID: {patient_ids[st.session_state['name_idx']]}")
 
-    # check if current_response is not 'Niet gebeld'
-    if current_response.call_status == "Niet gebeld":
-        st.button(
-            "Start met bellen patient",
-            on_click=start_calling,
-            args=(
-                Session,
-                current_response,
-            ),
-            type="primary",
-        )
-    else:
-        if current_patient:
-            st.write(f"- Naam: {current_patient.full_name or 'Onbekend'}")
-            st.write(f"- Voornaam: {current_patient.first_name or 'Onbekend'}")
-            st.write(f"- Geboortedatum: {current_patient.birth_date or 'Onbekend'}")
-            st.write(f"- Mobiel: {current_patient.mobile_phone or 'Onbekend'}")
-            st.write(f"- Thuis: {current_patient.home_phone or 'Onbekend'}")
-            st.write(f"- Overig nummer: {current_patient.other_phone or 'Onbekend'}")
-            st.write("")
-            if not current_patient_nmbr.call_number:
-                current_patient_nmbr.call_number = 0
-            call_number_type = call_number_list[current_patient_nmbr.call_number]
-            st.write(f"- Eerder contact ging via: {call_number_type or 'Onbekend'}")
-        else:
-            st.write("Patientgegevens zijn verwijderd.")
+    render_patient_info(
+        Session,
+        current_response,
+        current_patient,
+        current_patient_nmbr,
+        call_number_list,
+    )
 
     st.header("Afspraakoverzicht")
     if not enable_dev_mode:
