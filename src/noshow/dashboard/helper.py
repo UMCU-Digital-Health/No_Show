@@ -7,6 +7,55 @@ from sqlalchemy.orm import sessionmaker
 from noshow.database.models import ApiCallResponse, ApiPatient
 
 
+def render_patient_info(
+    Session: sessionmaker,
+    current_response: ApiCallResponse,
+    current_patient: ApiPatient,
+    current_patient_nmbr: int,
+    call_number_list: List[str],
+) -> None:
+    """Render patient information
+
+    Parameters
+    ----------
+    Session : sessionmaker
+        SQLAlchemy sessionmaker object
+    current_response : ApiCallResponse
+        Current call response object
+    current_patient : ApiPatient
+        Current patient object
+    current_patient_nmbr : int
+        Current patient number
+    call_number_list : List[str]
+        List of call number types
+    """
+    if current_response.call_status == "Niet gebeld":
+        st.button(
+            "Start met bellen patient",
+            on_click=start_calling,
+            args=(
+                Session,
+                current_response,
+            ),
+            type="primary",
+        )
+    else:
+        if current_patient:
+            st.write(f"- Naam: {current_patient.full_name or 'Onbekend'}")
+            st.write(f"- Voornaam: {current_patient.first_name or 'Onbekend'}")
+            st.write(f"- Geboortedatum: {current_patient.birth_date or 'Onbekend'}")
+            st.write(f"- Mobiel: {current_patient.mobile_phone or 'Onbekend'}")
+            st.write(f"- Thuis: {current_patient.home_phone or 'Onbekend'}")
+            st.write(f"- Overig nummer: {current_patient.other_phone or 'Onbekend'}")
+            st.write("")
+            if not current_patient_nmbr.call_number:
+                current_patient_nmbr.call_number = 0
+            call_number_type = call_number_list[current_patient_nmbr.call_number]
+            st.write(f"- Eerder contact ging via: {call_number_type or 'Onbekend'}")
+        else:
+            st.write("Patientgegevens zijn verwijderd.")
+
+
 def highlight_row(row: pd.Series) -> List[str]:
     """Highlight a row in a pandas dataframe
 
@@ -32,6 +81,27 @@ def previous_preds():
     """Go to previous prediction"""
     if st.session_state["pred_idx"] > 0:
         st.session_state["pred_idx"] -= 1
+
+
+def start_calling(Session: sessionmaker, call_response: ApiCallResponse):
+    """Log the call status as 'Wordt gebeld' and save the results
+
+    Parameters
+    ----------
+    Session : sessionmaker
+        Session used to save the current call response
+    call_response : ApiCallResponse
+        call response object that needs to be edited
+
+    Returns
+    -------
+    None
+    """
+    call_response.call_status = "Wordt gebeld"
+
+    with Session() as session:
+        session.merge(call_response)
+        session.commit()
 
 
 def next_preds(

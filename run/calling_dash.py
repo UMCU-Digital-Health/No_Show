@@ -13,6 +13,7 @@ from noshow.dashboard.helper import (
     navigate_patients,
     next_preds,
     previous_preds,
+    render_patient_info,
 )
 from noshow.database.models import (
     ApiCallResponse,
@@ -44,6 +45,7 @@ date_3_days = add_working_days(datetime.today(), 3)
 def reset_name_index() -> None:
     """Reset the name index when changing the date"""
     st.session_state["name_idx"] = 0
+    st.session_state["pred_idx"] = 0
 
 
 def main():
@@ -112,9 +114,14 @@ def main():
     all_predictions_df.loc[
         all_predictions_df["call_status"] == "Gebeld", "call_status"
     ] = "🟢"
-    all_predictions_df.loc[all_predictions_df["call_status"] != "🟢", "call_status"] = (
-        "🔴"
-    )
+    if "Wordt gebeld" in all_predictions_df["call_status"].values:
+        all_predictions_df.loc[
+            ~(all_predictions_df["call_status"] == "🟢"), "call_status"
+        ] = "📞"
+    all_predictions_df.loc[
+        ~all_predictions_df["call_status"].isin(["🟢", "📞"]),
+        "call_status",
+    ] = "🔴"
     pred_id = all_predictions_df.iat[st.session_state["pred_idx"], 0]
 
     # load information related to call history
@@ -130,7 +137,11 @@ def main():
             remarks="",
             prediction_id=pred_id,
         )
-    status_list = ["Niet gebeld", "Gebeld", "Onbereikbaar"]
+    # convert rows that are initiallised as None to 0
+    if current_patient_nmbr.call_number is None:
+        current_patient_nmbr.call_number = 0
+
+    status_list = ["Niet gebeld", "Wordt gebeld", "Gebeld", "Onbereikbaar"]
     res_list = ["Herinnerd", "Verzet/Geannuleerd", "Geen"]
     call_number_list = [
         "Niet van toepassing",
@@ -156,20 +167,14 @@ def main():
     st.header("Patient-gegevens")
     if enable_dev_mode:
         st.write(f"- ID: {patient_ids[st.session_state['name_idx']]}")
-    if current_patient:
-        st.write(f"- Naam: {current_patient.full_name or 'Onbekend'}")
-        st.write(f"- Voornaam: {current_patient.first_name or 'Onbekend'}")
-        st.write(f"- Geboortedatum: {current_patient.birth_date or 'Onbekend'}")
-        st.write(f"- Mobiel: {current_patient.mobile_phone or 'Onbekend'}")
-        st.write(f"- Thuis: {current_patient.home_phone or 'Onbekend'}")
-        st.write(f"- Overig nummer: {current_patient.other_phone or 'Onbekend'}")
-        st.write("")
-        if not current_patient_nmbr.call_number:
-            current_patient_nmbr.call_number = 0
-        call_number_type = call_number_list[current_patient_nmbr.call_number]
-        st.write(f"- Eerder contact ging via: {call_number_type or 'Onbekend'}")
-    else:
-        st.write("Patientgegevens zijn verwijderd.")
+
+    render_patient_info(
+        Session,
+        current_response,
+        current_patient,
+        current_patient_nmbr,
+        call_number_list,
+    )
 
     st.header("Afspraakoverzicht")
     if not enable_dev_mode:
