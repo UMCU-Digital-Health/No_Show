@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import Optional, Sequence, Tuple
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -12,7 +12,7 @@ def feature_barplot(
     feature_name: Optional[str] = None,
     perc_feature: bool = False,
     round_decimals: int = 0,
-) -> Axes:
+) -> Sequence[Axes]:
     """Create a feature barplot
 
     This will plot the relative effect of a feature
@@ -81,7 +81,7 @@ def feature_scatter(
     feature_name: Optional[str] = None,
     round_feature: bool = False,
     round_decimals: int = 0,
-) -> Axes:
+) -> Sequence[Axes]:
     """Create a feature scatter plot
 
     Parameters
