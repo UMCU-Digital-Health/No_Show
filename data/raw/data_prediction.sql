@@ -52,30 +52,35 @@ FROM [PUB].[no_show].[HealthcareService] A JOIN [PUB].[no_show].[HealthcareServi
         ON G.[parent_identifier_value] = F.identifier_value 
 WHERE 1=1
     AND A.active = 1
+    AND A.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixSubAgenda'
     AND A.identifier_value NOT IN (
-        '025224',  -- Behandelaar CMH (REV)
-        '028512',  -- Lab longziekten (LON)
-        'S00837',   -- Sylvia Toth centrum (Kind-Neurologie)
-        '024550', 'S21716', 'S21739', 'S22403', 'S22890'  -- Hartgroepen 1 t/m 5 (REV)
+        'Z10351', 'Z10330', 'Z10307', 'Z10362', 'Z10438',  -- Hartgroepen 1 t/m 5 (REV)
+        'Z10455',  -- Behandelaar CMH
+        'ZH0302', 'Z01613', 'Z01577'  -- LAB Longziekten
     )
     AND B.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgenda'
     AND B.active = 1
     AND B.identifier_value IN (
-        'A00014', 'A00030', 'A00035', 'A00036',  -- Poli Rood
-        'A00006',  -- Longziekten
-        'A20150')  -- Revalidatie en sport
+        'ZH0307',  -- RF&S Revalidatiegeneeskunde
+        'ZH0435',  -- RF&S Sportgeneeskunde
+        'ZH0183',  -- Longziekten
+        'ZH0153',  -- Kind-KNO
+        'ZH0159',  -- Kind-Neurologie
+        'ZH0163',  -- Kind-Orthopedie
+        'ZH0165'   -- Kind-Plastische chirurgie
+    )  
     AND C.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
     AND C.[created] >= '2015-01-01'
     AND C.[start] <= @end_date
     AND D.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
     AND D.type2_code NOT IN ('T', 'S', 'M')
-    AND D.type1_code NOT LIKE 'STS%'
-    AND D.type1_code NOT LIKE 'TC%'
+    AND D.type1_display NOT LIKE '%telefo%'
+    AND D.type1_display NOT LIKE 'TC%'
     AND D.without_patient <> 1
     AND E.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixLocatie'
     AND E.identifier_value NOT IN (
-        '0000010175', -- Dutch Scoliosis Center in Zeist (REV)
-        '0000006340')  -- afdeling longziekten / B3 (LON)
+        'ZH00000698', -- Dutch Scoliosis Center in Zeist
+        'ZH00000407')  -- afdeling longziekten / B3
     AND G.address_active = 1
     AND C.participant_actor_Patient_value IN (
         SELECT J.participant_actor_Patient_value
@@ -89,29 +94,34 @@ WHERE 1=1
                 ON K.location_Location_system = L.identifier_system AND K.location_Location_value = L.identifier_value
         WHERE 1=1
             AND H.active = 1
+            AND H.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixSubAgenda'
             AND H.identifier_value NOT IN (
-                '025224',  -- Behandelaar CMH (REV)
-                '028512',  -- Lab longziekten (LON)
-                'S00837',   -- Sylvia Toth centrum (Kind-Neurologie)
-                '024550', 'S21716', 'S21739', 'S22403', 'S22890'  -- Hartgroepen 1 t/m 5 (REV)
+                'Z10351', 'Z10330', 'Z10307', 'Z10362', 'Z10438',  -- Hartgroepen 1 t/m 5 (REV)
+                'Z10455',  -- Behandelaar CMH
+                'ZH0302', 'Z01613', 'Z01577'  -- LAB Longziekten
             )
             AND I.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgenda'
             AND I.active = 1
             AND I.identifier_value IN (
-                'A00014', 'A00030', 'A00035', 'A00036',  -- Poli Rood
-                'A00006',  -- Longziekten
-                'A20150')  -- Revalidatie en sport
+                'ZH0307',  -- RF&S Revalidatiegeneeskunde
+                'ZH0435',  -- RF&S Sportgeneeskunde
+                'ZH0183',  -- Longziekten
+                'ZH0153',  -- Kind-KNO
+                'ZH0159',  -- Kind-Neurologie
+                'ZH0163',  -- Kind-Orthopedie
+                'ZH0165'   -- Kind-Plastische chirurgie
+            )
             AND J.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
             AND CONVERT(DATE, J.[start]) = @start_date
             AND J.[status] = 'booked'
             AND K.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
             AND K.type2_code NOT IN ('T', 'S', 'M')
-            AND K.type1_code NOT LIKE 'STS%'
-            AND K.type1_code NOT LIKE 'TC%'
+            AND K.type1_display NOT LIKE '%telefo%'
+            AND K.type1_display NOT LIKE 'TC%'
             AND K.without_patient <> 1
             AND L.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixLocatie'
             AND L.identifier_value NOT IN (
-                '0000010175', -- Dutch Scoliosis Center in Zeist (REV)
-                '0000006340')  -- afdeling longziekten / B3 (LON)
-    )
-    ORDER BY pseudo_id, C.start;
+                'ZH00000698', -- Dutch Scoliosis Center in Zeist
+                'ZH00000407')  -- afdeling longziekten / B3
+            )
+        ORDER BY pseudo_id, C.start;
