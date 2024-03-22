@@ -27,12 +27,23 @@ class ApiRequest(Base):
     api_version: Mapped[str]
 
 
+class ApiPatient(Base):
+    __tablename__ = "apipatient"
+    __table_args__ = {"schema": "noshow"}
+
+    id: Mapped[str] = mapped_column(
+        String(64),
+        primary_key=True,
+        index=True,
+    )
+    call_number: Mapped[int] = mapped_column(Integer, init=False, nullable=True)
+
+
 class ApiPrediction(Base):
     __tablename__ = "apiprediction"
     __table_args__ = {"schema": "noshow"}
 
     id: Mapped[str] = mapped_column(String(50), primary_key=True, index=True)
-    patient_id: Mapped[str] = mapped_column(String(64), index=True)
     prediction: Mapped[float] = mapped_column(Float, nullable=True)
     start_time: Mapped[datetime] = mapped_column(DateTime, index=True)
     clinic_name: Mapped[str]
@@ -41,10 +52,16 @@ class ApiPrediction(Base):
     request_id: Mapped[int] = mapped_column(
         Integer, ForeignKey(ApiRequest.id), init=False
     )
+    patient_id: Mapped[str] = mapped_column(
+        String(64),
+        ForeignKey(ApiPatient.id),
+        index=True,
+    )
     active: Mapped[bool]
 
     request_relation: Mapped["ApiRequest"] = relationship()
     callresponse_relation: Mapped["ApiCallResponse"] = relationship(init=False)
+    patient_relation: Mapped["ApiPatient"] = relationship()
 
 
 class ApiSensitiveInfo(Base):

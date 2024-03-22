@@ -31,30 +31,35 @@ FROM [DWH].[models].[HealthcareService] A JOIN [DWH].[models].[HealthcareService
         ON G.[parent_identifier_value] = F.identifier_value 
 WHERE 1=1
     AND A.active = 1
+    AND A.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixSubAgenda'
     AND A.identifier_value NOT IN (
-        '025224',  -- Behandelaar CMH
-        '028512',  -- Lab longziekten
-        'S00837',   -- Sylvia Toth centrum
-        '024550', 'S21716', 'S21739', 'S22403', 'S22890'  -- Hartgroepen 1 t/m 5 (REV)
+        'Z10351', 'Z10330', 'Z10307', 'Z10362', 'Z10438',  -- Hartgroepen 1 t/m 5 (REV)
+        'Z10455',  -- Behandelaar CMH
+        'ZH0302', 'Z01613', 'Z01577'  -- LAB Longziekten
     )
     AND B.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgenda'
     AND B.active = 1
     AND B.identifier_value IN (
-        'A00014', 'A00030', 'A00035', 'A00036',  -- Poli Rood
-        'A00006',  -- Longziekten
-        'A20150')  -- Revalidatie en sport
+        'ZH0307',  -- RF&S Revalidatiegeneeskunde
+        'ZH0435',  -- RF&S Sportgeneeskunde
+        'ZH0183',  -- Longziekten
+        'ZH0153',  -- Kind-KNO
+        'ZH0159',  -- Kind-Neurologie
+        'ZH0163',  -- Kind-Orthopedie
+        'ZH0165'   -- Kind-Plastische chirurgie
+    )  
     AND C.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
     AND C.created >= '2015-01-01'
     AND C.created <= '2023-05-16'
     AND C.status <> 'booked'
     AND D.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
     AND D.type2_code NOT IN ('T', 'S', 'M')
-    AND D.type1_code NOT LIKE 'STS%'
-    AND D.type1_code NOT LIKE 'TC%'
+    AND D.type1_display NOT LIKE '%telefo%'
+    AND D.type1_display NOT LIKE 'TC%'
     AND D.without_patient <> 1
     AND E.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixLocatie'
     AND E.identifier_value NOT IN (
-        '0000010175', -- Dutch Scoliosis Center in Zeist
-        '0000006340')  -- afdeling longziekten / B3
+        'ZH00000698', -- Dutch Scoliosis Center in Zeist
+        'ZH00000407')  -- afdeling longziekten / B3
     AND G.address_active = 1
 ORDER BY B.name, A.name, C.start

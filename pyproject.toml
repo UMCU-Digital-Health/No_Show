@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "noshow"
-version = "1.0.7"
+version = "1.0.9"
 authors = [
   { name="Ruben Peters", email="r.peters-7@umcutrecht.nl" }
 ]
@@ -41,6 +41,7 @@ rye = { dev-dependencies = [
     "ipykernel>=6.29.2",
     "pytest>=8.0.1",
     "nbstripout>=0.7.1",
+    "uvicorn~=0.28.0",
 ] }
 
 [tool.isort]

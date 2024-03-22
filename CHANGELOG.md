@@ -7,12 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.7] - 2024-03-21
+## [1.0.9] - 2024-03-21
 
 ### Changed
 - Experimented with portability and performance over time of different models, see notebook: model_experiments.ipynb
 - Updated prev_minutes_early to cutoff at cutoff value instead of 0
 - Updated visualisations
+
+## [1.0.8] - 2024-03-21
+
+### Changed
+- Dashboard now logs when a call has started to prevent duplicate calls
+- Updated queries to match HiX 6.3 codes
+
+### Fixed
+- Bug where switching to new date didn't reset pred_idx
+- Bug where None values in call_number occured
+
+## [1.0.7] - 2024-03-11
+
+### Changed
+- phone number that was used to call patient is now stored
 
 ## [1.0.6] - 2024-02-07
 
