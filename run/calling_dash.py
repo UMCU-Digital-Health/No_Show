@@ -45,6 +45,7 @@ date_3_days = add_working_days(datetime.today(), 3)
 def reset_name_index() -> None:
     """Reset the name index when changing the date"""
     st.session_state["name_idx"] = 0
+    st.session_state["pred_idx"] = 0
 
 
 def main():
