@@ -113,9 +113,10 @@ def main():
     all_predictions_df.loc[
         all_predictions_df["call_status"] == "Gebeld", "call_status"
     ] = "🟢"
-    all_predictions_df.loc[
-        all_predictions_df["call_status"] == "Wordt gebeld", "call_status"
-    ] = "📞"
+    if "Wordt gebeld" in all_predictions_df["call_status"].values:
+        all_predictions_df.loc[
+            ~(all_predictions_df["call_status"] == "🟢"), "call_status"
+        ] = "📞"
     all_predictions_df.loc[
         ~all_predictions_df["call_status"].isin(["🟢", "📞"]),
         "call_status",
