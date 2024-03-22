@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "noshow"
-version = "1.0.7"
+version = "1.0.8"
 authors = [
   { name="Ruben Peters", email="r.peters-7@umcutrecht.nl" }
 ]
@@ -35,6 +35,11 @@ dependencies =[
 [project.optional-dependencies]
 test = ["pytest", "pytest-cov", "pytest-asyncio"]
 dev = ["black", "ruff", "isort", "rsconnect-python", "uvicorn", "nbstripout"]
+
+[tool]
+rye = { dev-dependencies = [
+    "uvicorn~=0.28.0",
+] }
 
 [tool.isort]
 profile = "black"
