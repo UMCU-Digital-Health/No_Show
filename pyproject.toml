@@ -16,28 +16,31 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies =[
-  "pandas~=2.0",
-  "matplotlib~=3.7",
-  "numpy~=1.24",
-  "imbalanced-learn~=0.11",
-  "scikit-learn~=1.3",
-  "pyarrow~=14.0",
-  "fastapi~=0.109",
-  "dvc~=3.33",
-  "dvclive~=3.41",
-  "sqlalchemy~=2.0",
-  "python-dotenv~=1.0",
-  "pymssql~=2.2",
-  "streamlit~=1.30",
-  "tomli~=2.0"
+    "pandas~=2.0",
+    "matplotlib~=3.7",
+    "numpy~=1.24",
+    "scikit-learn~=1.3",
+    "pyarrow~=14.0",
+    "fastapi~=0.109",
+    "dvc~=3.33",
+    "dvclive~=3.41",
+    "sqlalchemy~=2.0",
+    "python-dotenv~=1.0",
+    "pymssql~=2.2",
+    "streamlit~=1.30",
+    "tomli~=2.0",
+    "relplot>=1.0",
 ]
 
 [project.optional-dependencies]
 test = ["pytest", "pytest-cov", "pytest-asyncio"]
-dev = ["black", "ruff", "isort", "rsconnect-python", "uvicorn", "nbstripout"]
+dev = ["rsconnect-python", "uvicorn", "nbstripout", "ipykernel"]
 
 [tool]
 rye = { dev-dependencies = [
+    "ipykernel>=6.29.2",
+    "pytest>=8.0.1",
+    "nbstripout>=0.7.1",
     "uvicorn~=0.28.0",
 ] }
 
@@ -46,6 +49,8 @@ profile = "black"
 
 [tool.ruff]
 src = ["src"]
+
+[tool.ruff.lint]
 select = [
     "B",
     "E",
@@ -55,7 +60,7 @@ select = [
     "I",
 ]
 
-[tool.ruff.flake8-bugbear]
+[tool.ruff.lint.flake8-bugbear]
 extend-immutable-calls = [
     "Depends",
     "fastapi.Depends",

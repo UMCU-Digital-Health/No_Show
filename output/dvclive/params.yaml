@@ -1,2 +1,3 @@
-model_name: HistGradientBoostingClassifier(learning_rate=0.05)
+model_name: HistGradientBoostingClassifier(categorical_features=['hour', 'weekday'])
+learning_rate: 0.05
 max_iter: 300
