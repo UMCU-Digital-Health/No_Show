@@ -2,9 +2,6 @@
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[global-variables]
-mute_period = 0
-
 [project]
 name = "noshow"
 version = "1.0.9"
