@@ -7,7 +7,7 @@ mute_period = 0
 
 [project]
 name = "noshow"
-version = "1.0.8"
+version = "1.0.9"
 authors = [
   { name="Ruben Peters", email="r.peters-7@umcutrecht.nl" }
 ]
