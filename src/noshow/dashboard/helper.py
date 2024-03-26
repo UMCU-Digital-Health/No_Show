@@ -1,3 +1,4 @@
+from datetime import date
 from typing import List
 
 import pandas as pd
@@ -127,6 +128,8 @@ def next_preds(
     call_response.call_outcome = st.session_state.res_input
     call_response.remarks = st.session_state.opm_input
     current_patient.call_number = st.session_state.number_input
+    if call_response.call_status == "Gebeld":
+        current_patient.last_call_date = date.today()
 
     with Session() as session:
         session.merge(call_response)

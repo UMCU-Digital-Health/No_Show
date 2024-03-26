@@ -1,11 +1,12 @@
-from datetime import date
+from datetime import date, timedelta
 from typing import List
 
 import streamlit as st
 from sqlalchemy import Date, create_engine, func, select
 from sqlalchemy.orm import Session, sessionmaker
 
-from noshow.database.models import ApiPrediction
+from noshow.config import MUTE_PERIOD
+from noshow.database.models import ApiPatient, ApiPrediction
 
 
 @st.cache_resource
@@ -66,6 +67,16 @@ def get_patient_list(_session: Session, date_input: date, top_n: int = 20) -> Li
         .group_by(ApiPrediction.patient_id)
         .order_by(func.max(ApiPrediction.prediction).desc())
         .limit(top_n)
+        .outerjoin(ApiPrediction.patient_relation)
+        # select rows where last_call_date is null, today or more than x months ago
+        .where(
+            (ApiPatient.last_call_date == None)  # noqa: E711
+            | (
+                ApiPatient.last_call_date
+                <= date.today() - timedelta(days=round(MUTE_PERIOD * 30.5))
+            )
+        )
     ).all()
+
     patient_ids = [x.patient_id for x in call_list]
     return patient_ids
