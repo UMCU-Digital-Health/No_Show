@@ -6,10 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-## [1.0.9] - 2024-03-26
+## [1.0.10] - 2024-03-26
 
 ### Changed
 - Dashboard now allows for the muting of patient for a prefined period
+
+## [1.0.9] - 2024-03-21
+
+### Changed
 - Experimented with portability and performance over time of different models, see notebook: model_experiments.ipynb
 - Updated prev_minutes_early to cutoff at cutoff value instead of 0
 - Updated visualisations
