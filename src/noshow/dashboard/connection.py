@@ -6,6 +6,7 @@ import streamlit as st
 from sqlalchemy import Date, create_engine, func, select
 from sqlalchemy.orm import Session, sessionmaker
 
+from noshow import MUTE_PERIOD
 from noshow.database.models import ApiPatient, ApiPrediction
 
 
@@ -71,8 +72,10 @@ def get_patient_list(_session: Session, date_input: date, top_n: int = 20) -> Li
         # select rows where last_call_date is null, today or more than x months ago
         .where(
             (ApiPatient.last_call_date == None)  # noqa: E711
-            | (ApiPatient.last_call_date == date.today())
-            | (ApiPatient.last_call_date < date.today() - pd.DateOffset(months=6))
+            | (
+                ApiPatient.last_call_date
+                <= date.today() - pd.DateOffset(months=MUTE_PERIOD)
+            )
         )
     ).all()
 
