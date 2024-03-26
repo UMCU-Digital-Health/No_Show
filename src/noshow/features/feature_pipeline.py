@@ -61,24 +61,29 @@ def create_features(
 
 
 def select_feature_columns(featuretable: pd.DataFrame) -> pd.DataFrame:
-    return featuretable[
-        [
-            "hour",
-            "weekday",
-            "minutesDuration",
-            "no_show",
-            "prev_no_show",
-            "prev_no_show_perc",
-            "age",
-            "dist_umcu",
-            "prev_minutes_early",
-            "earlier_appointments",
-            "appointments_same_day",
-            "appointments_last_days",
-            "days_since_created",
-            "days_since_last_appointment",
+    return (
+        featuretable[
+            [
+                "hour",
+                "weekday",
+                "minutesDuration",
+                "no_show",
+                "prev_no_show",
+                "prev_no_show_perc",
+                "age",
+                "dist_umcu",
+                "prev_minutes_early",
+                "earlier_appointments",
+                "appointments_same_day",
+                "appointments_last_days",
+                "days_since_created",
+                "days_since_last_appointment",
+                "hoofdagenda",
+            ]
         ]
-    ]
+        .reset_index()
+        .set_index(["pseudo_id", "start", "hoofdagenda"])
+    )
 
 
 if __name__ == "__main__":
