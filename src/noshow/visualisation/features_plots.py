@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import Optional, Sequence, Tuple
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -8,11 +8,11 @@ from matplotlib.axes import Axes
 def feature_barplot(
     df: pd.DataFrame,
     feature_col: str,
-    figsize: Tuple[int, int] = (10, 4),
+    figsize: Tuple[int, int] = (16, 8),
     feature_name: Optional[str] = None,
     perc_feature: bool = False,
     round_decimals: int = 0,
-) -> Axes:
+) -> Sequence[Axes]:
     """Create a feature barplot
 
     This will plot the relative effect of a feature
@@ -47,38 +47,41 @@ def feature_barplot(
         )
     feature_name = feature_col if feature_name is None else feature_name
     feature_vs_no_show = (
-        feature_vs_no_show.groupby(feature_col)["no_show"]
-        .value_counts(normalize=True, dropna=False)
+        feature_vs_no_show.groupby([feature_col, "no_show"])["no_show"]
+        .count()
         .unstack(level="no_show")
     )
+    feature_vs_no_show["no_show_perc"] = feature_vs_no_show["no_show"] / (
+        feature_vs_no_show["no_show"] + feature_vs_no_show["show"]
+    )
+    feature_vs_no_show["show_perc"] = 1 - feature_vs_no_show["no_show_perc"]
     x_values = feature_vs_no_show.index
     if perc_feature:
         x_values = x_values * 10
 
-    _, ax = plt.subplots(figsize=figsize)
-    ax.bar(x_values, feature_vs_no_show["no_show"], label="No show")
-    ax.bar(
-        x_values,
-        feature_vs_no_show["show"],
-        bottom=feature_vs_no_show["no_show"],
-        label="Show",
-    )
-    ax.set_xticks(x_values)
-    ax.set_xticklabels(feature_vs_no_show.index)
-    ax.set_title(f"Relative amount of no-shows given {feature_name}")
-    ax.set_xlabel(feature_name)
-    ax.legend()
+    _, ax = plt.subplots(2, figsize=figsize, sharex=True)
+    ax[0].bar(x_values, feature_vs_no_show["no_show_perc"], label="No show")
+    ax[0].set_xticks(x_values)
+    ax[0].set_xticklabels(feature_vs_no_show.index)
+    ax[0].set_title(f"Relative amount of no-shows given {feature_name}")
+    ax[0].legend()
+
+    ax[1].bar(x_values, feature_vs_no_show["no_show"], label="No show")
+    ax[1].set_xticklabels(feature_vs_no_show.index)
+    ax[1].set_title(f"Number of observations per {feature_name}")
+    ax[1].set_xlabel(feature_name)
+
     return ax
 
 
 def feature_scatter(
     df: pd.DataFrame,
     feature_col: str,
-    figsize: Tuple[int, int] = (10, 5),
+    figsize: Tuple[int, int] = (16, 8),
     feature_name: Optional[str] = None,
     round_feature: bool = False,
     round_decimals: int = 0,
-) -> Axes:
+) -> Sequence[Axes]:
     """Create a feature scatter plot
 
     Parameters
@@ -111,15 +114,21 @@ def feature_scatter(
         )
 
     feature_vs_no_show = (
-        feature_vs_no_show.groupby(feature_col)["no_show"]
-        .value_counts(normalize=True)
+        feature_vs_no_show.groupby([feature_col, "no_show"])["no_show"]
+        .count()
         .unstack(level="no_show")
     )
+    feature_vs_no_show["no_show_perc"] = feature_vs_no_show["no_show"] / (
+        feature_vs_no_show["no_show"] + feature_vs_no_show["show"]
+    )
 
-    _, ax = plt.subplots(figsize=figsize)
+    _, ax = plt.subplots(2, figsize=figsize, sharex=True)
 
-    ax.scatter(feature_vs_no_show.index, feature_vs_no_show["no_show"])
-    ax.set_title(f"{feature_name} vs no show")
-    ax.set_xlabel(feature_name)
-    ax.set_ylabel("Relative no-show")
+    ax[0].scatter(feature_vs_no_show.index, feature_vs_no_show["no_show_perc"])
+    ax[0].set_title(f"{feature_name} vs no show")
+    ax[0].set_xlabel(feature_name)
+    ax[0].set_ylabel("Relative no-show")
+
+    ax[1].bar(feature_vs_no_show.index, feature_vs_no_show["no_show"])
+
     return ax

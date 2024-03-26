@@ -66,6 +66,12 @@ def train_cv_model(
         live.log_params(grid.best_params_)
         live.log_metric("best_score", grid.best_score_)
         live.log_metric(
+            "mean_roc_auc", grid.cv_results_["mean_test_roc_auc"][grid.best_index_]
+        )
+        live.log_metric(
+            "std_roc_auc", grid.cv_results_["std_test_roc_auc"][grid.best_index_]
+        )
+        live.log_metric(
             "mean_precision", grid.cv_results_["mean_test_precision"][grid.best_index_]
         )
         live.log_metric(
@@ -83,11 +89,15 @@ if __name__ == "__main__":
     featuretable = pd.read_parquet(
         project_folder / "data" / "processed" / "featuretable.parquet"
     )
+
+    model = HistGradientBoostingClassifier(categorical_features=["hour", "weekday"])
+
     best_model = train_cv_model(
         featuretable=featuretable,
         output_path=project_folder / "output",
-        classifier=HistGradientBoostingClassifier(
-            learning_rate=0.05,
-        ),
-        param_grid={"max_iter": [100, 200, 300]},
+        classifier=model,
+        param_grid={
+            "max_iter": [200, 300, 500],
+            "learning_rate": [0.01, 0.05, 0.1],
+        },
     )

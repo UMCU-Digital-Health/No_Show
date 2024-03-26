@@ -150,8 +150,12 @@ def add_minutes_early(appointments_df: pd.DataFrame, cutoff: int = 60) -> pd.Dat
     ).dt.total_seconds() / 60
 
     appointments_df.loc[appointments_df["gearriveerd"].isna(), "minutes_early"] = 0
-    appointments_df.loc[appointments_df["minutes_early"] > cutoff, "minutes_early"] = 0
-    appointments_df.loc[appointments_df["minutes_early"] < -cutoff, "minutes_early"] = 0
+    appointments_df.loc[appointments_df["minutes_early"] > cutoff, "minutes_early"] = (
+        cutoff
+    )
+    appointments_df.loc[
+        appointments_df["minutes_early"] < -cutoff, "minutes_early"
+    ] = -cutoff
 
     appointments_df = calc_cumulative_features(
         appointments_df, "minutes_early", "prev_minutes_early"

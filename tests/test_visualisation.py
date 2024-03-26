@@ -10,9 +10,13 @@ fake_feature_data = pd.DataFrame(
 
 def test_feature_barplot():
     ax = feature_barplot(fake_feature_data, "feature")
-    assert type(ax) is Axes
+    assert len(ax) == 2
+    assert type(ax[0]) is Axes
+    assert type(ax[1]) is Axes
 
 
 def test_feature_scatterplot():
     ax = feature_scatter(fake_feature_data, "feature")
-    assert type(ax) is Axes
+    assert len(ax) == 2
+    assert type(ax[0]) is Axes
+    assert type(ax[1]) is Axes
