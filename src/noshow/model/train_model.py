@@ -28,7 +28,9 @@ def train_cv_model(
         If we want to save the experiment in DVC, by default True
     """
 
-    featuretable["no_show"] = featuretable["no_show"].replace({"no_show": 1, "show": 0})
+    featuretable["no_show"] = (
+        featuretable["no_show"].replace({"no_show": "1", "show": "0"}).astype(int)
+    )
 
     X, y = featuretable.drop(columns="no_show"), featuretable["no_show"]
 

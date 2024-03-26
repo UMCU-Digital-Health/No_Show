@@ -22,8 +22,8 @@ def prev_no_show_features(appointments_df: pd.DataFrame) -> pd.DataFrame:
     pd.DataFrame
         The input dataframe with added feature columns
     """
-    appointments_df.loc[:, "prev_no_show"] = appointments_df["no_show"].replace(
-        {"no_show": 1, "show": 0}
+    appointments_df.loc[:, "prev_no_show"] = (
+        appointments_df["no_show"].replace({"no_show": "1", "show": "0"}).astype(int)
     )
 
     appointments_df = calc_cumulative_features(
