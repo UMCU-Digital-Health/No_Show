@@ -24,6 +24,7 @@ jobs:
         uv pip install -e ".[test]"
     - name: Running Unit tests
       run: |
+        source .venv/bin/activate
         pytest tests/ --doctest-modules --cov=src --cov-report=xml
     - name: Code Coverage Summary Report
       uses: irongut/CodeCoverageSummary@v1.3.0
