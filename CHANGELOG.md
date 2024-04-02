@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.10] - 2024-04-02
+
+### Changed
+- Added notebook for model strategy selection (including clinic or not)
+- Updating requirements (solves orjson dependabot alert)
+- Added comment to warn about new HiX 6.3 no-show codes
+
+### Fixes
+- Updated pandas replace function to solve deprecation warning
+
 ## [1.0.9] - 2024-03-21
 
 ### Changed
