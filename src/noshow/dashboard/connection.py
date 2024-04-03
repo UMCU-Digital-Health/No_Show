@@ -76,6 +76,7 @@ def get_patient_list(_session: Session, date_input: date, top_n: int = 20) -> Li
                 <= date.today() - timedelta(days=round(MUTE_PERIOD * 30.5))
             )
         )
+        .where((ApiPatient.opt_out == None) | (ApiPatient.opt_out == 0))  # noqa: E711
     ).all()
 
     patient_ids = [x.patient_id for x in call_list]
