@@ -70,13 +70,13 @@ def get_patient_list(_session: Session, date_input: date, top_n: int = 20) -> Li
         .outerjoin(ApiPrediction.patient_relation)
         # select rows where last_call_date is null, today or more than x months ago
         .where(
-            (ApiPatient.last_call_date == None)  # noqa: E711
+            (ApiPatient.last_call_date.is_(None))
             | (
                 ApiPatient.last_call_date
                 <= date.today() - timedelta(days=round(MUTE_PERIOD * 30.5))
             )
         )
-        .where((ApiPatient.opt_out == None) | (ApiPatient.opt_out == 0))  # noqa: E711
+        .where((ApiPatient.opt_out.is_(None)) | (ApiPatient.opt_out == 0))
     ).all()
 
     patient_ids = [x.patient_id for x in call_list]
