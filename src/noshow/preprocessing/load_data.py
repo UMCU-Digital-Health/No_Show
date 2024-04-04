@@ -85,7 +85,15 @@ def process_appointments(appointments_df: pd.DataFrame) -> pd.DataFrame:
     )
 
     appointments_df["no_show"] = appointments_df["cancelationReason_code"].isin(
-        ["M", "C2", "C3", "0000000010", "D1", "N", "E1"]
+        [
+            "M",
+            "C2",
+            "C3",
+            "0000000010",
+            "D1",
+            "N",
+            "E1",
+        ]  # TODO: Change when using HiX 6.3
     )
     appointments_df["no_show"] = appointments_df["no_show"].replace(
         {True: "no_show", False: "show"}
