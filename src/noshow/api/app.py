@@ -175,9 +175,10 @@ async def predict(
                 clinic_reception=row["description"],
                 clinic_phone_number=add_clinic_phone(row["hoofdagenda"]),
                 active=True,
+                treatment=row["treatment_group"],
             )
         else:
-            # All values of a prediction can be updated except the ID fields
+            # All values of a prediction can be updated except the ID and treatment
             apiprediction.prediction = row["prediction"]
             apiprediction.start_time = row["start"]
             apiprediction.request_relation = apirequest
