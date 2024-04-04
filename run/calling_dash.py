@@ -141,8 +141,13 @@ def main():
     if current_patient_nmbr.call_number is None:
         current_patient_nmbr.call_number = 0
 
-    status_list = ["Niet gebeld", "Wordt gebeld", "Gebeld", "Onbereikbaar"]
-    res_list = ["Herinnerd", "Verzet/Geannuleerd", "Geen"]
+    status_list = [
+        "Niet gebeld",
+        "Wordt gebeld",
+        "Gebeld",
+        "Onbereikbaar",
+    ]
+    res_list = ["Herinnerd", "Verzet/Geannuleerd", "Geen", "Bel me niet"]
     call_number_list = [
         "Niet van toepassing",
         "Mobielnummer",
