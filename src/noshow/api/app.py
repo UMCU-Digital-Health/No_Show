@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from noshow.api.app_helpers import (
     add_clinic_phone,
+    create_treatment_groups,
     fix_outdated_appointments,
     load_model,
 )
@@ -120,6 +121,8 @@ async def predict(
         add_sensitive_info=True,
     )
 
+    prediction_df = create_treatment_groups(prediction_df)
+
     prediction_df = prediction_df.sort_values(
         "prediction", ascending=False
     ).reset_index()
@@ -137,6 +140,7 @@ async def predict(
         runtime=(end_time - start_time).total_seconds(),
     )
     db.add(apirequest)
+
     for _, row in prediction_df.iterrows():
         apisensitive = db.get(ApiSensitiveInfo, row["pseudo_id"])
 

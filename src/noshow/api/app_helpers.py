@@ -2,7 +2,7 @@ import pickle
 from pathlib import Path
 from typing import Any, Union
 
-from pandas import Series
+import pandas as pd
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -39,7 +39,7 @@ def add_clinic_phone(clinic_name: str) -> str:
 
 
 def fix_outdated_appointments(
-    session: Session, app_ids: Series, start_date: str
+    session: Session, app_ids: pd.Series, start_date: str
 ) -> None:
     """Set the status of outdated appointments on inactive
 
@@ -69,3 +69,36 @@ def fix_outdated_appointments(
             apiprediction.active = False
             session.merge(apiprediction)
             session.commit()
+
+
+def create_treatment_groups(predictions: pd.DataFrame) -> pd.DataFrame:
+    """
+    Create treatment groups based on predictions.
+
+    Parameters
+    ----------
+    predictions : pd.DataFrame
+        DataFrame containing prediction scores.
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with treatment group assignments.
+
+    Notes
+    -----
+    This function creates treatment groups based on prediction scores. It first bins the
+    prediction scores using quantile bins. Then, it performs stratified randomization
+    to assign control and treatment groups based on the score bins and clinic.
+
+    The treatment group assignment is determined by the group number modulo 2.
+    If the group number is even, the patient is assigned to the control group.
+    If the group number is odd, the patient is assigned to the treatment group.
+    """
+    # Create prediction score bins using quantile bins, for example 10
+    predictions["score_bin"] = pd.qcut(predictions["prediction_score"], q=10)
+    # Create stratified randomization in control and treatment groups
+    predictions["treatment_group"] = (
+        predictions.groupby(["clinic", "score_bin"]).ngroup() % 2
+    )
+    return predictions
