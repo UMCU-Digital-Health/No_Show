@@ -18,6 +18,7 @@ def sample_df():
     data = {
         "prediction": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
         "hoofdagenda": ["A", "A", "B", "B", "C", "C", "D", "D", "E", "E"],
+        "pseudo_id": [1, 2, 3, 1, 3, 2, 4, 1, 2, 4],
     }
     return pd.DataFrame(data)
 
@@ -51,6 +52,10 @@ class TestRCT:
         assert (
             result["treatment_group"].dtype == int
         ), "treatment_group column is not of type int"
+        # check if every pseudo_id has one unique treatment group
+        assert (
+            result.groupby("pseudo_id")["treatment_group"].nunique().max() == 1
+        ), "Some pseudo_ids have multiple treatment groups"
 
     def test_alternate_assignment_within_groups(self, sample_df):
         """
@@ -66,3 +71,13 @@ class TestRCT:
             assert np.all(
                 np.diff(treatment_groups) != 0
             ), "Treatment groups are not alternately assigned within groups"
+
+    def test_empty_df(self, empty_df):
+        """
+        Test function for handling an empty DataFrame.
+        """
+
+        # if value error is raised, the function is working correctly
+        with pytest.raises(ValueError):
+            result = create_treatment_groups(empty_df)
+            assert result

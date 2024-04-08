@@ -79,44 +79,41 @@ def create_treatment_groups(predictions: pd.DataFrame) -> pd.DataFrame:
     Parameters
     ----------
     predictions : pd.DataFrame
-        DataFrame containing prediction scores.
+        DataFrame containing predictions.
 
     Returns
     -------
     pd.DataFrame
         DataFrame with treatment group assignments.
 
-    Notes
-    -----
-    This function creates treatment groups based on prediction scores. It first bins the
-    prediction scores using quantile bins. Then, it performs stratified randomization
-    to assign control and treatment groups based on the score bins and clinic.
-
-    The treatment group assignment is determined by the group number modulo 2.
-    If the group number is even, the patient is assigned to the control group.
-    If the group number is odd, the patient is assigned to the treatment group.
-
-    Example
-    -------
-    >>> import pandas as pd
-    >>> import numpy as np
-    >>> predictions = pd.DataFrame({"prediction": [0.2, 0.5, 0.8, 0.3, 0.6, 0.9],
-    ...                            "hoofdagenda": ["A", "B", "A", "B", "A", "B"]})
-    >>> create_treatment_groups(predictions)
-       prediction hoofdagenda  score_bin  treatment_group
-    0         0.2           A  (0.2, 0.3)                0
-    1         0.3           B  (0.2, 0.3)                1
-    2         0.5           B  (0.3, 0.6)                1
-    3         0.6           A  (0.3, 0.6)                0
-    4         0.8           A  (0.6, 0.9)                0
-    5         0.9           B  (0.6, 0.9)                1
+    Raises
+    ------
+    ValueError
+        If the predictions DataFrame is empty.
     """
+    if predictions.empty:
+        raise ValueError("The predictions DataFrame is empty.")
+
     # Create prediction score bins using quantile bins, for example 10
     predictions["score_bin"] = pd.qcut(predictions["prediction"], q=10)
+
     # sort predictions by hoofdagenda and score_bin
-    predictions = predictions.sort_values(["hoofdagenda", "prediction"])
+    predictions = predictions.sort_values(["prediction"])
+
+    # Pre-process data to handle duplicates
+    deduplicated = predictions.drop_duplicates(subset="pseudo_id", keep="first")
+
     # Create stratified randomization in control and treatment groups
-    predictions["treatment_group"] = predictions.groupby(
+    deduplicated = deduplicated.sort_values(["hoofdagenda", "prediction"])
+    deduplicated["treatment_group"] = deduplicated.groupby(
         ["hoofdagenda", "score_bin"], observed=True
-    ).transform(lambda x: np.arange(len(x)) % 2)
+    )["prediction"].transform(lambda x: np.arange(len(x)) % 2)
+    # Merge back the treatment_group assignments to the original DataFrame
+    predictions = pd.merge(
+        predictions,
+        deduplicated[["pseudo_id", "treatment_group"]],
+        on="pseudo_id",
+        how="left",
+    )
+
     return predictions
