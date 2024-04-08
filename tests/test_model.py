@@ -13,7 +13,8 @@ from noshow.preprocessing.load_data import process_appointments
 
 def test_create_prediction():
     appointments_df = pd.DataFrame(fake_appointments())
-    appointments_df["created"] = pd.to_datetime(appointments_df["created"])
+    appointments_df["created"] = pd.to_datetime(appointments_df["created"], unit="ms")
+    appointments_df["start"] = pd.to_datetime(appointments_df["start"], unit="ms")
     appointments_df = process_appointments(appointments_df)
 
     preds = create_prediction(FakeModel(), appointments_df, fake_postal_codes(None))

@@ -114,6 +114,6 @@ def create_treatment_groups(predictions: pd.DataFrame) -> pd.DataFrame:
         deduplicated[["pseudo_id", "treatment_group"]],
         on="pseudo_id",
         how="left",
-    ).drop(columns=["score_bin"])
+    )
 
     return predictions
