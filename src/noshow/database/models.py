@@ -60,7 +60,7 @@ class ApiPrediction(Base):
         index=True,
     )
     active: Mapped[bool]
-    treatment: Mapped[int]
+    treatment: Mapped[int] = mapped_column(Integer, init=False, nullable=True)
 
     request_relation: Mapped["ApiRequest"] = relationship()
     callresponse_relation: Mapped["ApiCallResponse"] = relationship(init=False)
