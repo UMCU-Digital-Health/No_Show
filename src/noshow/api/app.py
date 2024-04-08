@@ -121,12 +121,11 @@ async def predict(
         add_sensitive_info=True,
     )
 
-    prediction_df = create_treatment_groups(prediction_df)
-
     prediction_df = prediction_df.sort_values(
         "prediction", ascending=False
     ).reset_index()
 
+    prediction_df = create_treatment_groups(prediction_df)
     # Remove all previous sensitive info like name, phonenumber
     db.execute(delete(ApiSensitiveInfo))
 
@@ -186,6 +185,8 @@ async def predict(
             apiprediction.clinic_reception = row["description"]
             apiprediction.clinic_phone_number = add_clinic_phone(row["hoofdagenda"])
             apiprediction.active = True
+            if not apiprediction.treatment:
+                apiprediction.treatment = row["treatment_group"]
 
         db.merge(apisensitive)
         db.merge(apiprediction)
