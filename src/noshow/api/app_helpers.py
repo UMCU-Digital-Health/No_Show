@@ -72,7 +72,9 @@ def fix_outdated_appointments(
             session.commit()
 
 
-def create_treatment_groups(predictions: pd.DataFrame) -> pd.DataFrame:
+def create_treatment_groups(
+    predictions: pd.DataFrame, n_bins: int = 10
+) -> pd.DataFrame:
     """
     Create treatment groups based on predictions.
 
@@ -80,6 +82,9 @@ def create_treatment_groups(predictions: pd.DataFrame) -> pd.DataFrame:
     ----------
     predictions : pd.DataFrame
         DataFrame containing predictions.
+
+    n_bins : int, optional
+        Number of bins to create for prediction scores (default is 10).
 
     Returns
     -------
@@ -95,12 +100,11 @@ def create_treatment_groups(predictions: pd.DataFrame) -> pd.DataFrame:
         raise ValueError("The predictions DataFrame is empty.")
 
     # Create prediction score bins using quantile bins, for example 10
-    predictions["score_bin"] = pd.qcut(predictions["prediction"], q=10)
+    predictions["score_bin"] = pd.qcut(predictions["prediction"], q=n_bins)
 
-    # sort predictions by hoofdagenda and score_bin
     predictions = predictions.sort_values(["prediction"])
 
-    # Pre-process data to handle duplicates
+    # only keep top prediction per patient for treatment/control split
     deduplicated = predictions.drop_duplicates(subset="pseudo_id", keep="first")
 
     # Create stratified randomization in control and treatment groups
@@ -108,7 +112,7 @@ def create_treatment_groups(predictions: pd.DataFrame) -> pd.DataFrame:
     deduplicated["treatment_group"] = deduplicated.groupby(
         ["hoofdagenda", "score_bin"], observed=True
     )["prediction"].transform(lambda x: np.arange(len(x)) % 2)
-    # Merge back the treatment_group assignments to the original DataFrame
+
     predictions = pd.merge(
         predictions,
         deduplicated[["pseudo_id", "treatment_group"]],

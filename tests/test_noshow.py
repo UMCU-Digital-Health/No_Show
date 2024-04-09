@@ -9,7 +9,7 @@ import pandas as pd
 
 class FakeModel:
     def predict_proba(self, feature_table):
-        return np.zeros((len(feature_table), 2))
+        return np.random.rand(len(feature_table), 2)
 
 
 def fake_postal_codes(_=None) -> pd.DataFrame:
