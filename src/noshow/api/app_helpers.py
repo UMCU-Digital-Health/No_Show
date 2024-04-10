@@ -2,7 +2,8 @@ import pickle
 from pathlib import Path
 from typing import Any, Union
 
-from pandas import Series
+import numpy as np
+import pandas as pd
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -39,7 +40,7 @@ def add_clinic_phone(clinic_name: str) -> str:
 
 
 def fix_outdated_appointments(
-    session: Session, app_ids: Series, start_date: str
+    session: Session, app_ids: pd.Series, start_date: str
 ) -> None:
     """Set the status of outdated appointments on inactive
 
@@ -69,3 +70,54 @@ def fix_outdated_appointments(
             apiprediction.active = False
             session.merge(apiprediction)
             session.commit()
+
+
+def create_treatment_groups(
+    predictions: pd.DataFrame, n_bins: int = 10
+) -> pd.DataFrame:
+    """
+    Create treatment groups based on predictions.
+
+    Parameters
+    ----------
+    predictions : pd.DataFrame
+        DataFrame containing predictions.
+
+    n_bins : int, optional
+        Number of bins to create for prediction scores (default is 10).
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with treatment group assignments.
+
+    Raises
+    ------
+    ValueError
+        If the predictions DataFrame is empty.
+    """
+    if predictions.empty:
+        raise ValueError("The predictions DataFrame is empty.")
+
+    # Create prediction score bins using quantile bins, for example 10
+    predictions["score_bin"] = pd.qcut(predictions["prediction"], q=n_bins)
+
+    predictions = predictions.sort_values(["prediction"])
+
+    # only keep top prediction per patient for treatment/control split
+    deduplicated = predictions.drop_duplicates(subset="pseudo_id", keep="first")
+
+    # Create stratified randomization in control and treatment groups
+    deduplicated = deduplicated.sort_values(["hoofdagenda", "prediction"])
+    deduplicated["treatment_group"] = deduplicated.groupby(
+        ["hoofdagenda", "score_bin"], observed=True
+    )["prediction"].transform(lambda x: np.arange(len(x)) % 2)
+
+    predictions = pd.merge(
+        predictions,
+        deduplicated[["pseudo_id", "treatment_group"]],
+        on="pseudo_id",
+        how="left",
+    )
+
+    return predictions

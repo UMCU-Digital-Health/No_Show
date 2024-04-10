@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from noshow.api.app_helpers import (
     add_clinic_phone,
+    create_treatment_groups,
     fix_outdated_appointments,
     load_model,
 )
@@ -124,6 +125,7 @@ async def predict(
         "prediction", ascending=False
     ).reset_index()
 
+    prediction_df = create_treatment_groups(prediction_df)
     # Remove all previous sensitive info like name, phonenumber
     db.execute(delete(ApiSensitiveInfo))
 
@@ -137,6 +139,7 @@ async def predict(
         runtime=(end_time - start_time).total_seconds(),
     )
     db.add(apirequest)
+
     for _, row in prediction_df.iterrows():
         apisensitive = db.get(ApiSensitiveInfo, row["pseudo_id"])
 
@@ -171,9 +174,10 @@ async def predict(
                 clinic_reception=row["description"],
                 clinic_phone_number=add_clinic_phone(row["hoofdagenda"]),
                 active=True,
+                treatment=row["treatment_group"],
             )
         else:
-            # All values of a prediction can be updated except the ID fields
+            # All values of a prediction can be updated except the ID and treatment
             apiprediction.prediction = row["prediction"]
             apiprediction.start_time = row["start"]
             apiprediction.request_relation = apirequest
@@ -181,6 +185,8 @@ async def predict(
             apiprediction.clinic_reception = row["description"]
             apiprediction.clinic_phone_number = add_clinic_phone(row["hoofdagenda"])
             apiprediction.active = True
+            if not apiprediction.treatment:
+                apiprediction.treatment = row["treatment_group"]
 
         db.merge(apisensitive)
         db.merge(apiprediction)
