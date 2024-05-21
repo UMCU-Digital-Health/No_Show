@@ -125,7 +125,7 @@ async def predict(
         "prediction", ascending=False
     ).reset_index()
 
-    prediction_df = create_treatment_groups(prediction_df)
+    prediction_df = create_treatment_groups(prediction_df, db)
     # Remove all previous sensitive info like name, phonenumber
     db.execute(delete(ApiSensitiveInfo))
 

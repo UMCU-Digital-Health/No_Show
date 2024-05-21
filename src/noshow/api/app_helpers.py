@@ -7,7 +7,7 @@ import pandas as pd
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from noshow.database.models import ApiPrediction
+from noshow.database.models import ApiPatient, ApiPrediction
 
 
 def load_model(model_path: Union[str, Path, None] = None) -> Any:
@@ -73,7 +73,7 @@ def fix_outdated_appointments(
 
 
 def create_treatment_groups(
-    predictions: pd.DataFrame, n_bins: int = 10
+    predictions: pd.DataFrame, session: Session, n_bins: int = 4
 ) -> pd.DataFrame:
     """
     Create treatment groups based on predictions.
@@ -82,9 +82,10 @@ def create_treatment_groups(
     ----------
     predictions : pd.DataFrame
         DataFrame containing predictions.
-
+    session : Session
+        Session variable that holds the database connection.
     n_bins : int, optional
-        Number of bins to create for prediction scores (default is 10).
+        Number of bins to create for prediction scores (default is 4).
 
     Returns
     -------
@@ -99,19 +100,47 @@ def create_treatment_groups(
     if predictions.empty:
         raise ValueError("The predictions DataFrame is empty.")
 
+    # get unique patient ids
+    unique_patient_ids = predictions["pseudo_id"].unique().tolist()
+
+    # Get all unqiue patients from the ApiPatient table and save to df
+    patients = (
+        session.query(ApiPatient).filter(ApiPatient.id.in_(unique_patient_ids)).all()
+    )
+    patients = pd.DataFrame(patients)
+
+    # Merge predictions with patients to get treatment group
+    predictions = pd.merge(
+        predictions,
+        patients[["id", "treatment_group"]],
+        right_on="id",
+        left_on="pseudo_id",
+        how="left",
+    )
+
     # Create prediction score bins using quantile bins, for example 10
     predictions["score_bin"] = pd.qcut(predictions["prediction"], q=n_bins)
-
     predictions = predictions.sort_values(["prediction"])
 
     # only keep top prediction per patient for treatment/control split
     deduplicated = predictions.drop_duplicates(subset="pseudo_id", keep="first")
+    # only keep patients without treatment group
+    deduplicated = deduplicated[deduplicated["treatment_group"].isnull()]
 
     # Create stratified randomization in control and treatment groups
     deduplicated = deduplicated.sort_values(["hoofdagenda", "prediction"])
     deduplicated["treatment_group"] = deduplicated.groupby(
         ["hoofdagenda", "score_bin"], observed=True
     )["prediction"].transform(lambda x: np.arange(len(x)) % 2)
+
+    # save treatment group to patients without an assigned treatment group
+    for patient in list(deduplicated["pseudo_id"].unique()):
+        patient = session.get(ApiPatient, patient)
+        patient.treatment = deduplicated[deduplicated["pseudo_id"] == patient.id][
+            "treatment_group"
+        ].values[0]
+        session.merge(patient)
+        session.commit()
 
     predictions = pd.merge(
         predictions,
