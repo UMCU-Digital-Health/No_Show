@@ -135,12 +135,15 @@ def create_treatment_groups(
 
     # save treatment group to patients without an assigned treatment group
     for patient in list(deduplicated["pseudo_id"].unique()):
-        patient = session.get(ApiPatient, patient)
-        patient.treatment = deduplicated[deduplicated["pseudo_id"] == patient.id][
-            "treatment_group"
-        ].values[0]
-        session.merge(patient)
+        patient_data = session.get(ApiPatient, patient)
+        patient_data.treatment_group = int(
+            deduplicated[deduplicated["pseudo_id"] == patient_data.id][
+                "treatment_group"
+            ].values[0]
+        )
+        session.merge(patient_data)
         session.commit()
+    print(predictions.head())
 
     predictions = pd.merge(
         predictions,
@@ -148,5 +151,5 @@ def create_treatment_groups(
         on="pseudo_id",
         how="left",
     )
-
+    print(predictions.head())
     return predictions
