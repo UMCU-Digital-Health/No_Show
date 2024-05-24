@@ -143,13 +143,20 @@ def create_treatment_groups(
         )
         session.merge(patient_data)
         session.commit()
-    print(predictions.head())
 
-    predictions = pd.merge(
-        predictions,
+    # update predictions with treatment groups from deduplicated based on pseudo_id
+    merged = predictions.merge(
         deduplicated[["pseudo_id", "treatment_group"]],
         on="pseudo_id",
         how="left",
+        suffixes=("", "_new"),
     )
-    print(predictions.head())
+
+    # Update the treatment_group values where there's a new value
+    predictions["treatment_group"] = merged["treatment_group_new"].combine_first(
+        predictions["treatment_group"]
+    )
+    predictions["treatment_group"] = predictions["treatment_group"].astype(int)
+    # drop score_bin column
+    predictions = predictions.drop(columns="score_bin")
     return predictions
