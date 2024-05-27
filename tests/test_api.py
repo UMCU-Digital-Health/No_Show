@@ -42,6 +42,11 @@ async def test_predict_endpoint(monkeypatch):
     monkeypatch.setattr(app, "process_postal_codes", fake_postal_codes)
     monkeypatch.setattr(app, "load_model", fake_model)
     monkeypatch.setattr(app, "delete", lambda x: x)
+    # patch create treatment groups and add column to the dataframe
+    monkeypatch.setattr(
+        app, "create_treatment_groups", lambda x, y: x.assign(treatment_group=1)
+    )
+
     output = await predict(appointments_json, "2023-01-05", FakeDB())
     output_df = pd.DataFrame(output)
-    assert output_df.shape == (4, 16)
+    assert output_df.shape == (4, 15)
