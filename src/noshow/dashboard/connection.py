@@ -64,8 +64,6 @@ def get_patient_list(_session: Session, date_input: date, top_n: int = 20) -> Li
         select(ApiPrediction.patient_id, func.max(ApiPrediction.prediction))
         .where(ApiPrediction.start_time.cast(Date) == date_input)
         .where(ApiPrediction.active)
-        # select the treatment group
-        .where(ApiPrediction.treatment == 1)
         .group_by(ApiPrediction.patient_id)
         .order_by(func.max(ApiPrediction.prediction).desc())
         .limit(top_n)
@@ -78,6 +76,8 @@ def get_patient_list(_session: Session, date_input: date, top_n: int = 20) -> Li
                 <= date.today() - timedelta(days=round(MUTE_PERIOD * 30.5))
             )
         )
+        # select the treatment group
+        .where(ApiPatient.treatment_group == 1)
         .where((ApiPatient.opt_out.is_(None)) | (ApiPatient.opt_out == 0))
     ).all()
 

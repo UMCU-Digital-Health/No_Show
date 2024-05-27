@@ -160,6 +160,7 @@ async def predict(
             apisensitive.other_phone = row["telecom3_value"]
 
         apipatient = ApiPatient(id=row["pseudo_id"])
+        apipatient.treatment_group = int(row["treatment_group"])
 
         apiprediction = db.get(ApiPrediction, row["APP_ID"])
         if not apiprediction:
@@ -174,7 +175,6 @@ async def predict(
                 clinic_reception=row["description"],
                 clinic_phone_number=add_clinic_phone(row["hoofdagenda"]),
                 active=True,
-                treatment=row["treatment_group"],
             )
         else:
             # All values of a prediction can be updated except the ID and treatment
@@ -185,8 +185,6 @@ async def predict(
             apiprediction.clinic_reception = row["description"]
             apiprediction.clinic_phone_number = add_clinic_phone(row["hoofdagenda"])
             apiprediction.active = True
-            if not apiprediction.treatment:
-                apiprediction.treatment = row["treatment_group"]
 
         db.merge(apisensitive)
         db.merge(apiprediction)

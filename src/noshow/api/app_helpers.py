@@ -118,7 +118,7 @@ def create_treatment_groups(
         how="left",
     )
 
-    # Create prediction score bins using quantile bins, for example 10
+    # Create prediction score bins using quantile bins
     predictions["score_bin"] = pd.qcut(predictions["prediction"], q=n_bins)
     predictions = predictions.sort_values(["prediction"])
 
@@ -133,17 +133,6 @@ def create_treatment_groups(
         ["hoofdagenda", "score_bin"], observed=True
     )["prediction"].transform(lambda x: np.arange(len(x)) % 2)
 
-    # save treatment group to patients without an assigned treatment group
-    for patient in list(deduplicated["pseudo_id"].unique()):
-        patient_data = session.get(ApiPatient, patient)
-        patient_data.treatment_group = int(
-            deduplicated[deduplicated["pseudo_id"] == patient_data.id][
-                "treatment_group"
-            ].values[0]
-        )
-        session.merge(patient_data)
-        session.commit()
-
     # update predictions with treatment groups from deduplicated based on pseudo_id
     merged = predictions.merge(
         deduplicated[["pseudo_id", "treatment_group"]],
@@ -156,7 +145,6 @@ def create_treatment_groups(
     predictions["treatment_group"] = merged["treatment_group_new"].combine_first(
         predictions["treatment_group"]
     )
-    predictions["treatment_group"] = predictions["treatment_group"].astype(int)
     # drop score_bin column
     predictions = predictions.drop(columns="score_bin")
     return predictions
