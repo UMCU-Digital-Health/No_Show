@@ -109,14 +109,17 @@ def create_treatment_groups(
     )
     patients = pd.DataFrame(patients)
 
-    # Merge predictions with patients to get treatment group
-    predictions = pd.merge(
-        predictions,
-        patients[["id", "treatment_group"]],
-        right_on="id",
-        left_on="pseudo_id",
-        how="left",
-    )
+    if not patients.empty:
+        # Merge predictions with patients to get treatment group
+        predictions = pd.merge(
+            predictions,
+            patients[["id", "treatment_group"]],
+            right_on="id",
+            left_on="pseudo_id",
+            how="left",
+        )
+    else:
+        predictions["treatment_group"] = None
 
     # Create prediction score bins using quantile bins
     predictions["score_bin"] = pd.qcut(predictions["prediction"], q=n_bins)

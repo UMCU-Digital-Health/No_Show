@@ -159,9 +159,12 @@ async def predict(
             apisensitive.home_phone = row["telecom2_value"]
             apisensitive.other_phone = row["telecom3_value"]
 
-        apipatient = ApiPatient(id=row["pseudo_id"])
+        apipatient = db.get(ApiPatient, row["pseudo_id"])
+        if not apipatient:
+            apipatient = ApiPatient(
+                id=row["pseudo_id"],
+            )
         apipatient.treatment_group = int(row["treatment_group"])
-
         apiprediction = db.get(ApiPrediction, row["APP_ID"])
         if not apiprediction:
             apiprediction = ApiPrediction(
