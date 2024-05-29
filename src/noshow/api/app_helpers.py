@@ -8,6 +8,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from noshow.database.models import ApiPatient, ApiPrediction
+import random
 
 
 def load_model(model_path: Union[str, Path, None] = None) -> Any:
@@ -119,22 +120,25 @@ def create_treatment_groups(
             how="left",
         )
     else:
-        predictions["treatment_group"] = None
+        predictions.loc[:, "treatment_group"] = None
 
     # Create prediction score bins using quantile bins
     predictions["score_bin"] = pd.qcut(predictions["prediction"], q=n_bins)
-    predictions = predictions.sort_values(["prediction"])
+    predictions = predictions.sort_values(["prediction"], ascending=False)
 
     # only keep top prediction per patient for treatment/control split
     deduplicated = predictions.drop_duplicates(subset="pseudo_id", keep="first")
     # only keep patients without treatment group
     deduplicated = deduplicated[deduplicated["treatment_group"].isnull()]
 
-    # Create stratified randomization in control and treatment groups
+    # Create stratified randomization in control and treatment groups using
     deduplicated = deduplicated.sort_values(["hoofdagenda", "prediction"])
+    random.seed(123)  # Set fixed seed for reproducibility
     deduplicated["treatment_group"] = deduplicated.groupby(
-        ["hoofdagenda", "score_bin"], observed=True
-    )["prediction"].transform(lambda x: np.arange(len(x)) % 2)
+        ["hoofdagenda", "score_bin"],
+        observed=True,
+        # create random treatment group assignment
+    )["prediction"].transform(lambda x: (np.arange(len(x)) + random.randint(0, 1)) % 2)
 
     # update predictions with treatment groups from deduplicated based on pseudo_id
     merged = predictions.merge(
@@ -143,7 +147,6 @@ def create_treatment_groups(
         how="left",
         suffixes=("", "_new"),
     )
-
     # Update the treatment_group values where there's a new value
     predictions["treatment_group"] = merged["treatment_group_new"].combine_first(
         predictions["treatment_group"]
