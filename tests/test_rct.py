@@ -25,6 +25,19 @@ def sample_df():
 
 
 @pytest.fixture
+def sample_bins():
+    """Fixture to create a sample bin dictionary for testing."""
+    data = {
+        "A": {0.0: 0.003, 0.25: 0.03, 0.5: 0.053, 0.75: 0.077, 1.0: 0.69},
+        "B": {0.0: 0.003, 0.25: 0.03, 0.5: 0.053, 0.75: 0.077, 1.0: 0.69},
+        "C": {0.0: 0.003, 0.25: 0.02, 0.5: 0.053, 0.75: 0.067, 1.0: 0.69},
+        "D": {0.0: 0.003, 0.25: 0.03, 0.5: 0.053, 0.75: 0.077, 1.0: 0.69},
+        "E": {0.0: 0.013, 0.25: 0.03, 0.5: 0.083, 0.75: 0.097, 1.0: 0.69},
+    }
+    return data
+
+
+@pytest.fixture
 def no_patients():
     """Fixture to create an empty DataFrame for testing."""
     data = []
@@ -42,7 +55,7 @@ def some_patients():
 
 
 class TestRCT:
-    def test_quantile_binning(self, sample_df, no_patients):
+    def test_quantile_binning(self, sample_df, no_patients, sample_bins):
         """
         Test function for the quantile binning process and treatment group assignment.
         Raises:
@@ -56,7 +69,7 @@ class TestRCT:
         session.query.return_value.filter.return_value.all.return_value = no_patients
 
         # Apply the function
-        result = create_treatment_groups(sample_df, session)
+        result = create_treatment_groups(sample_df, session, sample_bins)
 
         assert set(result.columns) == original_columns.union(
             {"treatment_group"}
@@ -69,7 +82,7 @@ class TestRCT:
             result.groupby("pseudo_id")["treatment_group"].nunique().max() == 1
         ), "Some pseudo_ids have multiple treatment groups"
 
-    def test_empty_df(self, empty_df, no_patients):
+    def test_empty_df(self, empty_df, no_patients, sample_bins):
         """
         Test function for handling an empty DataFrame.
         """
@@ -77,22 +90,26 @@ class TestRCT:
         session.query.return_value.filter.return_value.all.return_value = no_patients
         # if value error is raised, the function is working correctly
         with pytest.raises(ValueError):
-            result = create_treatment_groups(empty_df, session)
+            result = create_treatment_groups(empty_df, session, sample_bins)
             assert result
 
-    def test_create_treatment_groups_no_patients(self, sample_df, no_patients):
+    def test_create_treatment_groups_no_patients(
+        self, sample_df, no_patients, sample_bins
+    ):
         # Test case for no patients in the database
         session = Mock()
         session.query.return_value.filter.return_value.all.return_value = no_patients
-        result = create_treatment_groups(sample_df, session)
+        result = create_treatment_groups(sample_df, session, sample_bins)
         result = result["treatment_group"].values
-        assert (result == [0, 1, 0, 0, 0, 1, 0, 0, 1, 0]).all()
+        assert (result == [1, 0, 0, 0, 1, 0, 0, 0, 0, 1]).all()
 
-    def test_create_treatment_groups_with_patients(self, sample_df, some_patients):
+    def test_create_treatment_groups_with_patients(
+        self, sample_df, some_patients, sample_bins
+    ):
         # Test case for patients in the database
         session = Mock()
         session.query.return_value.filter.return_value.all.return_value = some_patients
-        result = create_treatment_groups(sample_df, session)
+        result = create_treatment_groups(sample_df, session, sample_bins)
 
         result = result["treatment_group"].values
-        assert (result == [1, 0, 0, 1, 0, 0, 0, 1, 0, 0]).all()
+        assert (result == [0, 1, 1, 0, 0, 0, 1, 1, 1, 0]).all()

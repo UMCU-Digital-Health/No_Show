@@ -135,11 +135,14 @@ def create_treatment_groups(
         )
     else:
         predictions.loc[:, "treatment_group"] = None
-
+    predictions = predictions.sort_values("prediction", ascending=False)
     # apply bins based on supplied fixed score_bins
-    predictions = predictions.groupby("hoofdagenda").apply(
-        apply_bins, bin_dict=bin_edges, include_groups=False
+    predictions = (
+        predictions.groupby("hoofdagenda")
+        .apply(apply_bins, bin_dict=bin_edges, include_groups=False)
+        .reset_index()
     )
+    predictions = predictions.drop(columns="level_1")
 
     # Fill NaN values in 'treatment_group' with calculated values
     mask = predictions["treatment_group"].isnull()
@@ -157,4 +160,5 @@ def create_treatment_groups(
     )
     # drop score_bin column
     predictions = predictions.drop(columns="score_bin")
+    predictions["treatment_group"] = predictions["treatment_group"].astype(int)
     return predictions
