@@ -44,7 +44,7 @@ async def test_predict_endpoint(monkeypatch):
     monkeypatch.setattr(app, "delete", lambda x: x)
     # patch create treatment groups and add column to the dataframe
     monkeypatch.setattr(
-        app, "create_treatment_groups", lambda x, y: x.assign(treatment_group=1)
+        app, "create_treatment_groups", lambda x, y, z: x.assign(treatment_group=1)
     )
 
     output = await predict(appointments_json, "2023-01-05", FakeDB())

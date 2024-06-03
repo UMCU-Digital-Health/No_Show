@@ -1,3 +1,4 @@
+import json
 import os
 from datetime import datetime
 from pathlib import Path
@@ -37,6 +38,13 @@ app = FastAPI()
 
 with open(Path(__file__).parents[3] / "pyproject.toml", "rb") as f:
     config = tomli.load(f)
+
+# load fixed bins dict from json
+with open(
+    Path(__file__).parents[3] / "data" / "processed" / "fixed_pred_score_bin.json", "r"
+) as f:
+    fixed_bins = json.load(f)
+
 API_VERSION = config["project"]["version"]
 
 DB_USER = os.getenv("DB_USER", "")
@@ -125,7 +133,7 @@ async def predict(
         "prediction", ascending=False
     ).reset_index()
 
-    prediction_df = create_treatment_groups(prediction_df, db)
+    prediction_df = create_treatment_groups(prediction_df, db, fixed_bins)
     # Remove all previous sensitive info like name, phonenumber
     db.execute(delete(ApiSensitiveInfo))
 
