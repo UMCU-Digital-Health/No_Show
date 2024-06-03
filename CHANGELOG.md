@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2024-06-03
+
+### Changed
+- Added RCT to api
+- Create notebook to train model and create fixed bins
+
 ## [1.1.0] - 2024-05-27
 
 ### Changed
