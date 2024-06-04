@@ -56,19 +56,39 @@ WHERE 1=1
     AND A.identifier_value NOT IN (
         'Z10351', 'Z10330', 'Z10307', 'Z10362', 'Z10438',  -- Hartgroepen 1 t/m 5 (REV)
         'Z10455',  -- Behandelaar CMH
-        'ZH0302', 'Z01613', 'Z01577'  -- LAB Longziekten
+        'ZH0302', 'Z01613', 'Z01577',  -- LAB Longziekten
+        'Z06676', -- Ciliopathie
+        'Z07053', -- PMC
+        'Z07081', -- Research DER
+        'Z07078', -- Bioday kind
+        'Z04778', -- afgifteloket van het lab.
+        'Z04755' -- afgifteloket van het laboratorium
     )
     AND B.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgenda'
     AND B.active = 1
-    AND B.identifier_value IN (
-        'ZH0307',  -- RF&S Revalidatiegeneeskunde
-        'ZH0435',  -- RF&S Sportgeneeskunde
-        'ZH0183',  -- Longziekten
-        'ZH0153',  -- Kind-KNO
-        'ZH0159',  -- Kind-Neurologie
-        'ZH0163',  -- Kind-Orthopedie
-        'ZH0165'   -- Kind-Plastische chirurgie
-    )  
+    AND (
+        B.identifier_value IN (
+            -- Revalidatie en sport
+            'ZH0307',  -- RF&S Revalidatiegeneeskunde
+            'ZH0435',  -- RF&S Sportgeneeskunde
+            'ZH0444',  -- RF&S Psychologie
+            'ZH0091',  -- RF&S Dietetiek
+            'ZH0437',  -- RF&S Ergotherapie
+            'ZH0436',  -- RF&S Fysiotherapie
+            'ZH0439',  -- RF&S Maatschappelijk werk
+            'ZH0438',  -- RF&S Logopedie
+            'ZH0436',   -- RF&S Fysiotherapie
+            -- Poli blauw
+            'ZH0156', -- Kind-Nefrologie 
+            'ZH0139', -- Kind-Endocrinologie
+            'ZH0138', -- Kind-Dermatologie 
+            'ZH0129',  -- Kind-Algemene Pediatrie
+            -- Longziekten
+            'ZH0183',  -- Longziekten
+            'ZH0034'  -- Centrum voor Thuisbeademing
+        )  Or 
+        (b.identifier_value = 'ZH0152' And a.identifier_value = 'Z00936') -- CTB spreekuur kind klz
+        )  
     AND C.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
     AND C.[created] >= '2015-01-01'
     AND C.[start] <= @end_date
@@ -78,9 +98,13 @@ WHERE 1=1
     AND D.type1_display NOT LIKE 'TC%'
     AND D.without_patient <> 1
     AND E.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixLocatie'
-    AND E.identifier_value NOT IN (
+    AND (
+        b.identifier_value = 'ZH0034' -- Centrum voor Thuisbeademing zit wel op B3
+        OR E.identifier_value NOT IN (
         'ZH00000698', -- Dutch Scoliosis Center in Zeist
-        'ZH00000407')  -- afdeling longziekten / B3
+        'ZH00000407'   -- afdeling longziekten / B3
+        )
+        ) 
     AND G.address_active = 1
     AND C.participant_actor_Patient_value IN (
         SELECT J.participant_actor_Patient_value
@@ -98,19 +122,39 @@ WHERE 1=1
             AND H.identifier_value NOT IN (
                 'Z10351', 'Z10330', 'Z10307', 'Z10362', 'Z10438',  -- Hartgroepen 1 t/m 5 (REV)
                 'Z10455',  -- Behandelaar CMH
-                'ZH0302', 'Z01613', 'Z01577'  -- LAB Longziekten
+                'ZH0302', 'Z01613', 'Z01577',  -- LAB Longziekten
+                'Z06676', -- Ciliopathie
+                'Z07053', -- PMC
+                'Z07081', -- Research DER
+                'Z07078', -- Bioday kind
+                'Z04778', -- afgifteloket van het lab.
+                'Z04755' -- afgifteloket van het laboratorium
             )
             AND I.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgenda'
             AND I.active = 1
-            AND I.identifier_value IN (
-                'ZH0307',  -- RF&S Revalidatiegeneeskunde
-                'ZH0435',  -- RF&S Sportgeneeskunde
-                'ZH0183',  -- Longziekten
-                'ZH0153',  -- Kind-KNO
-                'ZH0159',  -- Kind-Neurologie
-                'ZH0163',  -- Kind-Orthopedie
-                'ZH0165'   -- Kind-Plastische chirurgie
-            )
+            AND (
+                I.identifier_value IN (
+                    -- Revalidatie en sport
+                    'ZH0307',  -- RF&S Revalidatiegeneeskunde
+                    'ZH0435',  -- RF&S Sportgeneeskunde
+                    'ZH0444',  -- RF&S Psychologie
+                    'ZH0091',  -- RF&S Dietetiek
+                    'ZH0437',  -- RF&S Ergotherapie
+                    'ZH0436',  -- RF&S Fysiotherapie
+                    'ZH0439',  -- RF&S Maatschappelijk werk
+                    'ZH0438',  -- RF&S Logopedie
+                    'ZH0436',   -- RF&S Fysiotherapie
+                    -- Poli blauw
+                    'ZH0156', -- Kind-Nefrologie 
+                    'ZH0139', -- Kind-Endocrinologie
+                    'ZH0138', -- Kind-Dermatologie 
+                    'ZH0129',  -- Kind-Algemene Pediatrie
+                    -- Longziekten
+                    'ZH0183',  -- Longziekten
+                    'ZH0034'  -- Centrum voor Thuisbeademing
+                )  Or 
+                (I.identifier_value = 'ZH0152' And H.identifier_value = 'Z00936') -- CTB spreekuur kind klz
+                ) 
             AND J.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
             AND CONVERT(DATE, J.[start]) = @start_date
             AND J.[status] = 'booked'
@@ -120,8 +164,11 @@ WHERE 1=1
             AND K.type1_display NOT LIKE 'TC%'
             AND K.without_patient <> 1
             AND L.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixLocatie'
-            AND L.identifier_value NOT IN (
+            AND (
+                I.identifier_value = 'ZH0034' -- Centrum voor Thuisbeademing zit wel op B3
+                OR L.identifier_value NOT IN (
                 'ZH00000698', -- Dutch Scoliosis Center in Zeist
-                'ZH00000407')  -- afdeling longziekten / B3
-            )
+                'ZH00000407'   -- afdeling longziekten / B3
+                )
+                ) 
         ORDER BY pseudo_id, C.start;

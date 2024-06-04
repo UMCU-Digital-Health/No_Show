@@ -39,6 +39,10 @@ def datetime_to_float(date_str, include_time):
     return datetime.strptime(date_str, format).timestamp() * 1000  # timestamp in ms
 
 
+def fake_bins():
+    return {}
+
+
 def fake_appointments() -> List[Dict]:
     with open(Path(__file__).parent / "data" / "test_appointments.json", "r") as f:
         appointments_json = json.load(f)

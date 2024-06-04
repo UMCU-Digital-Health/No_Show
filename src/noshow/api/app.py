@@ -1,3 +1,4 @@
+import json
 import os
 from datetime import datetime
 from pathlib import Path
@@ -37,6 +38,7 @@ app = FastAPI()
 
 with open(Path(__file__).parents[3] / "pyproject.toml", "rb") as f:
     config = tomli.load(f)
+
 API_VERSION = config["project"]["version"]
 
 DB_USER = os.getenv("DB_USER", "")
@@ -60,6 +62,15 @@ Base.metadata.create_all(engine)
 SessionLocal = sessionmaker(bind=engine)
 
 api_key_header = APIKeyHeader(name="X-API-KEY", auto_error=False)
+
+
+def get_bins():
+    with open(
+        Path(__file__).parents[3] / "data" / "processed" / "fixed_pred_score_bin.json",
+        "r",
+    ) as f:
+        fixed_bins = json.load(f)
+    return fixed_bins
 
 
 def get_db():
@@ -125,7 +136,7 @@ async def predict(
         "prediction", ascending=False
     ).reset_index()
 
-    prediction_df = create_treatment_groups(prediction_df)
+    prediction_df = create_treatment_groups(prediction_df, db, get_bins())
     # Remove all previous sensitive info like name, phonenumber
     db.execute(delete(ApiSensitiveInfo))
 
@@ -159,8 +170,12 @@ async def predict(
             apisensitive.home_phone = row["telecom2_value"]
             apisensitive.other_phone = row["telecom3_value"]
 
-        apipatient = ApiPatient(id=row["pseudo_id"])
-
+        apipatient = db.get(ApiPatient, row["pseudo_id"])
+        if not apipatient:
+            apipatient = ApiPatient(
+                id=row["pseudo_id"],
+            )
+        apipatient.treatment_group = int(row["treatment_group"])
         apiprediction = db.get(ApiPrediction, row["APP_ID"])
         if not apiprediction:
             apiprediction = ApiPrediction(
@@ -174,7 +189,6 @@ async def predict(
                 clinic_reception=row["description"],
                 clinic_phone_number=add_clinic_phone(row["hoofdagenda"]),
                 active=True,
-                treatment=row["treatment_group"],
             )
         else:
             # All values of a prediction can be updated except the ID and treatment
@@ -185,8 +199,6 @@ async def predict(
             apiprediction.clinic_reception = row["description"]
             apiprediction.clinic_phone_number = add_clinic_phone(row["hoofdagenda"])
             apiprediction.active = True
-            if not apiprediction.treatment:
-                apiprediction.treatment = row["treatment_group"]
 
         db.merge(apisensitive)
         db.merge(apiprediction)

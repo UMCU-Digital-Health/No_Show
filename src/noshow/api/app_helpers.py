@@ -1,13 +1,14 @@
 import pickle
+import random
 from pathlib import Path
-from typing import Any, Union
+from typing import Any, Dict, Union
 
 import numpy as np
 import pandas as pd
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from noshow.database.models import ApiPrediction
+from noshow.database.models import ApiPatient, ApiPrediction
 
 
 def load_model(model_path: Union[str, Path, None] = None) -> Any:
@@ -72,8 +73,19 @@ def fix_outdated_appointments(
             session.commit()
 
 
+# Function to apply the appropriate bin edges to each group
+def apply_bins(group, bin_dict):
+    edges = bin_dict[group.name]
+    # Use pd.cut to segment the prediction values into bins based on the edges
+    # 'labels=False' will return the indices of the bins from 0 to n_bins-1
+    group["score_bin"] = pd.cut(
+        group["prediction"], bins=[0] + list(edges.values())[1:] + [1], labels=False
+    )
+    return group
+
+
 def create_treatment_groups(
-    predictions: pd.DataFrame, n_bins: int = 10
+    predictions: pd.DataFrame, session: Session, bin_edges: Dict[str, list]
 ) -> pd.DataFrame:
     """
     Create treatment groups based on predictions.
@@ -82,9 +94,10 @@ def create_treatment_groups(
     ----------
     predictions : pd.DataFrame
         DataFrame containing predictions.
-
-    n_bins : int, optional
-        Number of bins to create for prediction scores (default is 10).
+    session : Session
+        Session variable that holds the database connection.
+    bin_edges : Dict[str, list]
+        Dictionary containing the bin edges for each group.
 
     Returns
     -------
@@ -96,28 +109,56 @@ def create_treatment_groups(
     ValueError
         If the predictions DataFrame is empty.
     """
+    # set random state
+    random.seed(1337)
+
     if predictions.empty:
         raise ValueError("The predictions DataFrame is empty.")
 
-    # Create prediction score bins using quantile bins, for example 10
-    predictions["score_bin"] = pd.qcut(predictions["prediction"], q=n_bins)
+    # get unique patient ids
+    unique_patient_ids = predictions["pseudo_id"].unique().tolist()
 
-    predictions = predictions.sort_values(["prediction"])
+    # Get all unique patients from the ApiPatient table and save to df
+    patients = (
+        session.query(ApiPatient).filter(ApiPatient.id.in_(unique_patient_ids)).all()
+    )
+    patients = pd.DataFrame(patients)
 
-    # only keep top prediction per patient for treatment/control split
-    deduplicated = predictions.drop_duplicates(subset="pseudo_id", keep="first")
+    if not patients.empty:
+        # Merge predictions with patients to get treatment group
+        predictions = pd.merge(
+            predictions,
+            patients[["id", "treatment_group"]],
+            right_on="id",
+            left_on="pseudo_id",
+            how="left",
+        )
+    else:
+        predictions.loc[:, "treatment_group"] = None
+    predictions = predictions.sort_values("prediction", ascending=False)
+    # apply bins based on supplied fixed score_bins
+    predictions = (
+        predictions.groupby("hoofdagenda")
+        .apply(apply_bins, bin_dict=bin_edges, include_groups=False)
+        .reset_index()
+    )
+    predictions = predictions.drop(columns="level_1")
 
-    # Create stratified randomization in control and treatment groups
-    deduplicated = deduplicated.sort_values(["hoofdagenda", "prediction"])
-    deduplicated["treatment_group"] = deduplicated.groupby(
-        ["hoofdagenda", "score_bin"], observed=True
-    )["prediction"].transform(lambda x: np.arange(len(x)) % 2)
-
-    predictions = pd.merge(
-        predictions,
-        deduplicated[["pseudo_id", "treatment_group"]],
-        on="pseudo_id",
-        how="left",
+    # Fill NaN values in 'treatment_group' with calculated values
+    mask = predictions["treatment_group"].isnull()
+    predictions.loc[mask, "treatment_group"] = (
+        predictions[mask]
+        .groupby(["hoofdagenda", "score_bin"])["prediction"]
+        .transform(lambda x: (np.arange(len(x)) + random.randint(0, 1)) % 2)
     )
 
+    # For every new patient assign the treatment group based on the mode
+    predictions.loc[mask, "treatment_group"] = (
+        predictions[mask]
+        .groupby("pseudo_id")["treatment_group"]
+        .transform(lambda x: x.mode()[0] if not x.mode().empty else np.nan)
+    )
+    # drop score_bin column
+    predictions = predictions.drop(columns="score_bin")
+    predictions["treatment_group"] = predictions["treatment_group"].astype(int)
     return predictions
