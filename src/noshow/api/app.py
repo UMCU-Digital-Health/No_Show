@@ -39,12 +39,6 @@ app = FastAPI()
 with open(Path(__file__).parents[3] / "pyproject.toml", "rb") as f:
     config = tomli.load(f)
 
-# load fixed bins dict from json
-with open(
-    Path(__file__).parents[3] / "data" / "processed" / "fixed_pred_score_bin.json", "r"
-) as f:
-    fixed_bins = json.load(f)
-
 API_VERSION = config["project"]["version"]
 
 DB_USER = os.getenv("DB_USER", "")
@@ -68,6 +62,15 @@ Base.metadata.create_all(engine)
 SessionLocal = sessionmaker(bind=engine)
 
 api_key_header = APIKeyHeader(name="X-API-KEY", auto_error=False)
+
+
+def get_bins():
+    with open(
+        Path(__file__).parents[3] / "data" / "processed" / "fixed_pred_score_bin.json",
+        "r",
+    ) as f:
+        fixed_bins = json.load(f)
+    return fixed_bins
 
 
 def get_db():
@@ -133,7 +136,7 @@ async def predict(
         "prediction", ascending=False
     ).reset_index()
 
-    prediction_df = create_treatment_groups(prediction_df, db, fixed_bins)
+    prediction_df = create_treatment_groups(prediction_df, db, get_bins())
     # Remove all previous sensitive info like name, phonenumber
     db.execute(delete(ApiSensitiveInfo))
 
