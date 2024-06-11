@@ -171,4 +171,4 @@ WHERE 1=1
                 'ZH00000407'   -- afdeling longziekten / B3
                 )
                 ) 
-        ORDER BY pseudo_id, C.start;
+        ORDER BY pseudo_id, C.start);
