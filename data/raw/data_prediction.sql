@@ -13,47 +13,47 @@ BEGIN
 END
 
 -- Main Query
-SELECT C.identifier_value AS APP_ID
-    ,CONVERT(VARCHAR(64), HASHBYTES('SHA2_256', CONCAT(F.identifier_value, 'noshow')), 2) AS pseudo_id
-    ,B.[name] AS hoofdagenda
-    ,A.specialty_code
-    ,D.type1_display AS soort_consult
-    ,D.type1_code
-    ,C.[start]
-    ,C.[end]
-    ,D.[statusHistory2_period_start] AS gearriveerd
-    ,C.[created]
-    ,C.[minutesDuration]
-    ,C.[status]
-    ,C.[status_code_original]
-    ,C.[cancelationReason_code]
-    ,C.[cancelationReason_display]
-    ,YEAR(F.[birthDate]) as BIRTH_YEAR
-    ,G.[address_postalCodeNumbersNL]
-    ,E.[name]
-    ,E.[description]
-    ,F.[name_text]
-    ,F.[name_given1_callMe]
-    ,F.[telecom1_value]
-    ,F.[telecom2_value]
-    ,F.[telecom3_value]
-    ,F.[birthDate]
-FROM [PUB].[no_show].[HealthcareService] A JOIN [PUB].[no_show].[HealthcareService] B 
-        ON A.partOf_HealthcareService_value = B.identifier_value AND A.partOf_HealthcareService_system = B.identifier_system
-    JOIN [PUB].[no_show].[Appointment] C 
-        ON C.participant_actor_HealthcareService_value = A.identifier_value AND C.participant_actor_HealthcareService_system = A.identifier_system
-    JOIN [PUB].[no_show].Encounter D 
-        ON D.appointment_Appointment_system = C.identifier_system AND D.appointment_Appointment_value = C.identifier_value
-    JOIN [PUB].[no_show].Location E 
-        ON D.location_Location_system = E.identifier_system AND D.location_Location_value = E.identifier_value
-    JOIN [PUB].[no_show].[Patient] F 
-        ON C.[participant_actor_Patient_value] = F.identifier_value
-    LEFT JOIN [PUB].[no_show].[Patient_Address] G 
-        ON G.[parent_identifier_value] = F.identifier_value 
+SELECT APP.identifier_value AS APP_ID
+    ,CONVERT(VARCHAR(64), HASHBYTES('SHA2_256', CONCAT(PAT.identifier_value, 'noshow')), 2) AS pseudo_id
+    ,HOOFDAGENDA.[name] AS hoofdagenda
+    ,SUBAGENDA.specialty_code
+    ,ENC.type1_display AS soort_consult
+    ,ENC.type1_code
+    ,APP.[start]
+    ,APP.[end]
+    ,ENC.[statusHistory2_period_start] AS gearriveerd
+    ,APP.[created]
+    ,APP.[minutesDuration]
+    ,APP.[status]
+    ,APP.[status_code_original]
+    ,APP.[cancelationReason_code]
+    ,APP.[cancelationReason_display]
+    ,YEAR(PAT.[birthDate]) as BIRTH_YEAR
+    ,ADDR.[address_postalCodeNumbersNL]
+    ,LOC.[name]
+    ,LOC.[description]
+    ,PAT.[name_text]
+    ,PAT.[name_given1_callMe]
+    ,PAT.[telecom1_value]
+    ,PAT.[telecom2_value]
+    ,PAT.[telecom3_value]
+    ,PAT.[birthDate]
+FROM [PUB].[no_show].[HealthcareService] SUBAGENDA JOIN [PUB].[no_show].[HealthcareService] HOOFDAGENDA 
+        ON SUBAGENDA.partOf_HealthcareService_value = HOOFDAGENDA.identifier_value AND SUBAGENDA.partOf_HealthcareService_system = HOOFDAGENDA.identifier_system
+    JOIN [PUB].[no_show].[Appointment] APP 
+        ON APP.participant_actor_HealthcareService_value = SUBAGENDA.identifier_value AND APP.participant_actor_HealthcareService_system = SUBAGENDA.identifier_system
+    JOIN [PUB].[no_show].Encounter ENC 
+        ON ENC.appointment_Appointment_system = APP.identifier_system AND ENC.appointment_Appointment_value = APP.identifier_value
+    LEFT JOIN [PUB].[no_show].Location LOC
+        ON ENC.location_Location_system = LOC.identifier_system AND ENC.location_Location_value = LOC.identifier_value
+    JOIN [PUB].[no_show].[Patient] PAT
+        ON APP.[participant_actor_Patient_value] = PAT.identifier_value
+    LEFT JOIN [PUB].[no_show].[Patient_Address] ADDR
+        ON ADDR.[parent_identifier_value] = PAT.identifier_value 
 WHERE 1=1
-    AND A.active = 1
-    AND A.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixSubAgenda'
-    AND A.identifier_value NOT IN (
+    AND SUBAGENDA.active = 1
+    AND SUBAGENDA.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixSubAgenda'
+    AND SUBAGENDA.identifier_value NOT IN (
         'Z10351', 'Z10330', 'Z10307', 'Z10362', 'Z10438',  -- Hartgroepen 1 t/m 5 (REV)
         'Z10455',  -- Behandelaar CMH
         'ZH0302', 'Z01613', 'Z01577',  -- LAB Longziekten
@@ -64,10 +64,10 @@ WHERE 1=1
         'Z04778', -- afgifteloket van het lab.
         'Z04755' -- afgifteloket van het laboratorium
     )
-    AND B.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgenda'
-    AND B.active = 1
+    AND HOOFDAGENDA.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgenda'
+    AND HOOFDAGENDA.active = 1
     AND (
-        B.identifier_value IN (
+        HOOFDAGENDA.identifier_value IN (
             -- Revalidatie en sport
             'ZH0307',  -- RF&S Revalidatiegeneeskunde
             'ZH0435',  -- RF&S Sportgeneeskunde
@@ -86,40 +86,32 @@ WHERE 1=1
             -- Longziekten
             'ZH0183',  -- Longziekten
             'ZH0034'  -- Centrum voor Thuisbeademing
-        )  Or 
-        (b.identifier_value = 'ZH0152' And a.identifier_value = 'Z00936') -- CTB spreekuur kind klz
-        )  
-    AND C.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
-    AND C.[created] >= '2015-01-01'
-    AND C.[start] <= @end_date
-    AND D.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
-    AND D.type2_code NOT IN ('T', 'S', 'M')
-    AND D.type1_display NOT LIKE '%telefo%'
-    AND D.type1_display NOT LIKE 'TC%'
-    AND D.without_patient <> 1
-    AND E.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixLocatie'
-    AND (
-        b.identifier_value = 'ZH0034' -- Centrum voor Thuisbeademing zit wel op B3
-        OR E.identifier_value NOT IN (
-        'ZH00000698', -- Dutch Scoliosis Center in Zeist
-        'ZH00000407'   -- afdeling longziekten / B3
-        )
-        ) 
-    AND G.address_active = 1
-    AND C.participant_actor_Patient_value IN (
-        SELECT J.participant_actor_Patient_value
-        FROM [PUB].[no_show].[HealthcareService] H JOIN [PUB].[no_show].[HealthcareService] I 
-                ON H.partOf_HealthcareService_value = I.identifier_value AND H.partOf_HealthcareService_system = I.identifier_system
-            JOIN [PUB].[no_show].[Appointment] J 
-                ON J.participant_actor_HealthcareService_value = H.identifier_value AND J.participant_actor_HealthcareService_system = H.identifier_system
-            JOIN [PUB].[no_show].Encounter K 
-                ON K.appointment_Appointment_system = J.identifier_system AND K.appointment_Appointment_value = J.identifier_value
-            JOIN [PUB].[no_show].Location L 
-                ON K.location_Location_system = L.identifier_system AND K.location_Location_value = L.identifier_value
+        )  OR 
+        (HOOFDAGENDA.identifier_value = 'ZH0152' AND SUBAGENDA.identifier_value = 'Z00936') -- CTB spreekuur kind klz
+    )  
+    AND APP.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
+    AND APP.[created] >= '2015-01-01'
+    AND APP.[start] <= @end_date
+    AND ENC.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
+    AND ENC.type2_code NOT IN ('T', 'S', 'M')
+    AND ENC.type1_display NOT LIKE '%telefo%'
+    AND ENC.type1_display NOT LIKE 'TC%'
+    AND ENC.without_patient <> 1
+    AND ADDR.address_active = 1
+    AND APP.participant_actor_Patient_value IN (
+        SELECT APP2.participant_actor_Patient_value
+        FROM [PUB].[no_show].[HealthcareService] SUBAGENDA2 JOIN [PUB].[no_show].[HealthcareService] HOOFDAGENDA2
+                ON SUBAGENDA2.partOf_HealthcareService_value = HOOFDAGENDA2.identifier_value AND SUBAGENDA2.partOf_HealthcareService_system = HOOFDAGENDA2.identifier_system
+            JOIN [PUB].[no_show].[Appointment] APP2 
+                ON APP2.participant_actor_HealthcareService_value = SUBAGENDA2.identifier_value AND APP2.participant_actor_HealthcareService_system = SUBAGENDA2.identifier_system
+            JOIN [PUB].[no_show].Encounter ENC2
+                ON ENC2.appointment_Appointment_system = APP2.identifier_system AND ENC2.appointment_Appointment_value = APP2.identifier_value
+            LEFT JOIN [PUB].[no_show].Location LOC2 
+                ON ENC2.location_Location_system = LOC2.identifier_system AND ENC2.location_Location_value = LOC2.identifier_value
         WHERE 1=1
-            AND H.active = 1
-            AND H.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixSubAgenda'
-            AND H.identifier_value NOT IN (
+            AND SUBAGENDA2.active = 1
+            AND SUBAGENDA2.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixSubAgenda'
+            AND SUBAGENDA2.identifier_value NOT IN (
                 'Z10351', 'Z10330', 'Z10307', 'Z10362', 'Z10438',  -- Hartgroepen 1 t/m 5 (REV)
                 'Z10455',  -- Behandelaar CMH
                 'ZH0302', 'Z01613', 'Z01577',  -- LAB Longziekten
@@ -130,10 +122,10 @@ WHERE 1=1
                 'Z04778', -- afgifteloket van het lab.
                 'Z04755' -- afgifteloket van het laboratorium
             )
-            AND I.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgenda'
-            AND I.active = 1
+            AND HOOFDAGENDA2.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgenda'
+            AND HOOFDAGENDA2.active = 1
             AND (
-                I.identifier_value IN (
+                HOOFDAGENDA2.identifier_value IN (
                     -- Revalidatie en sport
                     'ZH0307',  -- RF&S Revalidatiegeneeskunde
                     'ZH0435',  -- RF&S Sportgeneeskunde
@@ -152,23 +144,16 @@ WHERE 1=1
                     -- Longziekten
                     'ZH0183',  -- Longziekten
                     'ZH0034'  -- Centrum voor Thuisbeademing
-                )  Or 
-                (I.identifier_value = 'ZH0152' And H.identifier_value = 'Z00936') -- CTB spreekuur kind klz
+                )  OR
+                (HOOFDAGENDA2.identifier_value = 'ZH0152' AND SUBAGENDA2.identifier_value = 'Z00936') -- CTB spreekuur kind klz
                 ) 
-            AND J.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
-            AND CONVERT(DATE, J.[start]) = @start_date
-            AND J.[status] = 'booked'
-            AND K.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
-            AND K.type2_code NOT IN ('T', 'S', 'M')
-            AND K.type1_display NOT LIKE '%telefo%'
-            AND K.type1_display NOT LIKE 'TC%'
-            AND K.without_patient <> 1
-            AND L.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixLocatie'
-            AND (
-                I.identifier_value = 'ZH0034' -- Centrum voor Thuisbeademing zit wel op B3
-                OR L.identifier_value NOT IN (
-                'ZH00000698', -- Dutch Scoliosis Center in Zeist
-                'ZH00000407'   -- afdeling longziekten / B3
-                )
-                ) 
-        ORDER BY pseudo_id, C.start);
+            AND APP2.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
+            AND CONVERT(DATE, APP2.[start]) = @start_date
+            AND APP2.[status] = 'booked'
+            AND ENC2.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
+            AND ENC2.type2_code NOT IN ('T', 'S', 'M')
+            AND ENC2.type1_display NOT LIKE '%telefo%'
+            AND ENC2.type1_display NOT LIKE 'TC%'
+            AND ENC2.without_patient <> 1
+    )
+ORDER BY pseudo_id, APP.start;

@@ -1,38 +1,39 @@
-SELECT C.identifier_value AS APP_ID
-    ,CONVERT(VARCHAR(64), HASHBYTES('SHA2_256', CONCAT(F.identifier_value, 'noshow')), 2) AS pseudo_id
-    ,B.[name] AS hoofdagenda
-    ,A.specialty_code
-    ,D.type1_display AS soort_consult
-    ,D.type1_code
-    ,C.[start]
-    ,C.[end]
-    ,D.[statusHistory2_period_start] AS gearriveerd
-    ,C.[created]
-    ,C.[minutesDuration]
-    ,C.[status]
-    ,C.[status_code_original]
-    ,C.[cancelationReason_code]
-    ,C.[cancelationReason_display]
-    ,YEAR(F.[birthDate]) as BIRTH_YEAR
-    ,G.[address_postalCodeNumbersNL]
-    ,E.[name]
-    ,E.[description]
-FROM [DWH].[models].[HealthcareService] A JOIN [DWH].[models].[HealthcareService] B 
-        ON A.partOf_HealthcareService_value = B.identifier_value AND A.partOf_HealthcareService_system = B.identifier_system
-    JOIN [DWH].[models].[Appointment] C 
-        ON C.participant_actor_HealthcareService_value = A.identifier_value AND C.participant_actor_HealthcareService_system = A.identifier_system
-    JOIN [DWH].[models].Encounter D 
-        ON D.appointment_Appointment_system = C.identifier_system AND D.appointment_Appointment_value = C.identifier_value
-    JOIN [DWH].[models].Location E 
-        ON D.location_Location_system = E.identifier_system AND D.location_Location_value = E.identifier_value
-    JOIN [DWH].[models].[Patient] F 
-        ON C.[participant_actor_Patient_value] = F.identifier_value
-    LEFT JOIN [DWH].[models].[Patient_Address] G 
-        ON G.[parent_identifier_value] = F.identifier_value 
+SELECT APP.identifier_value AS APP_ID
+    ,CONVERT(VARCHAR(64), HASHBYTES('SHA2_256', CONCAT(PAT.identifier_value, 'noshow')), 2) AS pseudo_id
+    ,HOOFDAGENDA.[name] AS hoofdagenda
+    ,SUBAGENDA.specialty_code
+    ,SUBAGENDA.name 
+    ,ENC.type1_display AS soort_consult
+    ,ENC.type1_code
+    ,APP.[start]
+    ,APP.[end]
+    ,ENC.[statusHistory2_period_start] AS gearriveerd
+    ,APP.[created]
+    ,APP.[minutesDuration]
+    ,APP.[status]
+    ,APP.[status_code_original]
+    ,APP.[cancelationReason_code]
+    ,APP.[cancelationReason_display]
+    ,YEAR(PAT.[birthDate]) as BIRTH_YEAR
+    ,ADDR.[address_postalCodeNumbersNL]
+    ,LOC.[name]
+    ,LOC.[description]
+FROM [DWH].[models].[HealthcareService] SUBAGENDA JOIN [DWH].[models].[HealthcareService] HOOFDAGENDA
+        ON SUBAGENDA.partOf_HealthcareService_value = HOOFDAGENDA.identifier_value AND SUBAGENDA.partOf_HealthcareService_system = HOOFDAGENDA.identifier_system
+    JOIN [DWH].[models].[Appointment] APP 
+        ON APP.participant_actor_HealthcareService_value = SUBAGENDA.identifier_value AND APP.participant_actor_HealthcareService_system = SUBAGENDA.identifier_system
+    JOIN [DWH].[models].Encounter ENC
+        ON ENC.appointment_Appointment_system = APP.identifier_system AND ENC.appointment_Appointment_value = APP.identifier_value
+    LEFT JOIN [DWH].[models].Location LOC
+        ON ENC.location_Location_system = LOC.identifier_system AND ENC.location_Location_value = LOC.identifier_value
+    JOIN [DWH].[models].[Patient] PAT
+        ON APP.[participant_actor_Patient_value] = PAT.identifier_value
+    LEFT JOIN [DWH].[models].[Patient_Address] ADDR
+        ON ADDR.[parent_identifier_value] = PAT.identifier_value 
 WHERE 1=1
-    AND A.active = 1
-    AND A.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixSubAgenda'
-    AND A.identifier_value NOT IN (
+    AND SUBAGENDA.active = 1
+    AND SUBAGENDA.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixSubAgenda'
+    AND SUBAGENDA.identifier_value NOT IN (
         'Z10351', 'Z10330', 'Z10307', 'Z10362', 'Z10438',  -- Hartgroepen 1 t/m 5 (REV)
         'Z10455',  -- Behandelaar CMH
         'ZH0302', 'Z01613', 'Z01577',  -- LAB Longziekten
@@ -43,10 +44,10 @@ WHERE 1=1
         'Z04778', -- afgifteloket van het lab.
         'Z04755' -- afgifteloket van het laboratorium
     )
-    AND B.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgenda'
-    AND B.active = 1
+    AND HOOFDAGENDA.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgenda'
+    AND HOOFDAGENDA.active = 1
     AND (
-        B.identifier_value IN (
+        HOOFDAGENDA.identifier_value IN (
             -- Revalidatie en sport
             'ZH0307',  -- RF&S Revalidatiegeneeskunde
             'ZH0435',  -- RF&S Sportgeneeskunde
@@ -65,25 +66,17 @@ WHERE 1=1
             -- Longziekten
             'ZH0183',  -- Longziekten
             'ZH0034'  -- Centrum voor Thuisbeademing
-        )  Or 
-        (b.identifier_value = 'ZH0152' And a.identifier_value = 'Z00936') -- CTB spreekuur kind klz
+        )  OR 
+        (HOOFDAGENDA.identifier_value = 'ZH0152' AND SUBAGENDA.identifier_value = 'Z00936') -- CTB spreekuur kind klz
         ) 
-    AND C.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
-    AND C.created >= '2015-01-01'
-    AND C.created <= '2024-05-31'
-    AND C.status <> 'booked'
-    AND D.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
-    AND D.type2_code NOT IN ('T', 'S', 'M')
-    AND D.type1_display NOT LIKE '%telefo%'
-    AND D.type1_display NOT LIKE 'TC%'
-    AND D.without_patient <> 1
-    AND E.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixLocatie'
-        AND (
-            b.identifier_value = 'ZH0034' -- Centrum voor Thuisbeademing zit wel op B3
-            OR E.identifier_value NOT IN (
-            'ZH00000698', -- Dutch Scoliosis Center in Zeist
-            'ZH00000407'   -- afdeling longziekten / B3
-            )
-            ) 
-    AND G.address_active = 1
-ORDER BY B.name, A.name, C.start
+    AND APP.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
+    AND APP.created >= '2015-01-01'
+    AND APP.created <= '2024-05-31'
+    AND APP.status <> 'booked'
+    AND ENC.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
+    AND ENC.type2_code NOT IN ('T', 'S', 'M')
+    AND ENC.type1_display NOT LIKE '%telefo%'
+    AND ENC.type1_display NOT LIKE 'TC%'
+    AND ENC.without_patient <> 1
+    AND ADDR.address_active = 1
+ORDER BY HOOFDAGENDA.name, SUBAGENDA.name, APP.start
