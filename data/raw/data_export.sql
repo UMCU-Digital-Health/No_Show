@@ -35,8 +35,15 @@ WHERE 1=1
     AND SUBAGENDA.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixSubAgenda'
     AND SUBAGENDA.identifier_value NOT IN (
         'Z10351', 'Z10330', 'Z10307', 'Z10362', 'Z10438',  -- Hartgroepen 1 t/m 5 (REV)
+        'ZH0082', 'ZH0085', 'ZH0086', 'ZH0087', 'ZH0088',  -- Hartgroepen 1 t/m 5 (FYS)
         'Z10455',  -- Behandelaar CMH
         'ZH0302', 'Z01613', 'Z01577',  -- LAB Longziekten
+        -- Huisbezoeken van Centrum voor Thuisbeademing
+        'Z04789', 'Z04792', 'Z04790', 'Z04791', 'Z04764', 'Z04765', 'Z04760', 
+        'Z04766', 'Z04757', '029756', 'Z04745', 'Z04763', 'ZH0633', 'Z04761',
+        'Z04787', 'Z04747', 'Z04767', 'Z04746', 'Z04769', 'Z04758', 'Z04788',
+        'Z04786', 'Z04759',
+        --
         'Z06676', -- Ciliopathie
         'Z07053', -- PMC
         'Z07081', -- Research DER
