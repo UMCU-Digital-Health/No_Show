@@ -9,31 +9,28 @@
     "version": "3.11.7",
     "package_manager": {
       "name": "pip",
-      "version": "23.2",
+      "version": "23.3.1",
       "package_file": "requirements.txt"
     }
   },
   "files": {
     "requirements.txt": {
-      "checksum": "9ff08a3b39869fe92b73b7c63947f17d"
+      "checksum": "0c42b481e6dd7349c9e1cd0d0d8bf3ec"
     },
     ".dvcignore": {
       "checksum": "34659c119a2634fe318cd6a4822df435"
-    },
-    ".env": {
-      "checksum": "dd8f369eae26a88f32dd81179e681d31"
     },
     ".example.env": {
       "checksum": "a851d2b36a975d3155f448d08a4b7527"
     },
     ".gitignore": {
-      "checksum": "fac5ed7cf3df4b49f622694219c4c549"
+      "checksum": "1e2eceacc5b767dead1872564dc23845"
     },
     ".streamlit/config.toml": {
       "checksum": "99594759045ead1f8535775e35169a3d"
     },
     "CHANGELOG.md": {
-      "checksum": "4f55aa9e6c542914247881b3f761fd8e"
+      "checksum": "de08bac8eeba4b49a105ced08c5d65f9"
     },
     "LICENSE": {
       "checksum": "770bb10345b6c86b9f5dc743de74aadf"
@@ -47,8 +44,8 @@
     "data/processed/.gitkeep": {
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
-    "data/processed/featuretable.parquet": {
-      "checksum": "585dcaabc11d89718b252669e9d3bf48"
+    "data/processed/fixed_pred_score_bin.json": {
+      "checksum": "4e16d10a04730ea6d170507d309b85b6"
     },
     "data/raw/NL.txt": {
       "checksum": "6dd4fc6184a20b756821d48bd39488f0"
@@ -60,7 +57,7 @@
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
     "data/raw/poliafspraken_no_show.csv.dvc": {
-      "checksum": "fa79ce290a53fd2fe4e623e5e46785a7"
+      "checksum": "013c9261360efabee29106fd4b14ea02"
     },
     "data/raw/poliafspraken_pilot.csv": {
       "checksum": "d03083b8f25b945e6e6a3dcbb7ace46f"
@@ -71,35 +68,32 @@
     "deploy.sh": {
       "checksum": "21971b0584e7574dea4fa31a9b562930"
     },
-    "docs/Makefile": {
-      "checksum": "ef4f00c423089323edef1d3cff31a4a2"
+    "dvc.lock": {
+      "checksum": "311bdcc96157dad33a1a97e2f7327346"
     },
-    "docs/_static/.gitkeep": {
-      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
-    },
-    "docs/conf.py": {
-      "checksum": "4b697d78454005902386a73d66a4f34d"
-    },
-    "docs/index.rst": {
-      "checksum": "a88af673ea87333431d3e951c44dc847"
-    },
-    "docs/make.bat": {
-      "checksum": "1eb66bfc2d91ac65bd16a1a73bded2ca"
+    "dvc.yaml": {
+      "checksum": "e14888b51b20aa7ed8d1a7a8d63e33a9"
     },
     "manifest_api.json": {
-      "checksum": "ce74c30541eeb250d032cb4ea70c39b1"
+      "checksum": "b19af361d5dca31627f5c022810f714a"
     },
     "manifest_dash.json": {
-      "checksum": "d1f8305ca16747c7efa141e4c424ced5"
+      "checksum": "040b7ba42356b45824271b00ae01f325"
     },
     "output/models/.gitkeep": {
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
     "output/models/no_show_model_cv.pickle": {
-      "checksum": "55c9e4ced7c135cc1d4eb6aeb7c08dd9"
+      "checksum": "a86ef5b419dd432a6682cca605cf884c"
     },
     "pyproject.toml": {
-      "checksum": "9966428ccac54455f65c2b3ba776c0bc"
+      "checksum": "1602f462df281f33cd5ecb978aded6e3"
+    },
+    "requirements-dev.lock": {
+      "checksum": "c511b193e9662d13db553b013b384df0"
+    },
+    "requirements.lock": {
+      "checksum": "155c2fe9e66839a865de99d15bf791b7"
     },
     "run/app.py": {
       "checksum": "07ea1ee70ce2cfdd157a5d234a54cbfb"
@@ -114,10 +108,10 @@
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
     "src/noshow/api/app.py": {
-      "checksum": "4c65b872c8d36fe029138255e096241b"
+      "checksum": "81dbcec4df5509015f7c05b0e4dbca77"
     },
     "src/noshow/api/app_helpers.py": {
-      "checksum": "d1524ee373e74a7c1262203a9ea7d84f"
+      "checksum": "8cd1f20dae1e32394d962c2f2af196a2"
     },
     "src/noshow/config.py": {
       "checksum": "dd1de76ca75ae09d05c9afeeb83e930b"
@@ -168,37 +162,16 @@
       "checksum": "ad3285f5a7f55f0ca27a6c496212a05e"
     },
     "src/noshow/preprocessing/load_data.py": {
-      "checksum": "40ebd8c65848d2274bb3b84cf90208ef"
+      "checksum": "43b3a0bad5ff08dc5d48e3dc0ea5a044"
     },
     "src/noshow/preprocessing/utils.py": {
       "checksum": "5c84176aa1d08e3c246120ff5e0b1abf"
     },
-    "tests/data/test_appointments.json": {
-      "checksum": "07c31d873895acb78bbb9b8474c3ca9c"
+    "src/noshow/visualisation/__init__.py": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
-    "tests/test_api.py": {
-      "checksum": "047bf6ef5a8d590b6413714e09e3e6c9"
-    },
-    "tests/test_appointment_features.py": {
-      "checksum": "cb5db345fd46ce13da3093b7bcae524e"
-    },
-    "tests/test_features.py": {
-      "checksum": "42dec12ef6dfa8011f585b96a15b503e"
-    },
-    "tests/test_model.py": {
-      "checksum": "d8e1cf95fb86d00a441b9d7986fb6c28"
-    },
-    "tests/test_noshow.py": {
-      "checksum": "7f644d047be801b83ca78da541f63bf9"
-    },
-    "tests/test_rct.py": {
-      "checksum": "f52f3b8d311e9e6261dce10769414ab7"
-    },
-    "tests/test_utils.py": {
-      "checksum": "7007a9d03ff15bf7930f838230e27192"
-    },
-    "tests/test_visualisation.py": {
-      "checksum": "9c054833e44f7b37d4374d28d947b879"
+    "src/noshow/visualisation/features_plots.py": {
+      "checksum": "4bc6f06a7afb732c57147c4f011256d3"
     }
   }
 }

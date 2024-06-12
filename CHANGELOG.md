@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2024-06-12
+
+### Changed
+- Updated export and rerun pipelines
+- Rerun notebook and applied formatting
+- Updated dependencies to fix dependabot security alerts
+- Redeployed API and Streamlit dash and updated manifest files
+
+### Fixed
+- Fixed queries and code to handle missing location info since HiX6.3
+- Updated No-Show codes to only use the new 'N' code (HiX 6.3)
+
 ## [1.1.1] - 2024-06-03
 
 ### Changed

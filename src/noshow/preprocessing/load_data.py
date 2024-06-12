@@ -40,6 +40,12 @@ def load_appointment_json(input: List[Dict]) -> pd.DataFrame:
     appointments_df["address_postalCodeNumbersNL"] = appointments_df[
         "address_postalCodeNumbersNL"
     ].astype(float)
+
+    # Clinic name and description are sometimes unknown since HiX6.3
+    appointments_df.loc[appointments_df["name"].isnull(), "name"] = "Onbekend"
+    appointments_df.loc[appointments_df["description"].isnull(), "description"] = (
+        "Onbekend"
+    )
     return appointments_df
 
 
@@ -84,19 +90,9 @@ def process_appointments(appointments_df: pd.DataFrame) -> pd.DataFrame:
         appointments_df["gearriveerd"], errors="coerce"
     )
 
-    appointments_df["no_show"] = appointments_df["cancelationReason_code"].isin(
-        [
-            "M",
-            "C2",
-            "C3",
-            "0000000010",
-            "D1",
-            "N",
-            "E1",
-        ]  # TODO: Change when using HiX 6.3
-    )
-    appointments_df["no_show"] = appointments_df["no_show"].replace(
-        {True: "no_show", False: "show"}
+    appointments_df["no_show"] = "show"
+    appointments_df.loc[appointments_df["cancelationReason_code"] == "N", "no_show"] = (
+        "no_show"
     )
 
     # Some patients have multiple postal codes
