@@ -40,6 +40,12 @@ def load_appointment_json(input: List[Dict]) -> pd.DataFrame:
     appointments_df["address_postalCodeNumbersNL"] = appointments_df[
         "address_postalCodeNumbersNL"
     ].astype(float)
+
+    # Clinic name and description are sometimes unknown since HiX6.3
+    appointments_df.loc[appointments_df["name"].isnull(), "name"] = "Onbekend"
+    appointments_df.loc[appointments_df["description"].isnull(), "description"] = (
+        "Onbekend"
+    )
     return appointments_df
 
 
