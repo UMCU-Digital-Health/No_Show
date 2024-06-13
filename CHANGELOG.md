@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2024-06-13
+
+### Changed
+- Moved clinic phone numbers and feature enineering settings to a config file
+- Removed setting to get top-n patients in dashboard, simply show all patients
+
+### Fixed
+- Removed wrong subagendas from queries
+
 ## [1.2.0] - 2024-06-12
 
 ### Changed

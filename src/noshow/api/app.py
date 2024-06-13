@@ -187,7 +187,7 @@ async def predict(
                 patient_relation=apipatient,
                 clinic_name=row["hoofdagenda"],
                 clinic_reception=row["description"],
-                clinic_phone_number=CLINIC_PHONENUMBERS.get(row["hoofdagenda"]),
+                clinic_phone_number=CLINIC_PHONENUMBERS.get(row["hoofdagenda"], ""),
                 active=True,
             )
         else:
@@ -198,7 +198,7 @@ async def predict(
             apiprediction.clinic_name = row["hoofdagenda"]
             apiprediction.clinic_reception = row["description"]
             apiprediction.clinic_phone_number = CLINIC_PHONENUMBERS.get(
-                row["hoofdagenda"]
+                row["hoofdagenda"], ""
             )
             apiprediction.active = True
 
