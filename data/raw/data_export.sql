@@ -56,15 +56,15 @@ WHERE 1=1
     AND (
         HOOFDAGENDA.identifier_value IN (
             -- Revalidatie en sport
-            'ZH0307',  -- RF&S Revalidatiegeneeskunde
-            'ZH0435',  -- RF&S Sportgeneeskunde
-            'ZH0444',  -- RF&S Psychologie
-            'ZH0091',  -- RF&S Dietetiek
-            'ZH0437',  -- RF&S Ergotherapie
-            'ZH0436',  -- RF&S Fysiotherapie
-            'ZH0439',  -- RF&S Maatschappelijk werk
-            'ZH0438',  -- RF&S Logopedie
-            'ZH0436',   -- RF&S Fysiotherapie
+            -- 'ZH0307',  -- RF&S Revalidatiegeneeskunde
+            -- 'ZH0435',  -- RF&S Sportgeneeskunde
+            -- 'ZH0444',  -- RF&S Psychologie
+            -- 'ZH0091',  -- RF&S Dietetiek
+            -- 'ZH0437',  -- RF&S Ergotherapie
+            -- 'ZH0436',  -- RF&S Fysiotherapie
+            -- 'ZH0439',  -- RF&S Maatschappelijk werk
+            -- 'ZH0438',  -- RF&S Logopedie
+            -- 'ZH0436',   -- RF&S Fysiotherapie
             -- Poli blauw
             'ZH0156', -- Kind-Nefrologie 
             'ZH0139', -- Kind-Endocrinologie

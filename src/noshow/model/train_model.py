@@ -15,6 +15,7 @@ def train_cv_model(
     classifier: BaseEstimator,
     param_grid: Dict,
     save_dvc_exp: bool = True,
+    **kwargs,
 ) -> None:
     """Use Cross validation to train a model and save results and parameters to dvclive
 
@@ -24,8 +25,14 @@ def train_cv_model(
         The featuretable
     output_path : Union[Path, str]
         Path to the output folder where to store the dvc results
+    classifier : BaseEstimator
+        The classifier to use
+    param_grid : Dict
+        The parameter grid to search for the best model
     save_dvc_exp : bool
         If we want to save the experiment in DVC, by default True
+    kwargs
+        Additional arguments to pass to the dvclive.Live context manager
     """
 
     featuretable["no_show"] = (
@@ -41,7 +48,9 @@ def train_cv_model(
     train_groups = X_train.index.get_level_values("pseudo_id")
 
     with Live(
-        save_dvc_exp=save_dvc_exp, dir=str(Path(output_path) / "dvclive")
+        save_dvc_exp=save_dvc_exp,
+        dir=str(Path(output_path) / "dvclive"),
+        **kwargs,
     ) as live:
         # Define the final pipeline with preprocessor and random forest classifier
 

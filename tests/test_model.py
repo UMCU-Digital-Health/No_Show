@@ -60,5 +60,6 @@ def test_train_model():
             DummyClassifier(),
             param_grid={},
             save_dvc_exp=False,
+            dvcyaml=None,  # Prevents writing to dvc.yaml
         )
         assert (Path(tempdirname) / "models" / "no_show_model_cv.pickle").is_file()
