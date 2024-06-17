@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2024-06-13
+
+### Changed
+- Moved clinic phone numbers and feature enineering settings to a config file
+- Removed setting to get top-n patients in dashboard, simply show all patients
+- Retrained model and redeployed dashboard and api
+- Temporarily removed RF&S clinic appointments
+
+### Fixed
+- Removed wrong subagendas from queries
+- No longer write dvclive info when running unit tests
+- Load default config values if config file is absent (for unit tests)
+
 ## [1.2.0] - 2024-06-12
 
 ### Changed

@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from noshow.config import APPOINTMENTS_LAST_DAYS, MINUTES_EARLY_CUTOFF
 from noshow.features.appointment_features import (
     add_appointments_last_days,
     add_appointments_same_day,
@@ -22,7 +23,6 @@ from noshow.preprocessing.load_data import (
 def create_features(
     appointments_df: pd.DataFrame,
     all_postal_codes: pd.DataFrame,
-    minutes_early_cutoff: int = 60,
 ) -> pd.DataFrame:
     """Create all the feature for the no-show model
 
@@ -37,8 +37,6 @@ def create_features(
     all_postal_codes : pd.DataFrame
         The dataframe containing all the postalcodes in the
         Netherlands
-    minutes_early_cutoff : int, optional
-        Cutoff value for the minutes early feature, by default 60
 
     Returns
     -------
@@ -50,8 +48,8 @@ def create_features(
         .pipe(add_appointments_same_day)
         .pipe(add_days_since_last_appointment)
         .pipe(add_days_since_created)
-        .pipe(add_appointments_last_days, 14)
-        .pipe(add_minutes_early, minutes_early_cutoff)
+        .pipe(add_appointments_last_days, APPOINTMENTS_LAST_DAYS)
+        .pipe(add_minutes_early, MINUTES_EARLY_CUTOFF)
         .pipe(add_time_features)
         .pipe(add_patient_features, all_postal_codes)
         .sort_index(level="start")

@@ -39,7 +39,7 @@ def init_session(user: str, passwd: str, host: str, port: str, db: str) -> sessi
 
 
 @st.cache_data(ttl=600)
-def get_patient_list(_session: Session, date_input: date, top_n: int = 20) -> List[str]:
+def get_patient_list(_session: Session, date_input: date) -> List[str]:
     """Get the patient list ordered by prediction
 
     This function returns a list of patient ids who need to be called
@@ -51,9 +51,6 @@ def get_patient_list(_session: Session, date_input: date, top_n: int = 20) -> Li
     date_input : date
         The day of the appointments we're calling for
         (generally today +3 working days)
-    top_n : int
-        The number of patients to return, ordered by their maximum
-        prediction.
 
     Returns
     -------
@@ -66,7 +63,6 @@ def get_patient_list(_session: Session, date_input: date, top_n: int = 20) -> Li
         .where(ApiPrediction.active)
         .group_by(ApiPrediction.patient_id)
         .order_by(func.max(ApiPrediction.prediction).desc())
-        .limit(top_n)
         .outerjoin(ApiPrediction.patient_relation)
         # select rows where last_call_date is null, today or more than x months ago
         .where(

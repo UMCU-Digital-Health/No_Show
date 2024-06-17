@@ -35,8 +35,15 @@ WHERE 1=1
     AND SUBAGENDA.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixSubAgenda'
     AND SUBAGENDA.identifier_value NOT IN (
         'Z10351', 'Z10330', 'Z10307', 'Z10362', 'Z10438',  -- Hartgroepen 1 t/m 5 (REV)
+        'ZH0082', 'ZH0085', 'ZH0086', 'ZH0087', 'ZH0088',  -- Hartgroepen 1 t/m 5 (FYS)
         'Z10455',  -- Behandelaar CMH
         'ZH0302', 'Z01613', 'Z01577',  -- LAB Longziekten
+        -- Huisbezoeken van Centrum voor Thuisbeademing
+        'Z04789', 'Z04792', 'Z04790', 'Z04791', 'Z04764', 'Z04765', 'Z04760', 
+        'Z04766', 'Z04757', '029756', 'Z04745', 'Z04763', 'ZH0633', 'Z04761',
+        'Z04787', 'Z04747', 'Z04767', 'Z04746', 'Z04769', 'Z04758', 'Z04788',
+        'Z04786', 'Z04759',
+        --
         'Z06676', -- Ciliopathie
         'Z07053', -- PMC
         'Z07081', -- Research DER
@@ -49,15 +56,15 @@ WHERE 1=1
     AND (
         HOOFDAGENDA.identifier_value IN (
             -- Revalidatie en sport
-            'ZH0307',  -- RF&S Revalidatiegeneeskunde
-            'ZH0435',  -- RF&S Sportgeneeskunde
-            'ZH0444',  -- RF&S Psychologie
-            'ZH0091',  -- RF&S Dietetiek
-            'ZH0437',  -- RF&S Ergotherapie
-            'ZH0436',  -- RF&S Fysiotherapie
-            'ZH0439',  -- RF&S Maatschappelijk werk
-            'ZH0438',  -- RF&S Logopedie
-            'ZH0436',   -- RF&S Fysiotherapie
+            -- 'ZH0307',  -- RF&S Revalidatiegeneeskunde
+            -- 'ZH0435',  -- RF&S Sportgeneeskunde
+            -- 'ZH0444',  -- RF&S Psychologie
+            -- 'ZH0091',  -- RF&S Dietetiek
+            -- 'ZH0437',  -- RF&S Ergotherapie
+            -- 'ZH0436',  -- RF&S Fysiotherapie
+            -- 'ZH0439',  -- RF&S Maatschappelijk werk
+            -- 'ZH0438',  -- RF&S Logopedie
+            -- 'ZH0436',   -- RF&S Fysiotherapie
             -- Poli blauw
             'ZH0156', -- Kind-Nefrologie 
             'ZH0139', -- Kind-Endocrinologie

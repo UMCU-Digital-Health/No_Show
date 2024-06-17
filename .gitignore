@@ -1,3 +1,6 @@
+# Config files
+run/config/*.toml
+
 # Rsconnect files
 rsconnect-python/
 

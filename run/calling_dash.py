@@ -65,13 +65,6 @@ def main():
             date_3_days,
             on_change=reset_name_index,
         )
-        number_patients_input = int(
-            st.number_input(
-                label="Hoeveel patienten wil je bellen?",
-                min_value=1,
-                value=20,
-            )
-        )
         enable_dev_mode = st.toggle("Toon ID's")
 
     if not date_input:
@@ -81,7 +74,7 @@ def main():
     # Retrieve data from application database
     Session = init_session(db_user, db_passwd, db_host, db_port, db_database)
     with Session() as session:
-        patient_ids = get_patient_list(session, date_input, number_patients_input)
+        patient_ids = get_patient_list(session, date_input)
         if not patient_ids:
             st.header(f"Geen afspraken op {date_input}")
             return None

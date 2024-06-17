@@ -12,11 +12,11 @@ from sqlalchemy import create_engine, delete
 from sqlalchemy.orm import Session, sessionmaker
 
 from noshow.api.app_helpers import (
-    add_clinic_phone,
     create_treatment_groups,
     fix_outdated_appointments,
     load_model,
 )
+from noshow.config import CLINIC_PHONENUMBERS
 from noshow.database.models import (
     ApiPatient,
     ApiPrediction,
@@ -187,7 +187,7 @@ async def predict(
                 patient_relation=apipatient,
                 clinic_name=row["hoofdagenda"],
                 clinic_reception=row["description"],
-                clinic_phone_number=add_clinic_phone(row["hoofdagenda"]),
+                clinic_phone_number=CLINIC_PHONENUMBERS.get(row["hoofdagenda"], ""),
                 active=True,
             )
         else:
@@ -197,7 +197,9 @@ async def predict(
             apiprediction.request_relation = apirequest
             apiprediction.clinic_name = row["hoofdagenda"]
             apiprediction.clinic_reception = row["description"]
-            apiprediction.clinic_phone_number = add_clinic_phone(row["hoofdagenda"])
+            apiprediction.clinic_phone_number = CLINIC_PHONENUMBERS.get(
+                row["hoofdagenda"], ""
+            )
             apiprediction.active = True
 
         db.merge(apisensitive)

@@ -23,23 +23,6 @@ def load_model(model_path: Union[str, Path, None] = None) -> Any:
     return model
 
 
-def add_clinic_phone(clinic_name: str) -> str:
-    if clinic_name == "Revalidatie & Sport":
-        return "58831"
-    elif clinic_name == "Longziekten":
-        return "56192"
-    elif clinic_name == "Kind-KNO":
-        return "54902"
-    elif clinic_name == "Kind-Neurologie":
-        return "67370"
-    elif clinic_name == "Kind-Orthopedie":
-        return "67470"
-    elif clinic_name == "Kind-Plastische chirurgie":
-        return "53594"
-    else:
-        return ""
-
-
 def fix_outdated_appointments(
     session: Session, app_ids: pd.Series, start_date: str
 ) -> None:
