@@ -70,16 +70,6 @@ WHERE 1=1
     AND HOOFDAGENDA.active = 1
     AND (
         HOOFDAGENDA.identifier_value IN (
-            -- Revalidatie en sport
-            -- 'ZH0307',  -- RF&S Revalidatiegeneeskunde
-            -- 'ZH0435',  -- RF&S Sportgeneeskunde
-            -- 'ZH0444',  -- RF&S Psychologie
-            -- 'ZH0091',  -- RF&S Dietetiek
-            -- 'ZH0437',  -- RF&S Ergotherapie
-            -- 'ZH0436',  -- RF&S Fysiotherapie
-            -- 'ZH0439',  -- RF&S Maatschappelijk werk
-            -- 'ZH0438',  -- RF&S Logopedie
-            -- 'ZH0436',  -- RF&S Fysiotherapie
             -- Poli blauw
             'ZH0156', -- Kind-Nefrologie 
             'ZH0139', -- Kind-Endocrinologie
@@ -93,8 +83,67 @@ WHERE 1=1
             'ZH0018',  -- Cardiothoracale Chirurgie
             'ZH0116'   -- functie hart
         )  OR 
-        (HOOFDAGENDA.identifier_value = 'ZH0152' AND SUBAGENDA.identifier_value = 'Z00936') -- CTB spreekuur kind klz
-        ) 
+        (
+            HOOFDAGENDA.identifier_value = 'ZH0152' AND SUBAGENDA.identifier_value = 'Z00936' -- CTB spreekuur kind klz
+        )  OR
+        (
+            HOOFDAGENDA.identifier_value IN (
+                -- Revalidatie en sport
+                'ZH0307',  -- RF&S Revalidatiegeneeskunde
+                'ZH0435',  -- RF&S Sportgeneeskunde
+                'ZH0444',  -- RF&S Psychologie
+                'ZH0091',  -- RF&S Dietetiek
+                'ZH0437',  -- RF&S Ergotherapie
+                'ZH0436',  -- RF&S Fysiotherapie
+                'ZH0439',  -- RF&S Maatschappelijk werk
+                'ZH0438',  -- RF&S Logopedie
+                'ZH0436'   -- RF&S Fysiotherapie)
+            ) AND ENC.type1_code IN(
+                'CF15',
+                'CF30',
+                'CF45',
+                'CF60',
+                'CFCRE',
+                'CFMYDY',
+                'CFNOIC',
+                'CFOIMD',
+                'CFOIMV',
+                'CFORT',
+                'CFPRB',
+                'CFPRBSAB',
+                'NFALS',
+                'NFCVA',
+                'NFCWP',
+                'NFMYDY',
+                'NFNAH',
+                'NFNMZ',
+                'NFNONC',
+                'NFPRB',
+                'NFREV',
+                'NFREVK',
+                'NFRONC',
+                'NFSARC',
+                'NFSD',
+                'NFSPAS',
+                'NFTRAUMA',
+                'NFVCI',
+                'NF',
+                'NFSO',
+                'VBSOARTS',
+                'VBSOHART',
+                'VBSOHINS',
+                'VBSOINSP',
+                'VGSO+ART',
+                'VGSO+INS',
+                'VGSOARTS',
+                'VGSOINSP',
+                'VMITCHAR',
+                'VMITHARC',
+                'VMITHART',
+                'VMITHINS'
+            )
+        )
+    )
     AND APP.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
     AND APP.created >= '2015-01-01'
     AND APP.created <= '2024-05-31'
