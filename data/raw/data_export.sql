@@ -49,7 +49,22 @@ WHERE 1=1
         'Z07081', -- Research DER
         'Z07078', -- Bioday kind
         'Z04778', -- afgifteloket van het lab.
-        'Z04755' -- afgifteloket van het laboratorium
+        'Z04755', -- afgifteloket van het laboratorium
+        --
+        'Z01282', -- OACAR
+        'Z01254', -- RPM
+        'Z01724', -- CTC,
+        'Z01707', -- post CTC PA,
+        'Z01704', -- POST CTC Chirurg,
+        'Z01270', -- HTX jaarkaart na,
+        'Z01269', -- HTZ jaarkaart pre,
+        'Z01278', -- HTX post-operatief,
+        'Z01180', -- HTXV, 
+        'Z01222', -- HTXVS,
+        'Z01208', -- LVADVS
+        'Z09280', -- ECG inloop receptie 7
+        'Z09277', -- klinische en spoed ECG
+        'ZH0421'  -- ECG op poli
     )
     AND HOOFDAGENDA.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgenda'
     AND HOOFDAGENDA.active = 1
@@ -64,15 +79,19 @@ WHERE 1=1
             -- 'ZH0436',  -- RF&S Fysiotherapie
             -- 'ZH0439',  -- RF&S Maatschappelijk werk
             -- 'ZH0438',  -- RF&S Logopedie
-            -- 'ZH0436',   -- RF&S Fysiotherapie
+            -- 'ZH0436',  -- RF&S Fysiotherapie
             -- Poli blauw
             'ZH0156', -- Kind-Nefrologie 
             'ZH0139', -- Kind-Endocrinologie
             'ZH0138', -- Kind-Dermatologie 
-            'ZH0129',  -- Kind-Algemene Pediatrie
+            'ZH0129', -- Kind-Algemene Pediatrie
             -- Longziekten
             'ZH0183',  -- Longziekten
-            'ZH0034'  -- Centrum voor Thuisbeademing
+            'ZH0034',  -- Centrum voor Thuisbeademing
+            -- Cardiologie
+            'ZH0017',  -- cardiologie
+            'ZH0018',  -- Cardiothoracale Chirurgie
+            'ZH0116'   -- functie hart
         )  OR 
         (HOOFDAGENDA.identifier_value = 'ZH0152' AND SUBAGENDA.identifier_value = 'Z00936') -- CTB spreekuur kind klz
         ) 
