@@ -90,14 +90,7 @@ WHERE 1=1
             HOOFDAGENDA.identifier_value IN (
                 -- Revalidatie en sport
                 'ZH0307',  -- RF&S Revalidatiegeneeskunde
-                'ZH0435',  -- RF&S Sportgeneeskunde
-                'ZH0444',  -- RF&S Psychologie
-                'ZH0091',  -- RF&S Dietetiek
-                'ZH0437',  -- RF&S Ergotherapie
-                'ZH0436',  -- RF&S Fysiotherapie
-                'ZH0439',  -- RF&S Maatschappelijk werk
-                'ZH0438',  -- RF&S Logopedie
-                'ZH0436'   -- RF&S Fysiotherapie)
+                'ZH0435'  -- RF&S Sportgeneeskunde
             ) AND ENC.type1_code IN(
                 'CF15',
                 'CF30',
