@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.2] - 2024-06-20
+- Added Cardiology and RF&S to queries
+
 ## [1.2.1] - 2024-06-13
 
 ### Changed
