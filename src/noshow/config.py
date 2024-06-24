@@ -29,7 +29,7 @@ def load_config(config_path: Path) -> dict:
     logger.error(f"Config file not found: {config_path}")
     return {
         "feature_building": {
-            "mute_period": 6,
+            "mute_period": 0,
             "minutes_early_cutoff": 60,
             "appointments_last_days": 14,
         },
