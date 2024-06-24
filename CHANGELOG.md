@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Retrained model on new export containing Cardiology and RF&S
 - Redeployed API to test
+- Disabled mute period for RCT and added config to DVC
 
 ### Fixed
 - Fixed query to also include cardiology
