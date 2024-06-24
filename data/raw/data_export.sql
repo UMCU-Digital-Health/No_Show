@@ -80,7 +80,6 @@ WHERE 1=1
             'ZH0034',  -- Centrum voor Thuisbeademing
             -- Cardiologie
             'ZH0017',  -- cardiologie
-            'ZH0018',  -- Cardiothoracale Chirurgie
             'ZH0116'   -- functie hart
         )  OR 
         (

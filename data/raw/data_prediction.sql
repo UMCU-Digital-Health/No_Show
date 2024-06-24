@@ -97,7 +97,10 @@ WHERE 1=1
             'ZH0129',  -- Kind-Algemene Pediatrie
             -- Longziekten
             'ZH0183',  -- Longziekten
-            'ZH0034'  -- Centrum voor Thuisbeademing
+            'ZH0034',  -- Centrum voor Thuisbeademing
+            -- Cardiologie
+            'ZH0017',  -- cardiologie
+            'ZH0116'   -- functie hart
         )  OR 
         (
             HOOFDAGENDA.identifier_value = 'ZH0152' AND SUBAGENDA.identifier_value = 'Z00936' -- CTB spreekuur kind klz
@@ -218,7 +221,11 @@ WHERE 1=1
                     'ZH0129',  -- Kind-Algemene Pediatrie
                     -- Longziekten
                     'ZH0183',  -- Longziekten
-                    'ZH0034'  -- Centrum voor Thuisbeademing
+                    'ZH0034',  -- Centrum voor Thuisbeademing
+                    -- Cardiologie
+                    'ZH0017',  -- cardiologie
+                    'ZH0116'   -- functie hart
+
                 )  OR
                 (
                     HOOFDAGENDA2.identifier_value = 'ZH0152' AND SUBAGENDA2.identifier_value = 'Z00936'
