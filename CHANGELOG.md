@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.4] - 2024-07-01
+
+### Fixed
+- Casting of threshold_date in patient list query
+
 ## [1.2.3] - 2024-06-24
 
 ### Changed

@@ -2,7 +2,7 @@ from datetime import date, timedelta
 from typing import List
 
 import streamlit as st
-from sqlalchemy import Date, create_engine, func, select
+from sqlalchemy import Date, cast, create_engine, func, select
 from sqlalchemy.orm import Session, sessionmaker
 
 from noshow.config import MUTE_PERIOD
@@ -57,6 +57,9 @@ def get_patient_list(_session: Session, date_input: date) -> List[str]:
     List[str]
         List of unique patient ids, sorted by prediction
     """
+    # Calculate the threshold date for the last call
+    threshold_date = date.today() - timedelta(days=round(MUTE_PERIOD * 30.5))
+
     call_list = _session.execute(
         select(ApiPrediction.patient_id, func.max(ApiPrediction.prediction))
         .where(ApiPrediction.start_time.cast(Date) == date_input)
@@ -67,10 +70,7 @@ def get_patient_list(_session: Session, date_input: date) -> List[str]:
         # select rows where last_call_date is null, today or more than x months ago
         .where(
             (ApiPatient.last_call_date.is_(None))
-            | (
-                ApiPatient.last_call_date
-                <= date.today() - timedelta(days=round(MUTE_PERIOD * 30.5))
-            )
+            | (ApiPatient.last_call_date <= cast(threshold_date, Date))
         )
         # select the treatment group
         .where(ApiPatient.treatment_group == 1)
