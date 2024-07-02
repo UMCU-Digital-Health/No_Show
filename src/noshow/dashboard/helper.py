@@ -81,7 +81,10 @@ def highlight_row(row: pd.Series) -> List[str]:
 def previous_preds(call_status: str = "Niet gebeld"):
     """Go to previous prediction"""
     if call_status == "Wordt gebeld":
-        st.error("Status is 'Wordt gebeld', verander de status voordat je verder gaat.")
+        st.error(
+            "Status is 'Wordt gebeld', verander de status voordat je verder gaat.",
+            icon="🛑",
+        )
         return
 
     if st.session_state["pred_idx"] > 0:
@@ -134,7 +137,10 @@ def next_preds(
     current_patient.call_number = st.session_state.number_input
 
     if call_response.call_status == "Wordt gebeld":
-        st.error("Status is 'Word Gebeld', verander de status voordat je verder gaat.")
+        st.error(
+            "Status is 'Word Gebeld', verander de status voordat je verder gaat.",
+            icon="🛑",
+        )
         return
     if call_response.call_status == "Gebeld":
         current_patient.last_call_date = date.today()
@@ -165,7 +171,10 @@ def navigate_patients(
         Whether to navigate forward or backword, by default True
     """
     if call_status == "Wordt gebeld":
-        st.error("Status is 'Wordt gebeld', verander de status voordat je verder gaat.")
+        st.error(
+            "Status is 'Wordt gebeld', verander de status voordat je verder gaat.",
+            icon="🛑",
+        )
         return
     elif navigate_forward:
         if st.session_state["name_idx"] + 1 < list_len:
