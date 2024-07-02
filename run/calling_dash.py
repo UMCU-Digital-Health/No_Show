@@ -31,7 +31,7 @@ load_dotenv()
 with open(Path(__file__).parents[1] / "pyproject.toml", "rb") as f:
     config = tomli.load(f)
 
-API_VERSION = config["project"]["version"]
+VERSION = config["project"]["version"]
 
 # Global and env variables
 db_user = os.environ["DB_USER"]
@@ -65,8 +65,7 @@ def main():
         menu_items={
             "Get help": f"{support_message}",
             "About": (
-                f"No Show v{API_VERSION}\n\n"
-                "AI for Health, https://www.umcutrecht.nl/nl"
+                f"No Show v{VERSION}\n\n AI for Health, https://www.umcutrecht.nl/nl"
             ),
         },
     )
