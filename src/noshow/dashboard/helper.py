@@ -30,7 +30,7 @@ def render_patient_info(
     call_number_list : List[str]
         List of call number types
     """
-    if current_response.call_status == "Niet gebeld":
+    if current_response.call_status != "Wordt gebeld":
         st.button(
             "Start met bellen patient",
             on_click=start_calling,
@@ -78,8 +78,15 @@ def highlight_row(row: pd.Series) -> List[str]:
         return [""] * len(row)
 
 
-def previous_preds():
+def previous_preds(call_status: str = "Niet gebeld"):
     """Go to previous prediction"""
+    if call_status == "Wordt gebeld":
+        st.error(
+            "Status is 'Wordt gebeld', verander de status voordat je verder gaat.",
+            icon="🛑",
+        )
+        return
+
     if st.session_state["pred_idx"] > 0:
         st.session_state["pred_idx"] -= 1
 
@@ -128,6 +135,13 @@ def next_preds(
     call_response.call_outcome = st.session_state.res_input
     call_response.remarks = st.session_state.opm_input
     current_patient.call_number = st.session_state.number_input
+
+    if call_response.call_status == "Wordt gebeld":
+        st.error(
+            "Status is 'Word Gebeld', verander de status voordat je verder gaat.",
+            icon="🛑",
+        )
+        return
     if call_response.call_status == "Gebeld":
         current_patient.last_call_date = date.today()
     if call_response.call_outcome == "Bel me niet":
@@ -142,7 +156,9 @@ def next_preds(
         st.session_state["pred_idx"] += 1
 
 
-def navigate_patients(list_len: int, navigate_forward: bool = True):
+def navigate_patients(
+    list_len: int, navigate_forward: bool = True, call_status: str = "Niet gebeld"
+):
     """Navigate through patients
 
     Navigates through the patients list and reset the prediction index
@@ -154,7 +170,13 @@ def navigate_patients(list_len: int, navigate_forward: bool = True):
     navigate_forward : bool, optional
         Whether to navigate forward or backword, by default True
     """
-    if navigate_forward:
+    if call_status == "Wordt gebeld":
+        st.error(
+            "Status is 'Wordt gebeld', verander de status voordat je verder gaat.",
+            icon="🛑",
+        )
+        return
+    elif navigate_forward:
         if st.session_state["name_idx"] + 1 < list_len:
             st.session_state["name_idx"] += 1
             st.session_state["pred_idx"] = 0

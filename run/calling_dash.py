@@ -1,9 +1,11 @@
 import os
 from datetime import date, datetime
+from pathlib import Path
 from typing import cast
 
 import pandas as pd
 import streamlit as st
+import tomli
 from dotenv import load_dotenv
 from sqlalchemy import select
 
@@ -26,6 +28,10 @@ from noshow.preprocessing.utils import add_working_days
 
 load_dotenv()
 
+with open(Path(__file__).parents[1] / "pyproject.toml", "rb") as f:
+    config = tomli.load(f)
+
+VERSION = config["project"]["version"]
 
 # Global and env variables
 db_user = os.environ["DB_USER"]
@@ -56,7 +62,12 @@ def main():
     st.set_page_config(
         page_title="No Show bel-dashboard",
         page_icon=":chair:",
-        menu_items={"Get help": f"{support_message}"},
+        menu_items={
+            "Get help": f"{support_message}",
+            "About": (
+                f"No Show v{VERSION}\n\n AI for Health, https://www.umcutrecht.nl/nl"
+            ),
+        },
     )
 
     with st.sidebar:
@@ -152,7 +163,9 @@ def main():
     col1, col2, col3 = st.columns(3)
     with col1:
         st.button(
-            "Vorige patient", on_click=navigate_patients, args=(len(patient_ids), False)
+            "Vorige patient",
+            on_click=navigate_patients,
+            args=(len(patient_ids), False, current_response.call_status),
         )
     with col2:
         st.write(f"Patient {st.session_state['name_idx'] + 1}/{len(patient_ids)}")
@@ -160,7 +173,7 @@ def main():
         st.button(
             "Volgende patient",
             on_click=navigate_patients,
-            args=(len(patient_ids), True),
+            args=(len(patient_ids), True, current_response.call_status),
         )
     st.header("Patient-gegevens")
     if enable_dev_mode:
@@ -206,7 +219,7 @@ def main():
         )
         st.text_input("Opmerkingen: ", value=current_response.remarks, key="opm_input")
         st.form_submit_button(
-            "Volgende",
+            "Opslaan",
             on_click=next_preds,
             args=(
                 len(all_predictions_df),
