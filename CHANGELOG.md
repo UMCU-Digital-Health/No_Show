@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.5] - 2024-07-02
+
+### Fixed
+- Only allow users to move to another page if status is not 'Wordt gebeld', forcing them to log the result
+
 ## [1.2.4] - 2024-07-01
 
 ### Fixed
