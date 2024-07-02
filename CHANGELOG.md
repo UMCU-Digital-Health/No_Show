@@ -9,8 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.5] - 2024-07-02
 
-### Fixed
+### Changed
 - Only allow users to move to another page if status is not 'Wordt gebeld', forcing them to log the result
+- Updated requirements, fixing a dependabot warning about urllib3
 
 ## [1.2.4] - 2024-07-01
 
