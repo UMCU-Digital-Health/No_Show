@@ -1,9 +1,11 @@
 import os
 from datetime import date, datetime
+from pathlib import Path
 from typing import cast
 
 import pandas as pd
 import streamlit as st
+import tomli
 from dotenv import load_dotenv
 from sqlalchemy import select
 
@@ -26,6 +28,10 @@ from noshow.preprocessing.utils import add_working_days
 
 load_dotenv()
 
+with open(Path(__file__).parents[1] / "pyproject.toml", "rb") as f:
+    config = tomli.load(f)
+
+API_VERSION = config["project"]["version"]
 
 # Global and env variables
 db_user = os.environ["DB_USER"]
@@ -56,7 +62,13 @@ def main():
     st.set_page_config(
         page_title="No Show bel-dashboard",
         page_icon=":chair:",
-        menu_items={"Get help": f"{support_message}"},
+        menu_items={
+            "Get help": f"{support_message}",
+            "About": (
+                f"No Show v{API_VERSION}\n\n"
+                "AI for Health, https://www.umcutrecht.nl/nl"
+            ),
+        },
     )
 
     with st.sidebar:

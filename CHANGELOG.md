@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.5] - 2024-07-02
 
+### Added
+- Added package version to about menu in dashboard
+
 ### Changed
 - Only allow users to move to another page if status is not 'Wordt gebeld', forcing them to log the result
 - Changed button text to 'Opslaan', making it clear that it needs to be pressed before anything is saved
