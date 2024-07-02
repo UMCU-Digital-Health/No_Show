@@ -208,7 +208,7 @@ def main():
         )
         st.text_input("Opmerkingen: ", value=current_response.remarks, key="opm_input")
         st.form_submit_button(
-            "Volgende",
+            "Opslaan",
             on_click=next_preds,
             args=(
                 len(all_predictions_df),
