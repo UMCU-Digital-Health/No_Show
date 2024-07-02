@@ -152,7 +152,9 @@ def main():
     col1, col2, col3 = st.columns(3)
     with col1:
         st.button(
-            "Vorige patient", on_click=navigate_patients, args=(len(patient_ids), False)
+            "Vorige patient",
+            on_click=navigate_patients,
+            args=(len(patient_ids), False, current_response.call_status),
         )
     with col2:
         st.write(f"Patient {st.session_state['name_idx'] + 1}/{len(patient_ids)}")
@@ -160,7 +162,7 @@ def main():
         st.button(
             "Volgende patient",
             on_click=navigate_patients,
-            args=(len(patient_ids), True),
+            args=(len(patient_ids), True, current_response.call_status),
         )
     st.header("Patient-gegevens")
     if enable_dev_mode:
