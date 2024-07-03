@@ -8,15 +8,16 @@ import tomli
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, Security
 from fastapi.security.api_key import APIKeyHeader
-from sqlalchemy import create_engine, delete
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from noshow.api.app_helpers import (
     create_treatment_groups,
     fix_outdated_appointments,
     load_model,
+    remove_sensitive_info,
 )
-from noshow.config import CLINIC_PHONENUMBERS
+from noshow.config import CLINIC_PHONENUMBERS, KEEP_SENSITIVE_DATA
 from noshow.database.models import (
     ApiPatient,
     ApiPrediction,
@@ -137,8 +138,8 @@ async def predict(
     ).reset_index()
 
     prediction_df = create_treatment_groups(prediction_df, db, get_bins())
-    # Remove all previous sensitive info like name, phonenumber
-    db.execute(delete(ApiSensitiveInfo))
+
+    remove_sensitive_info(db, start_time, lookback_days=KEEP_SENSITIVE_DATA)
 
     end_time = datetime.now()
     apirequest = ApiRequest(

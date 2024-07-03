@@ -29,16 +29,21 @@ def load_config(config_path: Path) -> dict:
     logger.error(f"Config file not found: {config_path}")
     return {
         "feature_building": {
-            "mute_period": 0,
             "minutes_early_cutoff": 60,
             "appointments_last_days": 14,
         },
         "clinic_phonenumbers": {},
+        "dashboard": {
+            "mute_period": 0,
+            "keep_sensitive_data": 7,
+        },
     }
 
 
 config = load_config(CONFIG_PATH)
-MUTE_PERIOD = config["feature_building"]["mute_period"]
+MUTE_PERIOD = config["dashboard"]["mute_period"]
+KEEP_SENSITIVE_DATA = config["dashboard"]["keep_sensitive_data"]
+
 MINUTES_EARLY_CUTOFF = config["feature_building"]["minutes_early_cutoff"]
 APPOINTMENTS_LAST_DAYS = config["feature_building"]["appointments_last_days"]
 

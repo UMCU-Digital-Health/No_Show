@@ -1,14 +1,15 @@
 import pickle
 import random
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, Union
 
 import numpy as np
 import pandas as pd
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
-from noshow.database.models import ApiPatient, ApiPrediction
+from noshow.database.models import ApiPatient, ApiPrediction, ApiSensitiveInfo
 
 
 def load_model(model_path: Union[str, Path, None] = None) -> Any:
@@ -21,6 +22,35 @@ def load_model(model_path: Union[str, Path, None] = None) -> Any:
         model = pickle.load(f)
 
     return model
+
+
+def remove_sensitive_info(
+    session: Session, start_time: datetime, lookback_days: int = 7
+) -> None:
+    """Remove sensitive information for patients that have not been predicted on
+    in the last `lookback_days` days.
+
+    Parameters
+    ----------
+    session : Session
+        Session variable that holds the database connection
+    start_time : datetime
+        The start time of the predictions
+    lookback_days : int, optional
+        The number of days to look back, by default 7
+    """
+    patients_with_recent_predictions = (
+        select(ApiPrediction.patient_id)
+        .where(ApiPrediction.start_time > (start_time - timedelta(days=lookback_days)))
+        .distinct()
+        .scalar_subquery()
+    )
+
+    session.execute(
+        delete(ApiSensitiveInfo).where(
+            ApiSensitiveInfo.patient_id.notin_(patients_with_recent_predictions)
+        )
+    )
 
 
 def fix_outdated_appointments(

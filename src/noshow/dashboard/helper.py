@@ -30,7 +30,7 @@ def render_patient_info(
     call_number_list : List[str]
         List of call number types
     """
-    if current_response.call_status != "Wordt gebeld":
+    if current_response.call_status == "Niet gebeld":
         st.button(
             "Start met bellen patient",
             on_click=start_calling,
@@ -42,6 +42,8 @@ def render_patient_info(
         )
     else:
         if current_patient:
+            if current_response.call_status != "Wordt gebeld":
+                st.warning("Deze patient is al gebeld!", icon="⚠️")
             st.write(f"- Naam: {current_patient.full_name or 'Onbekend'}")
             st.write(f"- Voornaam: {current_patient.first_name or 'Onbekend'}")
             st.write(f"- Geboortedatum: {current_patient.birth_date or 'Onbekend'}")
