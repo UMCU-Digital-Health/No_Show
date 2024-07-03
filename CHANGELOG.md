@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.6] - 2024-07-03
 
+### Added
+- Added a search field to search for patients by their phone number, in case they call back
+
 ### Changed
 - Sensitive info is now only removed after 7 days, so dashboard users can go back to a previous day, in case a patient calls back
 - The button 'start calling' now only appears when a patient has not been called, if a patient has been called (or was unavailable) the patient info is shown, but a warning will be displayed to inform the user that the patient was already called.

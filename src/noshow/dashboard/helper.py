@@ -3,32 +3,35 @@ from typing import List
 
 import pandas as pd
 import streamlit as st
+from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 
-from noshow.database.models import ApiCallResponse, ApiPatient
+from noshow.database.models import ApiCallResponse, ApiPatient, ApiSensitiveInfo
 
 
 def render_patient_info(
     Session: sessionmaker,
     current_response: ApiCallResponse,
-    current_patient: ApiPatient,
-    current_patient_nmbr: int,
+    current_patient: ApiSensitiveInfo,
+    current_patient_nmbr: ApiPatient,
     call_number_list: List[str],
 ) -> None:
     """Render patient information
 
+    This function is responsible for rendering the patient information on the dashboard.
+
     Parameters
     ----------
     Session : sessionmaker
-        SQLAlchemy sessionmaker object
+        The SQLAlchemy sessionmaker object used for database operations.
     current_response : ApiCallResponse
-        Current call response object
-    current_patient : ApiPatient
-        Current patient object
-    current_patient_nmbr : int
-        Current patient number
+        The current call response object.
+    current_patient : ApiSensitiveInfo
+        The current patient object containing sensitive information.
+    current_patient_nmbr : ApiPatient
+        The current patient object containing the call number.
     call_number_list : List[str]
-        List of call number types
+        The list of call number types.
     """
     if current_response.call_status == "Niet gebeld":
         st.button(
@@ -186,3 +189,35 @@ def navigate_patients(
         if st.session_state["name_idx"] > 0:
             st.session_state["name_idx"] -= 1
             st.session_state["pred_idx"] = 0
+
+
+def search_number(
+    Session: sessionmaker, phone_number: str, patient_ids: list[str]
+) -> None:
+    """Search for a patient by phone number
+
+    Parameters
+    ----------
+    Session : sessionmaker
+        SQLAlchemy sessionmaker object
+    phone_number : str
+        Phone number to search for
+    patient_ids : list[str]
+        List of patient ids
+    """
+    with Session() as session:
+        patient_id = session.execute(
+            select(ApiSensitiveInfo.patient_id)
+            .where(
+                (ApiSensitiveInfo.mobile_phone == phone_number)
+                | (ApiSensitiveInfo.home_phone == phone_number)
+                | (ApiSensitiveInfo.other_phone == phone_number)
+            )
+            .distinct()
+        ).scalar()
+
+        if patient_id and patient_id in patient_ids:
+            st.session_state["name_idx"] = patient_ids.index(patient_id)
+            st.session_state["pred_idx"] = 0
+        else:
+            st.info("Geen patient gevonden met dit telefoonnummer.", icon="ℹ️")
