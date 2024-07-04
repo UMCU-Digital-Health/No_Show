@@ -220,4 +220,6 @@ def search_number(
             st.session_state["name_idx"] = patient_ids.index(patient_id)
             st.session_state["pred_idx"] = 0
         else:
-            st.info("Geen patient gevonden met dit telefoonnummer.", icon="ℹ️")
+            st.info(
+                "Geen patient gevonden met dit telefoonnummer op deze dag", icon="ℹ️"
+            )
