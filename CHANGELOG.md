@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.7] - 2024-07-09
+
+### Added
+- Added a dashboard for monitoring and KPIs during the implementation of the No Show project
+
 ## [1.2.6] - 2024-07-03
 
 ### Added
