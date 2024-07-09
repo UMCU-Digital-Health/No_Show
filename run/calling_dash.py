@@ -16,6 +16,7 @@ from noshow.dashboard.helper import (
     next_preds,
     previous_preds,
     render_patient_info,
+    search_number,
 )
 from noshow.database.models import (
     ApiCallResponse,
@@ -160,6 +161,7 @@ def main():
     ]
 
     # Main content of streamlit app
+    st.write(f"## Patient {st.session_state['name_idx'] + 1}/{len(patient_ids)}")
     col1, col2, col3 = st.columns(3)
     with col1:
         st.button(
@@ -168,7 +170,15 @@ def main():
             args=(len(patient_ids), False, current_response.call_status),
         )
     with col2:
-        st.write(f"Patient {st.session_state['name_idx'] + 1}/{len(patient_ids)}")
+        with st.popover(
+            "🔍 Zoeken", help="Zoek op telefoonnummer om een patient te vinden."
+        ):
+            phone_number = st.text_input("Zoek op telefoonnummer...")
+            st.button(
+                "Zoek",
+                on_click=search_number,
+                args=(Session, phone_number, patient_ids),
+            )
     with col3:
         st.button(
             "Volgende patient",
