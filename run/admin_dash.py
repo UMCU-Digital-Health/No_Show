@@ -28,6 +28,31 @@ db_port = os.environ["DB_PORT"]
 db_database = os.environ["DB_DATABASE"]
 
 
+def calc_calling_percentage(
+    call_results_df: pd.DataFrame, call_outcomes: list[str]
+) -> str:
+    """Calculates the percentage of rows that have `call_outcomes` and
+    returns it as a string with two decimal places and a percentage sign.
+
+    Parameters
+    ----------
+    call_results_df : pd.DataFrame
+        The DataFrame containing the call results
+    call_outcomes : list[str]
+        The outcomes to calculate the percentage for
+
+    Returns
+    -------
+    str
+        The percentage formatted as a string
+    """
+    num_outcomes = len(
+        call_results_df[call_results_df["call_outcome"].isin(call_outcomes)]
+    )
+    total = len(call_results_df)
+    return f"{num_outcomes / total * 100:.2f}%"
+
+
 def kpi_page():
     """Page that contains basic KPIs for the no-show project"""
     st.write("## KPIs")
@@ -75,7 +100,7 @@ def kpi_page():
         }
     )
 
-    metric_cols = st.columns(4)
+    metric_cols = st.columns(5)
     metric_cols[0].metric(
         "Aantal Hoofdagenda's", call_results_df["clinic_name"].nunique()
     )
@@ -87,20 +112,19 @@ def kpi_page():
         "Aantal afspraken verzet of geannuleerd",
         len(call_results_df[call_results_df["call_outcome"] == "Verzet/Geannuleerd"]),
     )
-    percentage_reached = (
-        len(
-            call_results_df[
-                call_results_df["call_outcome"].isin(
-                    ["Herinnerd", "Verzet/Geannuleerd"]
-                )
-            ]
-        )
-        / len(call_results_df)
-        * 100
+    percentage_reached = calc_calling_percentage(
+        call_results_df, ["Herinnerd", "Verzet/Geannuleerd"]
     )
     metric_cols[3].metric(
         "Percentage patienten bereikt",
-        f"{percentage_reached:.2f}%",
+        percentage_reached,
+    )
+    percentage_called = calc_calling_percentage(
+        call_results_df, ["Herinnerd", "Verzet/Geannuleerd", "Onbereikbaar"]
+    )
+    metric_cols[4].metric(
+        "Percentage patienten gebeld",
+        percentage_called,
     )
 
     st.write("### Uitkomsten per dag")
