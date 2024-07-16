@@ -43,14 +43,14 @@ WHERE 1=1
         'Z04766', 'Z04757', '029756', 'Z04745', 'Z04763', 'ZH0633', 'Z04761',
         'Z04787', 'Z04747', 'Z04767', 'Z04746', 'Z04769', 'Z04758', 'Z04788',
         'Z04786', 'Z04759',
-        --
+        --  Poli blauw
         'Z06676', -- Ciliopathie
         'Z07053', -- PMC
         'Z07081', -- Research DER
         'Z07078', -- Bioday kind
         'Z04778', -- afgifteloket van het lab.
         'Z04755', -- afgifteloket van het laboratorium
-        --
+        -- Cardiologie
         'Z01282', -- OACAR
         'Z01254', -- RPM
         'Z01724', -- CTC,
@@ -61,10 +61,11 @@ WHERE 1=1
         'Z01278', -- HTX post-operatief,
         'Z01180', -- HTXV, 
         'Z01222', -- HTXVS,
-        'Z01208', -- LVADVS
-        'Z09280', -- ECG inloop receptie 7
-        'Z09277', -- klinische en spoed ECG
-        'ZH0421'  -- ECG op poli
+        'Z01208', -- LVADVS,
+        -- HTX subagenda's
+        'Z01178', '029708', '029710', '029712', '029713', '029711', '029707', 'Z01226',
+        --- GUCH subagenda's
+        'ZH0192', 'ZH0561', 'Z01316', 'Z01188', 'Z01234'
     )
     AND HOOFDAGENDA.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgenda'
     AND HOOFDAGENDA.active = 1
@@ -79,8 +80,7 @@ WHERE 1=1
             'ZH0183',  -- Longziekten
             'ZH0034',  -- Centrum voor Thuisbeademing
             -- Cardiologie
-            'ZH0017',  -- cardiologie
-            'ZH0116'   -- functie hart
+            'ZH0017'  -- cardiologie
         )  OR 
         (
             HOOFDAGENDA.identifier_value = 'ZH0152' AND SUBAGENDA.identifier_value = 'Z00936' -- CTB spreekuur kind klz
