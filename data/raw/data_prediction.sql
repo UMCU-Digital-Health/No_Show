@@ -18,7 +18,7 @@ SELECT APP.identifier_value AS APP_ID
     ,HOOFDAGENDA.[name] AS hoofdagenda
     ,SUBAGENDA.specialty_code
     ,ENC.type1_display AS soort_consult
-    ,ENC.type1_code
+    ,ENC.type1_code AS afspraak_code
     ,APP.[start]
     ,APP.[end]
     ,ENC.[statusHistory2_period_start] AS gearriveerd

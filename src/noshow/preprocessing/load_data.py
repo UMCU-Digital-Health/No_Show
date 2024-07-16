@@ -119,7 +119,7 @@ def process_appointments(appointments_df: pd.DataFrame) -> pd.DataFrame:
 def process_postal_codes(postalcodes_path: Union[str, Path]) -> pd.DataFrame:
     """Load and process all postalcode locations in the Netherlands
 
-    This file can be found at: https://download.geonames.org/export/dump/
+    This file can be found at: https://download.geonames.org/export/zip/NL.zip
 
     Parameters
     ----------

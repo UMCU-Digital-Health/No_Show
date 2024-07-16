@@ -4,7 +4,7 @@ SELECT APP.identifier_value AS APP_ID
     ,SUBAGENDA.specialty_code
     ,SUBAGENDA.name 
     ,ENC.type1_display AS soort_consult
-    ,ENC.type1_code
+    ,ENC.type1_code AS afspraak_code
     ,APP.[start]
     ,APP.[end]
     ,ENC.[statusHistory2_period_start] AS gearriveerd

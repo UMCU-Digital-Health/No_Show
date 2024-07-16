@@ -19,9 +19,9 @@ def fake_postal_codes(_=None) -> pd.DataFrame:
     """
     return pd.DataFrame(
         {
-            "postalcode": [3994, 2034],
-            "latitude": [52.0238, 52.3613],
-            "longitude": [5.1842, 4.6464],
+            "postalcode": [3994, 2034, 3738, 8225, 3072, 9724],
+            "latitude": [52.0238, 52.3613, 52.155789, 52.502652, 51.901032, 53.211872],
+            "longitude": [5.1842, 4.6464, 5.177230, 5.490525, 4.486715, 6.576597],
         }
     ).set_index("postalcode")
 

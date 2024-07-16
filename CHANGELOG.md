@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.8] - 2024-07-16
+
+### Changed
+- Updated the dataset card and the test-data to better reflect a possible dataset
+- Updated links to the postalcode file URL
+
 ## [1.2.7] - 2024-07-09
 
 ### Added
