@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the dataset card and the test-data to better reflect a possible dataset
 - Updated links to the postalcode file URL
 - Removed hart functie agenda, too many appointments for this phase, TODO: add at a later stage
+- Updated deploy script
 
 ## [1.2.8] - 2024-07-17
 
