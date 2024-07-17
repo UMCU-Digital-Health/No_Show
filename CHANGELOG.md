@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.2.8] - 2024-07-16
+## [1.2.9] - 2024-07-16
 
 ### Added
 - Added Cardiology to the data and retrained model
@@ -16,6 +16,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the dataset card and the test-data to better reflect a possible dataset
 - Updated links to the postalcode file URL
 - Removed hart functie agenda, too many appointments for this phase, TODO: add at a later stage
+
+## [1.2.8] - 2024-07-17
+
+### Added
+- Added an option to select the clinic in the admin dashboard
+
+### Changed
+- Updated requirements to solve dependabot alert
 
 ## [1.2.7] - 2024-07-09
 
