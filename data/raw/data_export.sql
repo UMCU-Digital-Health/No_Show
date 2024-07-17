@@ -62,6 +62,9 @@ WHERE 1=1
         'Z01180', -- HTXV, 
         'Z01222', -- HTXVS,
         'Z01208', -- LVADVS,
+        'Z09280', -- ECG inloop receptie 7
+        'Z09277', -- klinische en spoed ECG
+        'ZH0421',  -- ECG op poli
         -- HTX subagenda's
         'Z01178', '029708', '029710', '029712', '029713', '029711', '029707', 'Z01226',
         --- GUCH subagenda's
@@ -80,7 +83,8 @@ WHERE 1=1
             'ZH0183',  -- Longziekten
             'ZH0034',  -- Centrum voor Thuisbeademing
             -- Cardiologie
-            'ZH0017'  -- cardiologie
+            'ZH0017',  -- cardiologie
+            'ZH0116'   -- functie hart
         )  OR 
         (
             HOOFDAGENDA.identifier_value = 'ZH0152' AND SUBAGENDA.identifier_value = 'Z00936' -- CTB spreekuur kind klz
