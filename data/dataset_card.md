@@ -8,7 +8,7 @@ Based on the dataset card template from huggingface, which can be found [here](h
 
 ### Dataset Summary
 
-The dataset consists of all appointments created between January 2015 and May 2023. It combines data from different Data platform tables, namely Appointment, HealthCareService, Polyklinisch_consult, Patient and Patient_address. It uses HealthCareService specialtycodes to filter on clinic and excludes appointments that are booked.
+The dataset consists of all appointments created between January 2015 and June 2024. It combines data from different Data platform tables, namely Appointment, HealthCareService, Polyklinisch_consult, Patient and Patient_address. It uses HealthCareService specialtycodes to filter on clinic and excludes appointments that are booked.
 
 ### Supported Tasks and Leaderboards
 
@@ -30,11 +30,12 @@ The input data for the prediction is structured as follows:
   "pseudo_id": "1ch5k",
   "hoofdagenda": "Revalidatie en Sport",
   "specialty_code": "REV",
-  "soort_consult": "Eerste",
-  "start": "2023-01-01T09:00:00",
-  "end": "2023-01-01T09:30:00",
-  "gearriveerd": "2023-01-01T09:02:00",
-  "created": "2022-10-01T00:00",
+  "soort_consult": "Controle fysiek",
+  "afspraak_code": "CG63",
+  "start": "1717232400000",
+  "end": "1717234200000",
+  "gearriveerd": "1717232590000",
+  "created": "1713366900000",
   "minutesDuration": "30",
   "status": "fulfilled",
   "status_code_original": "J",
@@ -49,40 +50,41 @@ The input data for the prediction is structured as follows:
   "telecom1_value": "0683726384",
   "telecom2_value": "112",
   "telecom3_value": null,
-  "birthDate: "1994-01-01:"
+  "birthDate: "679418100000"
   }
 ```
 
-Every observation contains all the information of a single appointment. When predicting for a single appointment all the previous appointments of the patient also need to be included as they can be used for feature engineering. The last 7 fields are considered sensitive and are only stored for the purspose of calling and overwritten when a new prediction is made.
+Every observation contains all the information of a single appointment. When predicting for a single appointment all the previous appointments of the patient also need to be included as they can be used for feature engineering. The last 6 fields are considered sensitive and are only stored for the purspose of calling and overwritten when a new prediction is made.
 
 ### Data Fields
 
 Below you can find the datafields present in the dataset. The datafields are the result of running the query on the dataplatform, most of the fields are the names from the columns in the data platform, some are changed in the query (like `HCS_ID`):
 
-- `APP_ID`: string with the identifier of the Appointment
-- `pseudo_id`: string of the hashed patient id
-- `hoofdagenda`: string with the name of the main HiXagenda
-- `specialty_code`: string with the specialty code of the HealthCareService, for this pilot: REV, KAP, SPO, LON
-- `soort_consult`: string with consult type, mainly used to filter out phone appointments
-- `start`: datetime in isoformat with the start date of the appointment
-- `end`: datetime in isoformat with the end date of the appointment
-- `gearriveerd`: datetime in isoformat with the date of arrival of the patient
-- `created`: datetime in isoformat with the creation date of the appointment
-- `minutesDuration`: integer indicating the duration of the appointment in minutes
-- `status`: string with the status of the appointment, for example: booked or fulfilled.
-- `status_code_original`: string with the status of the appointent.
-- `cancelationReason_code`: string with the code of the reason of cancelation
-- `cancelationReason_display`: string with the reason of cancelation
-- `BIRTH_YEAR`: integer containing the birthyear of the patient
-- `address_postalCodeNumbersNL`: integer containing the first 4 digits of the postalcode of the patient
-- `name`: Code of the outpatient clinic reception. The first letter usually represents the area in the UMCU, *only used during prediction* 
-- `description`: Description of the outpatient clinic reception, *only used during prediction*
-- `name_text`: The name of the patient, *only used during prediction*
-- `name_given1_callMe`: The first name of the patient, *only used during prediction*
-- `telecom1_value`: The mobile phone number of the patient (if known), *only used during prediction*
-- `telecom2_value`: The home phone number of the patient (if known), *only used during prediction*
-- `telecom3_value`: The other phone number of the patient (if known), *only used during prediction*
-- `birthDate`: The birthdate of the patient, needed for validation when calling, *only used during prediction*
+- `APP_ID`: string with the identifier of the Appointment, for example `"1573125974"`
+- `pseudo_id`: string of the hashed patient id, for example `"JE994ND3Y30XN"`
+- `hoofdagenda`: string with the name of the main HiXagenda, for example `"Cardiologie"`
+- `specialty_code`: string with the specialty code of the HealthCareService, for example: `"REV"`, `"KAP"`, `"SPO"`, `"LON"`
+- `soort_consult`: string with consult type, mainly used to filter out phone appointments, for example: `"Telefonisch"`, `"Controle fysiek"`
+- `afspraakcode`: string with the code for `soort_consult`, for example: `"GT91"`
+- `start`: UNIX timestamp in ms with the start date of the appointment, for example: `1717232400000`
+- `end`: UNIX timestamp in ms with the end date of the appointment, for example: `1717234200000`
+- `gearriveerd`: UNIX timestamp in ms with the date of arrival of the patient, for example: `1717232590000`
+- `created`: UNIX timestamp in ms with the creation date of the appointment, for example: `1713366900000`
+- `minutesDuration`: integer indicating the duration of the appointment in minutes, for example: `30`
+- `status`: string with the status of the appointment, for example: `"booked"` or `"fulfilled"`.
+- `status_code_original`: string with the status of the appointent, for example: `"J"` or `"N"`
+- `cancelationReason_code`: string with the code of the reason of cancelation, for example `null` or `"N"`
+- `cancelationReason_display`: string with the reason of cancelation, for example: `"No Show"` or `null`
+- `BIRTH_YEAR`: integer containing the birthyear of the patient, for example `1991`
+- `address_postalCodeNumbersNL`: integer containing the first 4 digits of the postalcode of the patient, for example `3994`
+- `name`: Code of the outpatient clinic reception. The first letter usually represents the area in the UMCU, for example: `"Receptie 10A"` *only used during prediction* 
+- `description`: Description of the outpatient clinic reception, for example `"receptie van cardiologie"` *only used during prediction*
+- `name_text`: The name of the patient, for example `"John H. Doe"` *only used during prediction*
+- `name_given1_callMe`: The first name of the patient, for example `"John"` *only used during prediction*
+- `telecom1_value`: The mobile phone number of the patient (if known), for example: `"06-73496410"` *only used during prediction*
+- `telecom2_value`: The home phone number of the patient (if known), for example: `"0481-643995"` *only used during prediction*
+- `telecom3_value`: The other phone number of the patient (if known), for example: `null` *only used during prediction*
+- `birthDate`: UNIX timestamp in ms of the birthdate of the patient, needed for validation when calling, for example `679418100000` *only used during prediction*
 
 ### Data Splits
 
@@ -108,6 +110,7 @@ All data is extracted from the Data Platform maintained by the UMCU.
 #### Initial Data Collection and Normalization
 
 Data is collected using a SQL query which can be found [here](raw/data_export.sql).
+The postal codes are exported from [here](https://download.geonames.org/export/zip/NL.txt).
 
 #### Who are the source data producers?
 
@@ -118,15 +121,15 @@ The data consists of all patients of the participating clinics at the UMC Utrech
 ### Annotations
 
 The target variable of no-shows should be inferred from the data as follows:
-If the appointment was cancelled and the cancellationReasonCode is on of: "M", "C2", "C3", "0000000010", "D1", "N", "E1", than the status is no-show. All other observations are `show`.
+If the appointment was cancelled and the cancellationReasonCode is `"N"` than the status is no-show. All other observations are `show`.
 
-Appointments that have status `booked` and are excluded from the train data. When predicting all appointments should have status `booked`.
+Appointments that have status `booked` and are excluded from the train data. When predicting all appointments should have status `booked`, except for the historic predictions of the patients.
 
 ### Personal and Sensitive Information
 
 The data contains identity categories like the birthyear, postalcode and information on the outpatient clinic where they have their appointment. The outpatient clinic data could be considered sensitive. Individuals can't be directly identified from the dataset, but when linking it to other datasets it might be possible to infer the individuals. Therefore this data is not shared outside the UMC Utrecht or with other departments within the UMCU. 
 
-In an effort to increaze the anonymity of the patients, only the birthyear is used instead of the birth date and the first 4 numbers of the postalcode. Another reason for only using the first 4 numbers of the postal code is to reduce bias in the model. Furthermore we use specialization instead of the specific clinic, so it is harder to infer which treatment the patient received. Finally to prevent identification on the patient identifier number, we hash the patient id with a salt.
+In an effort to increase the anonymity of the patients, only the birthyear is used instead of the birth date and the first 4 numbers of the postalcode. Another reason for only using the first 4 numbers of the postal code is to reduce bias in the model. Furthermore we use specialization instead of the specific clinic, so it is harder to infer which treatment the patient received. Finally to prevent identification on the patient identifier number, we hash the patient id with a salt.
 
 The data is not shared within or outside the UMCU and can only be accessed by the development team working on the no-show project.
 
