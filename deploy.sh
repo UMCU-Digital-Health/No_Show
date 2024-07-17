@@ -7,7 +7,7 @@ do
 done
 
 read -p "What do you want to deploy? Options: 'admin-dash'/1 ; 'calling-dash'/2 ; 'calling-dash-test'/3 ; 'api'/4 ; 'api-test'/5 " APPLICATION
-APPLICATION = ${APPLICATION:-N}
+APPLICATION=${APPLICATION:-N}
 
 if [[ $APPLICATION == 'admin-dash' || $APPLICATION == "1" ]]; then
     echo "Deploying Admin dashboard"
