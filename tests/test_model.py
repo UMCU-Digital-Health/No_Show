@@ -18,23 +18,27 @@ def test_create_prediction():
     appointments_df = process_appointments(appointments_df)
 
     preds = create_prediction(FakeModel(), appointments_df, fake_postal_codes(None))
-    assert preds.shape == (5, 1)  # 5 appointments in test data
+    assert preds.shape == (12, 1)  # 12 appointments in test data
 
     preds_booked = create_prediction(
         FakeModel(),
         appointments_df,
         fake_postal_codes(None),
-        prediction_start_date="2023-01-05",
+        prediction_start_date="2024-07-16",
     )
     # First patient has 2 appointments on same day
     # second has 1 on the day and one in the future
-    assert preds_booked.shape == (4, 1)
-    assert all(preds_booked.index.get_level_values("start") >= "2023-01-05")
+    assert preds_booked.shape == (5, 1)
+    assert all(preds_booked.index.get_level_values("start") >= "2024-07-16")
 
 
 def test_train_model():
     appointments_df = pd.DataFrame(fake_appointments())
-    appointments_df["created"] = pd.to_datetime(appointments_df["created"])
+    appointments_df["created"] = pd.to_datetime(appointments_df["created"], unit="ms")
+    appointments_df["start"] = pd.to_datetime(appointments_df["start"], unit="ms")
+    appointments_df["gearriveerd"] = pd.to_datetime(
+        appointments_df["gearriveerd"], unit="ms"
+    )
     appointments_df = process_appointments(appointments_df)
     feature_table = create_features(appointments_df, fake_postal_codes(None)).pipe(
         select_feature_columns
