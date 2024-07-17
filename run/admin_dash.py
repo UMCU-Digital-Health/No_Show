@@ -2,6 +2,7 @@ import os
 from datetime import datetime, timedelta
 
 import altair as alt
+import numpy as np
 import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
@@ -57,7 +58,7 @@ def kpi_page():
     """Page that contains basic KPIs for the no-show project"""
     st.write("## KPIs")
 
-    if len(date_input) != 2:
+    if not isinstance(date_input, tuple) or len(date_input) != 2:
         st.info("Selecteer een tijdsperiode")
         return
 
@@ -99,6 +100,17 @@ def kpi_page():
             "Bel me niet": 4,
         }
     )
+
+    clinic_selection_col, _ = st.columns([1, 2])
+    clinic_selection = clinic_selection_col.selectbox(
+        "Kies een kliniek",
+        np.insert(call_results_df["clinic_name"].unique(), 0, "Alle poli's"),
+        index=0,
+    )
+    if clinic_selection != "Alle poli's":
+        call_results_df = call_results_df[
+            call_results_df["clinic_name"] == clinic_selection
+        ]
 
     metric_cols = st.columns(5)
     metric_cols[0].metric(
@@ -160,7 +172,7 @@ def monitoring_page():
     """Page that contains monitoring information for the no-show project"""
     st.write("## Monitoring")
 
-    if len(date_input) != 2:
+    if not isinstance(date_input, tuple) or len(date_input) != 2:
         st.info("Selecteer een tijdsperiode")
         return
 

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.8] - 2024-07-17
+
+### Added
+- Added an option to select the clinic in the admin dashboard
+
+### Changed
+- Updated requirements to solve dependabot alert
+
 ## [1.2.7] - 2024-07-09
 
 ### Added
