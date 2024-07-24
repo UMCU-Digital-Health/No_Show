@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.10] - 2024-07-24
+
+### Fixed
+- Fixed a bug where when the full name of a patient is None, the predict endpoint crashes
+
 ## [1.2.9] - 2024-07-16
 
 ### Added

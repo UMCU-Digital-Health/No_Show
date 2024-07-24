@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from datetime import datetime
 from pathlib import Path
@@ -32,6 +33,8 @@ from noshow.preprocessing.load_data import (
     process_postal_codes,
 )
 from noshow.preprocessing.utils import add_working_days
+
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -156,6 +159,13 @@ async def predict(
         apisensitive = db.get(ApiSensitiveInfo, row["pseudo_id"])
 
         if not apisensitive:
+            if row["name_text"] is None:
+                row["name_text"] = ""
+                logger.warning(
+                    f"Patient {row['pseudo_id']} has no name_text, "
+                    "replacing with empty string"
+                )
+
             apisensitive = ApiSensitiveInfo(
                 patient_id=row["pseudo_id"],
                 full_name=row["name_text"],
