@@ -1,16 +1,21 @@
 FROM python:3.11
 
-# 
 WORKDIR /code
 
-# 
 COPY ./requirements.txt /code/requirements.txt
 
-# 
+COPY ./src /code/src
+
+COPY ./run/config /code/run/config
+
+COPY ./pyproject.toml /code/pyproject.toml
+
+COPY ./data/raw/NL.txt /code/data/raw/NL.txt
+
+COPY ./data/processed/fixed_pred_score_bin.json /code/data/processed/fixed_pred_score_bin.json
+
+COPY ./output/models /code/output/models
+
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-# 
-COPY ./src/api /code/api
-
-# 
-CMD ["fastapi", "run", "api/app.py", "--port", "80"]
+CMD ["fastapi", "run", "src/noshow/api/app.py", "--port", "80"]
