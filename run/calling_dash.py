@@ -35,11 +35,11 @@ with open(Path(__file__).parents[1] / "pyproject.toml", "rb") as f:
 VERSION = config["project"]["version"]
 
 # Global and env variables
-db_user = os.environ["DB_USER"]
-db_passwd = os.environ["DB_PASSWD"]
-db_host = os.environ["DB_HOST"]
-db_port = os.environ["DB_PORT"]
-db_database = os.environ["DB_DATABASE"]
+db_user = os.getenv("DB_USER", "")
+db_passwd = os.getenv("DB_PASSWD", "")
+db_host = os.getenv("DB_HOST", "")
+db_port = os.getenv("DB_PORT", 1433)
+db_database = os.getenv("DB_DATABASE", "")
 
 if "name_idx" not in st.session_state:
     st.session_state["name_idx"] = 0
@@ -64,7 +64,7 @@ def main():
         page_title="No Show bel-dashboard",
         page_icon=":chair:",
         menu_items={
-            "Get help": f"{support_message}",
+            "Get help": support_message,
             "About": (
                 f"No Show v{VERSION}\n\n AI for Health, https://www.umcutrecht.nl/nl"
             ),

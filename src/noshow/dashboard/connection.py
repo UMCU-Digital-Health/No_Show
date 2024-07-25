@@ -6,7 +6,7 @@ from sqlalchemy import Date, cast, create_engine, func, select
 from sqlalchemy.orm import Session, sessionmaker
 
 from noshow.config import MUTE_PERIOD
-from noshow.database.models import ApiPatient, ApiPrediction
+from noshow.database.models import ApiPatient, ApiPrediction, Base
 
 
 @st.cache_resource
@@ -32,9 +32,20 @@ def init_session(user: str, passwd: str, host: str, port: str, db: str) -> sessi
         The returned SQLAlchemy engine used for queries
     """
 
-    CONNECTSTRING = rf"mssql+pymssql://{user}:{passwd}@{host}:{port}/{db}"
-    engine = create_engine(CONNECTSTRING)
+    if user == "":
+        print("Using debug SQLite database...")
+        SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
+        execution_options = {"schema_translate_map": {"noshow": None}}
+    else:
+        SQLALCHEMY_DATABASE_URL = (
+            rf"mssql+pymssql://{user}:{passwd}@{host}:{port}/{db}"
+        )
+        execution_options = None
+
+    engine = create_engine(SQLALCHEMY_DATABASE_URL, execution_options=execution_options)
+    Base.metadata.create_all(engine)
     session_object = sessionmaker(bind=engine)
+
     return session_object
 
 
