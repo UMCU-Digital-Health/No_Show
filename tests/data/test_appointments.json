@@ -2,7 +2,7 @@
     {
         "APP_ID": "7292675890",
         "pseudo_id": "HG84HR93B4",
-        "hoofdagenda": "Sport en revalidatie",
+        "hoofdagenda": "RF&S Sportgeneeskunde",
         "specialty_code": "SPO",
         "soort_consult": "Controle fysiek",
         "afspraak_code": "C73",
@@ -29,7 +29,7 @@
     {
         "APP_ID": "6874169845",
         "pseudo_id": "HG84HR93B4",
-        "hoofdagenda": "Sport en revalidatie",
+        "hoofdagenda": "RF&S Sportgeneeskunde",
         "specialty_code": "SPO",
         "soort_consult": "Controle fysiek",
         "afspraak_code": "C73",
@@ -83,8 +83,8 @@
     {
         "APP_ID": "8127956345",
         "pseudo_id": "937GN3KD12",
-        "hoofdagenda": "Allergologie",
-        "specialty_code": "ALE",
+        "hoofdagenda": "Longziekten",
+        "specialty_code": "LON",
         "soort_consult": "Controle fysiek",
         "afspraak_code": "C90",
         "start": "1721136600000",
@@ -110,8 +110,8 @@
     {
         "APP_ID": "6783216597",
         "pseudo_id": "937GN3KD12",
-        "hoofdagenda": "Allergologie",
-        "specialty_code": "ALE",
+        "hoofdagenda": "Longziekten",
+        "specialty_code": "LON",
         "soort_consult": "Controle fysiek",
         "afspraak_code": "C91",
         "start": "1720877400000",
@@ -137,8 +137,8 @@
     {
         "APP_ID": "2468136597",
         "pseudo_id": "937GN3KD12",
-        "hoofdagenda": "Allergologie",
-        "specialty_code": "ALE",
+        "hoofdagenda": "Longziekten",
+        "specialty_code": "LON",
         "soort_consult": "Controle fysiek",
         "afspraak_code": "C92",
         "start": "1720618200000",
@@ -164,8 +164,8 @@
     {
         "APP_ID": "4763486528",
         "pseudo_id": "937GN3KD12",
-        "hoofdagenda": "Allergologie",
-        "specialty_code": "ALE",
+        "hoofdagenda": "Longziekten",
+        "specialty_code": "LON",
         "soort_consult": "Controle fysiek",
         "afspraak_code": "C93",
         "start": "1717245000000",
@@ -191,8 +191,8 @@
     {
         "APP_ID": "3813317688.14286",
         "pseudo_id": "F42KDSH3K3",
-        "hoofdagenda": "Neurologie",
-        "specialty_code": "NEU",
+        "hoofdagenda": "Kind-Endocrinologie",
+        "specialty_code": "KEN",
         "soort_consult": "Controle fysiek",
         "afspraak_code": "H46",
         "start": "1721147400000",
@@ -326,7 +326,7 @@
     {
         "APP_ID": "7451576254",
         "pseudo_id": "M17VG3KZ9F",
-        "hoofdagenda": "Dermatologie",
+        "hoofdagenda": "Kind-Dermatologie",
         "specialty_code": "DER",
         "soort_consult": "Controle fysiek",
         "afspraak_code": "K64",
