@@ -37,7 +37,9 @@ WHERE 1=1
         'Z10351', 'Z10330', 'Z10307', 'Z10362', 'Z10438',  -- Hartgroepen 1 t/m 5 (REV)
         'ZH0082', 'ZH0085', 'ZH0086', 'ZH0087', 'ZH0088',  -- Hartgroepen 1 t/m 5 (FYS)
         'Z10455',  -- Behandelaar CMH
+        -- Longziekten
         'ZH0302', 'Z01613', 'Z01577',  -- LAB Longziekten
+        'Z01564', 'Z01565', 'Z01566', 'Z01582', 'Z01583', 'Z01584', 'Z01585', 'Z01622', 'Z01623', 'Z01624', 'Z01625', 'Z01571', 'Z01570', -- Dagbehandeling
         -- Huisbezoeken van Centrum voor Thuisbeademing
         'Z04789', 'Z04792', 'Z04790', 'Z04791', 'Z04764', 'Z04765', 'Z04760', 
         'Z04766', 'Z04757', '029756', 'Z04745', 'Z04763', 'ZH0633', 'Z04761',
@@ -80,10 +82,9 @@ WHERE 1=1
             'ZH0183',  -- Longziekten
             'ZH0034',  -- Centrum voor Thuisbeademing
             -- Cardiologie
-            'ZH0017'  -- cardiologie
-        )  OR 
-        (
-            HOOFDAGENDA.identifier_value = 'ZH0152' AND SUBAGENDA.identifier_value = 'Z00936' -- CTB spreekuur kind klz
+            'ZH0017',  -- cardiologie
+            -- Neurologie
+            'ZH0318'  -- Spieren voor Spieren kinderen
         )  OR
         (
             HOOFDAGENDA.identifier_value IN (
