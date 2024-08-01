@@ -61,20 +61,22 @@ def get_patient_list(_session: Session, date_input: date) -> List[str]:
     threshold_date = date.today() - timedelta(days=round(MUTE_PERIOD * 30.5))
 
     call_list = _session.execute(
-        select(ApiPrediction.patient_id, func.max(ApiPrediction.prediction))
+        select(
+            ApiPrediction.patient_id,
+            ApiPatient.treatment_group,
+            func.max(ApiPrediction.prediction),
+        )
+        .outerjoin(ApiPrediction.patient_relation)
         .where(ApiPrediction.start_time.cast(Date) == date_input)
         .where(ApiPrediction.active)
-        .group_by(ApiPrediction.patient_id)
-        .order_by(func.max(ApiPrediction.prediction).desc())
-        .outerjoin(ApiPrediction.patient_relation)
-        # select rows where last_call_date is null, today or more than x months ago
         .where(
             (ApiPatient.last_call_date.is_(None))
             | (ApiPatient.last_call_date <= cast(threshold_date, Date))
         )
-        # select the treatment group
-        .where(ApiPatient.treatment_group == 1)
+        .where(ApiPatient.treatment_group >= 1)
         .where((ApiPatient.opt_out.is_(None)) | (ApiPatient.opt_out == 0))
+        .group_by(ApiPrediction.patient_id, ApiPatient.treatment_group)
+        .order_by(ApiPatient.treatment_group, func.max(ApiPrediction.prediction).desc())
     ).all()
 
     patient_ids = [x.patient_id for x in call_list]
