@@ -37,6 +37,20 @@ def load_config(config_path: Path) -> dict:
             "mute_period": 0,
             "keep_sensitive_data": 7,
         },
+        "rct": {
+            "agendas": [
+                "RF&S Revalidatiegeneeskunde",
+                "RF&S Sportgeneeskunde",
+                "Longziekten",
+                "Centrum voor Thuisbeademing",
+                "Kind-Nefrologie",
+                "Kind-Endocrinologie",
+                "Kind-Dermatologie",
+                "Kind-Algemene Pediatrie",
+                "Cardiologie",
+                "Functie Hart",
+            ]
+        },
     }
 
 
@@ -48,3 +62,5 @@ MINUTES_EARLY_CUTOFF = config["feature_building"]["minutes_early_cutoff"]
 APPOINTMENTS_LAST_DAYS = config["feature_building"]["appointments_last_days"]
 
 CLINIC_PHONENUMBERS = config["clinic_phonenumbers"]
+
+RCT_AGENDAS = config["rct"]["agendas"]

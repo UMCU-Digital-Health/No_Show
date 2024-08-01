@@ -18,7 +18,7 @@ from noshow.api.app_helpers import (
     load_model,
     remove_sensitive_info,
 )
-from noshow.config import CLINIC_PHONENUMBERS, KEEP_SENSITIVE_DATA
+from noshow.config import CLINIC_PHONENUMBERS, KEEP_SENSITIVE_DATA, RCT_AGENDAS
 from noshow.database.models import (
     ApiPatient,
     ApiPrediction,
@@ -140,7 +140,7 @@ async def predict(
         "prediction", ascending=False
     ).reset_index()
 
-    prediction_df = create_treatment_groups(prediction_df, db, get_bins())
+    prediction_df = create_treatment_groups(prediction_df, db, get_bins(), RCT_AGENDAS)
 
     remove_sensitive_info(db, start_time, lookback_days=KEEP_SENSITIVE_DATA)
 
