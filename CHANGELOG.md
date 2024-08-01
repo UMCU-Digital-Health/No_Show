@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.11] - 2024-08-01
+
+### Added
+- Added a small agenda "Spieren voor Spieren" outside of the RCT
+
+### Changed
+- Changed treatment group to 2 for agendas outside RCT
+- Removed unnecessary subagendas for Longziekten and Poli-blauw
+
 ## [1.2.10] - 2024-07-24
 
 ### Fixed
