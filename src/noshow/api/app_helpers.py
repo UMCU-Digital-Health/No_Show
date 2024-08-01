@@ -115,7 +115,8 @@ def create_treatment_groups(
     bin_edges : Dict[str, list]
         Dictionary containing the bin edges for each group.
     rct_agendas : list[str], optional
-        List of agendas that are part of the RCT, by default None.
+        List of agendas that are part of the RCT, if None than all agendas are
+        assumed to be part of the RCT, by default None.
 
     Returns
     -------
