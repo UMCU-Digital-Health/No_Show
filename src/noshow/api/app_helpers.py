@@ -98,7 +98,10 @@ def apply_bins(group, bin_dict):
 
 
 def create_treatment_groups(
-    predictions: pd.DataFrame, session: Session, bin_edges: Dict[str, list]
+    predictions: pd.DataFrame,
+    session: Session,
+    bin_edges: Dict[str, list],
+    rct_agendas: list[str] | None = None,
 ) -> pd.DataFrame:
     """
     Create treatment groups based on predictions.
@@ -111,6 +114,9 @@ def create_treatment_groups(
         Session variable that holds the database connection.
     bin_edges : Dict[str, list]
         Dictionary containing the bin edges for each group.
+    rct_agendas : list[str], optional
+        List of agendas that are part of the RCT, if None than all agendas are
+        assumed to be part of the RCT, by default None.
 
     Returns
     -------
@@ -148,6 +154,13 @@ def create_treatment_groups(
         )
     else:
         predictions.loc[:, "treatment_group"] = None
+
+    # Treatment group 2 means excluded from RCT
+    if rct_agendas is not None:
+        predictions.loc[
+            ~predictions["hoofdagenda"].isin(rct_agendas), "treatment_group"
+        ] = 2
+
     predictions = predictions.sort_values("prediction", ascending=False)
     # apply bins based on supplied fixed score_bins
     predictions = (
