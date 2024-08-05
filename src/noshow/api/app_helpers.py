@@ -156,7 +156,7 @@ def create_treatment_groups(
         predictions.loc[:, "treatment_group"] = None
 
     # Treatment group 2 means excluded from RCT
-    if rct_agendas:
+    if rct_agendas is not None:
         predictions.loc[
             ~predictions["hoofdagenda"].isin(rct_agendas), "treatment_group"
         ] = 2

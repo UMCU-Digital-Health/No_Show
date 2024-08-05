@@ -113,3 +113,34 @@ class TestRCT:
 
         result = result["treatment_group"].values
         assert (result == [0, 1, 1, 0, 0, 0, 1, 1, 1, 0]).all()
+
+    def test_create_treatment_group_empty_rct_agendas(
+        self, sample_df, some_patients, sample_bins
+    ):
+        """Test case for empty rct_agendas, should add all patients to group 2"""
+        session = Mock()
+        session.query.return_value.filter.return_value.all.return_value = some_patients
+        result = create_treatment_groups(
+            sample_df, session, sample_bins, rct_agendas=[]
+        )
+
+        result = result["treatment_group"]
+        assert (result == 2).all()
+
+    def test_create_treatment_group_some_rct_agendas(
+        self, sample_df, some_patients, sample_bins
+    ):
+        """Test case for some rct_agendas, should add patients of A and B to RCT,
+        meaning group 0 or 1 and patients of other agendas to group 2"""
+        session = Mock()
+        session.query.return_value.filter.return_value.all.return_value = some_patients
+        result = create_treatment_groups(
+            sample_df, session, sample_bins, rct_agendas=["A", "B"]
+        )
+
+        assert (
+            result.loc[result["hoofdagenda"].isin(["A", "B"]), "treatment_group"] < 2
+        ).all()
+        assert (
+            result.loc[~result["hoofdagenda"].isin(["A", "B"]), "treatment_group"] == 2
+        ).all()

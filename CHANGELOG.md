@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Added a small agenda "Spieren voor Spieren" outside of the RCT
+- Added unit test for adding agendas outside RCT
 
 ### Changed
 - Changed treatment group to 2 for agendas outside RCT
