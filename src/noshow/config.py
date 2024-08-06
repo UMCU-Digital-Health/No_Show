@@ -32,24 +32,27 @@ def load_config(config_path: Path) -> dict:
             "minutes_early_cutoff": 60,
             "appointments_last_days": 14,
         },
-        "clinic_phonenumbers": {},
         "dashboard": {
             "mute_period": 0,
             "keep_sensitive_data": 7,
         },
-        "rct": {
-            "agendas": [
-                "RF&S Revalidatiegeneeskunde",
-                "RF&S Sportgeneeskunde",
-                "Longziekten",
-                "Centrum voor Thuisbeademing",
-                "Kind-Nefrologie",
-                "Kind-Endocrinologie",
-                "Kind-Dermatologie",
-                "Kind-Algemene Pediatrie",
-                "Cardiologie",
-                "Functie Hart",
-            ]
+        "clinic": {
+            "sport_en_revalidatie": {
+                "include_rct": True,
+                "phone_number": "58831",
+                "teleq_name": "Sport en Revalidatie",
+                "main_agenda_codes": [
+                    "ZH0307",  # RF&S Revalidatiegeneeskunde
+                    "ZH0435",  # RF&S Sportgeneeskunde
+                ],
+                "subagenda_exclude": True,
+                "subagendas": [],
+                "appcode_exclude": False,
+                "appcodes": [
+                    "CF15",
+                    "CF30",
+                ],
+            }
         },
     }
 
@@ -61,6 +64,4 @@ KEEP_SENSITIVE_DATA = config["dashboard"]["keep_sensitive_data"]
 MINUTES_EARLY_CUTOFF = config["feature_building"]["minutes_early_cutoff"]
 APPOINTMENTS_LAST_DAYS = config["feature_building"]["appointments_last_days"]
 
-CLINIC_PHONENUMBERS = config["clinic_phonenumbers"]
-
-RCT_AGENDAS = config["rct"]["agendas"]
+CLINIC_CONFIG = config["clinic"]
