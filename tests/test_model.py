@@ -13,8 +13,12 @@ from noshow.preprocessing.load_data import process_appointments
 
 def test_create_prediction():
     appointments_df = pd.DataFrame(fake_appointments())
-    appointments_df["created"] = pd.to_datetime(appointments_df["created"], unit="ms")
-    appointments_df["start"] = pd.to_datetime(appointments_df["start"], unit="ms")
+    appointments_df["created"] = pd.to_datetime(
+        appointments_df["created"].astype(float), unit="ms"
+    )
+    appointments_df["start"] = pd.to_datetime(
+        appointments_df["start"].astype(float), unit="ms"
+    )
     appointments_df = process_appointments(appointments_df)
 
     preds = create_prediction(FakeModel(), appointments_df, fake_postal_codes(None))
@@ -34,10 +38,14 @@ def test_create_prediction():
 
 def test_train_model():
     appointments_df = pd.DataFrame(fake_appointments())
-    appointments_df["created"] = pd.to_datetime(appointments_df["created"], unit="ms")
-    appointments_df["start"] = pd.to_datetime(appointments_df["start"], unit="ms")
+    appointments_df["created"] = pd.to_datetime(
+        appointments_df["created"].astype(float), unit="ms"
+    )
+    appointments_df["start"] = pd.to_datetime(
+        appointments_df["start"].astype(float), unit="ms"
+    )
     appointments_df["gearriveerd"] = pd.to_datetime(
-        appointments_df["gearriveerd"], unit="ms"
+        appointments_df["gearriveerd"].astype(float), unit="ms"
     )
     appointments_df = process_appointments(appointments_df)
     feature_table = create_features(appointments_df, fake_postal_codes(None)).pipe(

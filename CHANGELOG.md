@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.12] - 2024-08-07
+
+### Changed
+- Updated requirements
+- Added a format to data-loading functions to prevent pandas warnings
+
+### Fixed
+- Fixed dependency issue in fastapi preventing exceptions from being raised, resulting in internal server error for every possible exception
+
 ## [1.2.11] - 2024-08-01
 
 ### Added

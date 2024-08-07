@@ -1,0 +1,171 @@
+{
+  "version": 1,
+  "locale": "en_US.UTF-8",
+  "metadata": {
+    "appmode": "python-fastapi",
+    "entrypoint": "run.app:app"
+  },
+  "python": {
+    "version": "3.11.7",
+    "package_manager": {
+      "name": "pip",
+      "version": "23.3.1",
+      "package_file": "requirements.txt"
+    }
+  },
+  "files": {
+    "requirements.txt": {
+      "checksum": "0c42b481e6dd7349c9e1cd0d0d8bf3ec"
+    },
+    ".dvcignore": {
+      "checksum": "34659c119a2634fe318cd6a4822df435"
+    },
+    ".example.env": {
+      "checksum": "a851d2b36a975d3155f448d08a4b7527"
+    },
+    ".gitignore": {
+      "checksum": "2da14bc0356b25f34ace0ca1fd375c3e"
+    },
+    ".streamlit/config.toml": {
+      "checksum": "99594759045ead1f8535775e35169a3d"
+    },
+    "CHANGELOG.md": {
+      "checksum": "87e9d45d9649e3d9f57e922cd9eb4e05"
+    },
+    "LICENSE": {
+      "checksum": "770bb10345b6c86b9f5dc743de74aadf"
+    },
+    "README.md": {
+      "checksum": "22b1aafab9743843daf608c23df19b50"
+    },
+    "data/dataset_card.md": {
+      "checksum": "b1affb9bf9e84a4721a61ab70d017c45"
+    },
+    "data/processed/.gitkeep": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "data/processed/fixed_pred_score_bin.json": {
+      "checksum": "1d8f7b0282e6fd5fd32822bf16022530"
+    },
+    "data/raw/NL.txt": {
+      "checksum": "6dd4fc6184a20b756821d48bd39488f0"
+    },
+    "data/raw/NL.txt.dvc": {
+      "checksum": "f3e37287e3ecb53c3d0230c7c042035d"
+    },
+    "data/raw/gitkeep": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "deploy.sh": {
+      "checksum": "21971b0584e7574dea4fa31a9b562930"
+    },
+    "dvc.lock": {
+      "checksum": "7ea13996eac38d35496e86dec591a9b8"
+    },
+    "dvc.yaml": {
+      "checksum": "e14888b51b20aa7ed8d1a7a8d63e33a9"
+    },
+    "manifest_api.json": {
+      "checksum": "76134643adcfc53de06a99a757299350"
+    },
+    "manifest_dash.json": {
+      "checksum": "37bec34c754fd1c9c31b49aba54c2e4e"
+    },
+    "output/models/.gitkeep": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "output/models/no_show_model_cv.pickle": {
+      "checksum": "d5dab90d36bc2a8ea98fdd6622d85564"
+    },
+    "pyproject.toml": {
+      "checksum": "2b0a3c016e76327704e8eafb3a15923a"
+    },
+    "requirements-dev.lock": {
+      "checksum": "c511b193e9662d13db553b013b384df0"
+    },
+    "requirements.lock": {
+      "checksum": "155c2fe9e66839a865de99d15bf791b7"
+    },
+    "run/app.py": {
+      "checksum": "07ea1ee70ce2cfdd157a5d234a54cbfb"
+    },
+    "run/calling_dash.py": {
+      "checksum": "edbc6ad156f078d9fd9c18f01a32abe9"
+    },
+    "run/config/config.toml": {
+      "checksum": "1a7a13b61dbae54520f0746dc8b72662"
+    },
+    "setup.cfg": {
+      "checksum": "bbbe201f135ed769da1877db5cc56fb6"
+    },
+    "src/noshow/__init__.py": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "src/noshow/api/app.py": {
+      "checksum": "c4898b7108b1872b308740de7930c7f4"
+    },
+    "src/noshow/api/app_helpers.py": {
+      "checksum": "5e2d806db2ab8f98c0a0c1bb3df2c36b"
+    },
+    "src/noshow/config.py": {
+      "checksum": "a36edffcf5c567b81a166b33aa6d9867"
+    },
+    "src/noshow/dashboard/__init__.py": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "src/noshow/dashboard/connection.py": {
+      "checksum": "9fcf05d54f54190fa10c9df7e41d6996"
+    },
+    "src/noshow/dashboard/helper.py": {
+      "checksum": "0a02a31c3acaf7fd5b16a6f1f856afaf"
+    },
+    "src/noshow/database/__init__.py": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "src/noshow/database/models.py": {
+      "checksum": "a9d85a0414e22eb6a780b4287c3fbd33"
+    },
+    "src/noshow/features/appointment_features.py": {
+      "checksum": "3c58c90ca0b5df7bbce4a328ca235e58"
+    },
+    "src/noshow/features/cumulative_features.py": {
+      "checksum": "eb2109a96e2c7a10c028a85af658171b"
+    },
+    "src/noshow/features/feature_pipeline.py": {
+      "checksum": "c58cd256e4737f0e7455e3de4e395315"
+    },
+    "src/noshow/features/no_show_features.py": {
+      "checksum": "4df69daf90146a762360ebb22668b098"
+    },
+    "src/noshow/features/patient_features.py": {
+      "checksum": "35866b0e903e110abcf52fbb5a6515de"
+    },
+    "src/noshow/model/__init__.py": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "src/noshow/model/predict.py": {
+      "checksum": "d6afc83f0160fc766e7497a9d467b770"
+    },
+    "src/noshow/model/train_model.py": {
+      "checksum": "98753748d1408144fa8db0559f28fbc1"
+    },
+    "src/noshow/preprocessing/__init__.py": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "src/noshow/preprocessing/geo.py": {
+      "checksum": "ad3285f5a7f55f0ca27a6c496212a05e"
+    },
+    "src/noshow/preprocessing/load_data.py": {
+      "checksum": "43b3a0bad5ff08dc5d48e3dc0ea5a044"
+    },
+    "src/noshow/preprocessing/utils.py": {
+      "checksum": "5c84176aa1d08e3c246120ff5e0b1abf"
+    },
+    "src/noshow/visualisation/__init__.py": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "src/noshow/visualisation/features_plots.py": {
+      "checksum": "4bc6f06a7afb732c57147c4f011256d3"
+    }
+  }
+}
