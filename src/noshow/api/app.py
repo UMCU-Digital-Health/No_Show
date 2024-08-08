@@ -7,7 +7,7 @@ from typing import Dict, List, Optional
 
 import tomli
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI, HTTPException, Security
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.security.api_key import APIKeyHeader
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
@@ -78,19 +78,11 @@ def get_bins():
 
 
 def get_db():
+    db = SessionLocal()
     try:
-        db = SessionLocal()
         yield db
+    finally:
         db.close()
-    except Exception as e:
-        print(e)
-
-
-def get_api_key(api_key_header: str = Security(api_key_header)) -> str:
-    if api_key_header == os.getenv("X_API_KEY", ""):
-        return api_key_header
-    else:
-        raise HTTPException(403, "Unauthorized, Api Key not valid")
 
 
 @app.post("/predict")
@@ -98,7 +90,7 @@ async def predict(
     input: List[Dict],
     start_date: Optional[str] = None,
     db: Session = Depends(get_db),
-    api_key: str = Depends(get_api_key),
+    api_key: str = Depends(api_key_header),
 ) -> List[Dict]:
     """
     Predict the probability of a patient having a no-show.
@@ -116,6 +108,9 @@ async def predict(
     Dict[str, Any]
         Prediction output in FHIR format
     """
+    if api_key != os.getenv("X_API_KEY"):
+        raise HTTPException(403, "Unauthorized, Api Key not valid")
+
     if start_date is None:
         start_date_dt = add_working_days(datetime.today(), 3)
         start_date = start_date_dt.strftime(r"%Y-%m-%d")
