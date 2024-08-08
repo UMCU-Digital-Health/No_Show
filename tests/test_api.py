@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 import pytest
 from sqlalchemy.orm import Session
@@ -44,6 +46,8 @@ class FakeDB(Session):
 
 @pytest.mark.asyncio
 async def test_predict_endpoint(monkeypatch):
+    os.environ["DB_USER"] = ""
+    os.environ["X_API_KEY"] = "test"
     appointments_json = fake_appointments()
     monkeypatch.setattr(app, "get_bins", fake_bins)
     monkeypatch.setattr(app, "process_postal_codes", fake_postal_codes)
@@ -54,6 +58,6 @@ async def test_predict_endpoint(monkeypatch):
         app, "create_treatment_groups", lambda x, y, z, q: x.assign(treatment_group=1)
     )
 
-    output = await predict(appointments_json, "2024-07-16", FakeDB())
+    output = await predict(appointments_json, "2024-07-16", FakeDB(), "test")
     output_df = pd.DataFrame(output)
     assert output_df.shape == (5, 15)
