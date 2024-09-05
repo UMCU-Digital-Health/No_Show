@@ -33,6 +33,7 @@ SELECT APP.identifier_value AS APP_ID
     ,LOC.[name]
     ,LOC.[description]
     ,PAT.[name_text]
+    ,PAT.identifier_value as patient_id
     ,PAT.[name_given1_callMe]
     ,PAT.[telecom1_value]
     ,PAT.[telecom2_value]
