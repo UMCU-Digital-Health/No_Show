@@ -289,5 +289,6 @@ WHERE 1=1
             AND ENC2.type1_display NOT LIKE '%telefo%'
             AND ENC2.type1_display NOT LIKE 'TC%'
             AND ENC2.without_patient <> 1
+            AND ENC2.type1_code NOT IN ('VELD')
     )
 ORDER BY pseudo_id, APP.start;
