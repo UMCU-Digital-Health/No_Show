@@ -6,7 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [1.2.14] - 2024-09-09
 
+### Added
+- patient_id to sql_query
+- patient id to sensitive info table as hix_number
+- showed patient id in dashboard
+
+## [1.2.13] - 2024-08-30
+
+### Fixed
+- Fixed issue where 'VELD' afspraken appeared in call list
 ## [1.2.12] - 2024-08-07
 
 ### Changed
