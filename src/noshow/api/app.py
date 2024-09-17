@@ -131,6 +131,24 @@ async def predict(
         add_sensitive_info=True,
     )
 
+    if RCT_AGENDAS:
+        model_path = project_path / "output" / "models" / "no_show_model_cv_rct.pickle"
+        rct_model = load_model(model_path)
+        rct_appointments_df = appointments_df[
+            appointments_df["hoofdagenda"].isin(RCT_AGENDAS)
+        ]
+        rct_prediction_df = create_prediction(
+            rct_model,
+            rct_appointments_df,
+            all_postalcodes,
+            prediction_start_date=start_date,
+            add_sensitive_info=True,
+        )
+        # replace the predictions of the RCT appointments with the RCT model
+        prediction_df.loc[rct_prediction_df.index, "prediction"] = rct_prediction_df[
+            "prediction"
+        ]
+
     prediction_df = prediction_df.sort_values(
         "prediction", ascending=False
     ).reset_index()
