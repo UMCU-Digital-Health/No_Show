@@ -12,6 +12,11 @@ class FakeModel:
         return np.random.rand(len(feature_table), 2)
 
 
+class FakeRCTModel:
+    def predict_proba(self, feature_table):
+        return np.ones((len(feature_table), 2))
+
+
 def fake_postal_codes(_=None) -> pd.DataFrame:
     """Mock function for `process_postal_codes`
 
@@ -26,11 +31,10 @@ def fake_postal_codes(_=None) -> pd.DataFrame:
     ).set_index("postalcode")
 
 
-def fake_model(_=None):
-    """Mock function for returning `load_model`
-
-    Needs to accept a parameter, but this parameter will be ignored
-    """
+def fake_model(model_path=None):
+    """Mock function for returning `load_model`"""
+    if model_path and "rct" in str(model_path):
+        return FakeRCTModel()
     return FakeModel()
 
 

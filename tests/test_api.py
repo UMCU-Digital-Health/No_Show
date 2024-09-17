@@ -60,4 +60,35 @@ async def test_predict_endpoint(monkeypatch):
 
     output = await predict(appointments_json, "2024-07-16", FakeDB(), "test")
     output_df = pd.DataFrame(output)
+    # assert fake model returns random predictions
+    assert output_df.shape == (5, 16)
+
+
+@pytest.mark.asyncio
+async def test_rct_selection(monkeypatch):
+    os.environ["DB_USER"] = ""
+    os.environ["X_API_KEY"] = "test"
+    appointments_json = fake_appointments()
+    monkeypatch.setattr(app, "get_bins", fake_bins)
+    monkeypatch.setattr(app, "process_postal_codes", fake_postal_codes)
+    monkeypatch.setattr(app, "load_model", fake_model)
+    monkeypatch.setattr(app_helpers, "delete", lambda x: FakeWhere())
+    # patch create treatment groups and add column to the dataframe
+    monkeypatch.setattr(
+        app, "create_treatment_groups", lambda x, y, z, q: x.assign(treatment_group=1)
+    )
+    monkeypatch.setattr(app, "RCT_AGENDAS", ["Longziekten"])
+
+    output = await predict(appointments_json, "2024-07-16", FakeDB(), "test")
+    output_df = pd.DataFrame(output)
+    # assert that the prediction is 1 for Longziekten as specified in the dummy model
+    assert (
+        output_df.loc[output_df["hoofdagenda"] == "Longziekten", "prediction"].values
+        == 1
+    ).all()
+    # assert that the other predictions are not 1
+    assert (
+        output_df.loc[output_df["hoofdagenda"] != "Longziekten", "prediction"].values
+        != 1
+    ).all()
     assert output_df.shape == (5, 16)
