@@ -33,6 +33,7 @@ SELECT APP.identifier_value AS APP_ID
     ,LOC.[name]
     ,LOC.[description]
     ,PAT.[name_text]
+    ,PAT.identifier_value as patient_id
     ,PAT.[name_given1_callMe]
     ,PAT.[telecom1_value]
     ,PAT.[telecom2_value]
@@ -288,5 +289,6 @@ WHERE 1=1
             AND ENC2.type1_display NOT LIKE '%telefo%'
             AND ENC2.type1_display NOT LIKE 'TC%'
             AND ENC2.without_patient <> 1
+            AND ENC2.type1_code NOT IN ('VELD')
     )
 ORDER BY pseudo_id, APP.start;

@@ -152,7 +152,13 @@ def main():
         "Gebeld",
         "Onbereikbaar",
     ]
-    res_list = ["Herinnerd", "Verzet/Geannuleerd", "Geen", "Bel me niet"]
+    res_list = [
+        "Herinnerd",
+        "Verzet/Geannuleerd",
+        "Geen",
+        "Bel me niet",
+        "Voicemail ingesproken",
+    ]
     call_number_list = [
         "Niet van toepassing",
         "Mobielnummer",

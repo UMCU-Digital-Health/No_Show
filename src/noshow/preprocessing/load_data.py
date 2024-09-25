@@ -84,10 +84,14 @@ def process_appointments(appointments_df: pd.DataFrame) -> pd.DataFrame:
     pd.DataFrame
         Cleaned appointment DataFrame that can be used for feature building
     """
-    appointments_df["start"] = pd.to_datetime(appointments_df["start"], errors="coerce")
-    appointments_df["end"] = pd.to_datetime(appointments_df["end"], errors="coerce")
+    appointments_df["start"] = pd.to_datetime(
+        appointments_df["start"], errors="coerce", format="ISO8601"
+    )
+    appointments_df["end"] = pd.to_datetime(
+        appointments_df["end"], errors="coerce", format="ISO8601"
+    )
     appointments_df["gearriveerd"] = pd.to_datetime(
-        appointments_df["gearriveerd"], errors="coerce"
+        appointments_df["gearriveerd"], errors="coerce", format="ISO8601"
     )
 
     appointments_df["no_show"] = "show"
