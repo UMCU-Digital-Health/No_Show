@@ -49,6 +49,7 @@ def render_patient_info(
                 st.warning("Deze patient is al gebeld!", icon="⚠️")
             st.write(f"- Naam: {current_patient.full_name or 'Onbekend'}")
             st.write(f"- Voornaam: {current_patient.first_name or 'Onbekend'}")
+            st.write(f"- Patientnummer: {current_patient.hix_number or 'Onbekend'}")
             st.write(f"- Geboortedatum: {current_patient.birth_date or 'Onbekend'}")
             st.write(f"- Mobiel: {current_patient.mobile_phone or 'Onbekend'}")
             st.write(f"- Thuis: {current_patient.home_phone or 'Onbekend'}")

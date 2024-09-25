@@ -163,6 +163,7 @@ async def predict(
 
             apisensitive = ApiSensitiveInfo(
                 patient_id=row["pseudo_id"],
+                hix_number=row["patient_id"],
                 full_name=row["name_text"],
                 first_name=row["name_given1_callMe"],
                 birth_date=row["birthDate"],

@@ -60,4 +60,4 @@ async def test_predict_endpoint(monkeypatch):
 
     output = await predict(appointments_json, "2024-07-16", FakeDB(), "test")
     output_df = pd.DataFrame(output)
-    assert output_df.shape == (5, 15)
+    assert output_df.shape == (5, 16)

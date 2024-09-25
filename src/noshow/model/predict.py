@@ -61,6 +61,7 @@ def create_prediction(
             [
                 "APP_ID",
                 "hoofdagenda",
+                "patient_id",
                 "name_text",
                 "name_given1_callMe",
                 "telecom1_value",
