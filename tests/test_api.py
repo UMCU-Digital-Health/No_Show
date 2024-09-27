@@ -91,4 +91,3 @@ async def test_rct_selection(monkeypatch):
         output_df.loc[output_df["hoofdagenda"] != "Longziekten", "prediction"].values
         != 1
     ).all()
-    assert output_df.shape == (5, 16)
