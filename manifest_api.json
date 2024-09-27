@@ -77,6 +77,9 @@
     "output/models/no_show_model_cv.pickle": {
       "checksum": "d5dab90d36bc2a8ea98fdd6622d85564"
     },
+    "output/models/no_show_model_cv_rct.pickle": {
+      "checksum": "d754ad05309b61b28c6a9fff0d8ad177"
+    },
     "pyproject.toml": {
       "checksum": "2b0a3c016e76327704e8eafb3a15923a"
     },
