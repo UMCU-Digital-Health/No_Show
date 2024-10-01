@@ -1,8 +1,9 @@
 SELECT APP.identifier_value AS APP_ID
     ,CONVERT(VARCHAR(64), HASHBYTES('SHA2_256', CONCAT(PAT.identifier_value, 'noshow')), 2) AS pseudo_id
     ,HOOFDAGENDA.[name] AS hoofdagenda
+    ,HOOFDAGENDA.[identifier_value] AS hoofdagenda_id
+    ,SUBAGENDA.[identifier_value] AS subagenda_id
     ,SUBAGENDA.specialty_code
-    ,SUBAGENDA.name 
     ,ENC.type1_display AS soort_consult
     ,ENC.type1_code AS afspraak_code
     ,APP.[start]

@@ -3,6 +3,8 @@ from typing import Dict, List, Union
 
 import pandas as pd
 
+from noshow.config import ClinicConfig
+
 
 def load_appointment_json(input: List[Dict]) -> pd.DataFrame:
     """Load prediction data from a JSON dictionary
@@ -67,11 +69,25 @@ def load_appointment_csv(csv_path: Union[str, Path]) -> pd.DataFrame:
     appointments_df = pd.read_csv(
         csv_path,
         parse_dates=["created"],
+        date_format="ISO8601",
     )
+
+    appointments_df["start"] = pd.to_datetime(
+        appointments_df["start"], errors="coerce", format="ISO8601"
+    )
+    appointments_df["end"] = pd.to_datetime(
+        appointments_df["end"], errors="coerce", format="ISO8601"
+    )
+    appointments_df["gearriveerd"] = pd.to_datetime(
+        appointments_df["gearriveerd"], errors="coerce", format="ISO8601"
+    )
+
     return appointments_df
 
 
-def process_appointments(appointments_df: pd.DataFrame) -> pd.DataFrame:
+def process_appointments(
+    appointments_df: pd.DataFrame, clinic_config: Dict[str, ClinicConfig]
+) -> pd.DataFrame:
     """Process the appointments data
 
     Parameters
@@ -84,15 +100,7 @@ def process_appointments(appointments_df: pd.DataFrame) -> pd.DataFrame:
     pd.DataFrame
         Cleaned appointment DataFrame that can be used for feature building
     """
-    appointments_df["start"] = pd.to_datetime(
-        appointments_df["start"], errors="coerce", format="ISO8601"
-    )
-    appointments_df["end"] = pd.to_datetime(
-        appointments_df["end"], errors="coerce", format="ISO8601"
-    )
-    appointments_df["gearriveerd"] = pd.to_datetime(
-        appointments_df["gearriveerd"], errors="coerce", format="ISO8601"
-    )
+    appointments_df = apply_config_filters(appointments_df, clinic_config)
 
     appointments_df["no_show"] = "show"
     appointments_df.loc[appointments_df["cancelationReason_code"] == "N", "no_show"] = (
@@ -158,3 +166,44 @@ def process_postal_codes(postalcodes_path: Union[str, Path]) -> pd.DataFrame:
     all_postalcodes = all_postalcodes.set_index("postalcode")[["latitude", "longitude"]]
     all_postalcodes = all_postalcodes.loc[~all_postalcodes.index.duplicated()]
     return all_postalcodes
+
+
+def apply_config_filters(
+    appointments_df: pd.DataFrame, clinic_config: Dict[str, ClinicConfig]
+) -> pd.DataFrame:
+    """Apply the clinic config filters to the appointments data
+
+    Parameters
+    ----------
+    appointments_df : pd.DataFrame
+        The appointments data
+    clinic_config : Dict[str, ClinicConfig]
+        The clinic config
+
+    Returns
+    -------
+    pd.DataFrame
+        The appointments data with the clinic config filters applied
+    """
+    clinic_df_list = []
+    for name, config in clinic_config.items():
+        clinic_df = appointments_df.loc[
+            appointments_df["hoofdagenda_id"].isin(config.main_agenda_codes)
+        ].copy()
+        clinic_df["clinic"] = name
+
+        if config.subagenda_exclude and config.subagendas:
+            clinic_df = clinic_df.loc[
+                ~clinic_df["subagenda_id"].isin(config.subagendas)
+            ]
+        elif config.subagendas:
+            clinic_df = clinic_df.loc[clinic_df["subagenda_id"].isin(config.subagendas)]
+
+        if config.appcode_exclude and config.appcodes:
+            clinic_df = clinic_df.loc[~clinic_df["afspraak_code"].isin(config.appcodes)]
+        elif config.appcodes:
+            clinic_df = clinic_df.loc[clinic_df["afspraak_code"].isin(config.appcodes)]
+
+        clinic_df_list.append(clinic_df)
+
+    return pd.concat(clinic_df_list)

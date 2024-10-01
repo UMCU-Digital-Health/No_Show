@@ -18,7 +18,7 @@ from noshow.api.app_helpers import (
     load_model,
     remove_sensitive_info,
 )
-from noshow.config import CLINIC_PHONENUMBERS, KEEP_SENSITIVE_DATA, RCT_AGENDAS
+from noshow.config import CLINIC_CONFIG, KEEP_SENSITIVE_DATA
 from noshow.database.models import (
     ApiPatient,
     ApiPrediction,
@@ -119,7 +119,7 @@ async def predict(
     start_time = datetime.now()
 
     input_df = load_appointment_json(input)
-    appointments_df = process_appointments(input_df)
+    appointments_df = process_appointments(input_df, CLINIC_CONFIG)
     all_postalcodes = process_postal_codes(project_path / "data" / "raw" / "NL.txt")
 
     model = load_model()
@@ -135,7 +135,10 @@ async def predict(
         "prediction", ascending=False
     ).reset_index()
 
-    prediction_df = create_treatment_groups(prediction_df, db, get_bins(), RCT_AGENDAS)
+    rct_agendas = [
+        clinic for clinic, config in CLINIC_CONFIG.items() if config.include_rct
+    ]
+    prediction_df = create_treatment_groups(prediction_df, db, get_bins(), rct_agendas)
 
     remove_sensitive_info(db, start_time, lookback_days=KEEP_SENSITIVE_DATA)
 
@@ -192,9 +195,9 @@ async def predict(
                 start_time=row["start"],
                 request_relation=apirequest,
                 patient_relation=apipatient,
-                clinic_name=row["hoofdagenda"],
+                clinic_name=CLINIC_CONFIG[row["clinic"]].teleq_name,
                 clinic_reception=row["description"],
-                clinic_phone_number=CLINIC_PHONENUMBERS.get(row["hoofdagenda"], ""),
+                clinic_phone_number=CLINIC_CONFIG[row["clinic"]].phone_number,
                 active=True,
             )
         else:
@@ -202,11 +205,11 @@ async def predict(
             apiprediction.prediction = row["prediction"]
             apiprediction.start_time = row["start"]
             apiprediction.request_relation = apirequest
-            apiprediction.clinic_name = row["hoofdagenda"]
+            apiprediction.clinic_name = CLINIC_CONFIG[row["clinic"]].teleq_name
             apiprediction.clinic_reception = row["description"]
-            apiprediction.clinic_phone_number = CLINIC_PHONENUMBERS.get(
-                row["hoofdagenda"], ""
-            )
+            apiprediction.clinic_phone_number = CLINIC_CONFIG[
+                row["clinic"]
+            ].phone_number
             apiprediction.active = True
 
         db.merge(apisensitive)

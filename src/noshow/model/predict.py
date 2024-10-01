@@ -5,6 +5,7 @@ from typing import Any, Optional
 import numpy as np
 import pandas as pd
 
+from noshow.config import CLINIC_CONFIG
 from noshow.features.feature_pipeline import create_features, select_feature_columns
 from noshow.preprocessing.load_data import (
     load_appointment_csv,
@@ -59,6 +60,7 @@ def create_prediction(
     if add_sensitive_info:
         sensitive_info = appointments_df[
             [
+                "clinic",
                 "APP_ID",
                 "hoofdagenda",
                 "patient_id",
@@ -81,7 +83,7 @@ if __name__ == "__main__":
     data_path = project_folder / "data" / "raw"
     output_path = project_folder / "data" / "processed"
     appointments_df = load_appointment_csv(data_path / "poliafspraken_no_show.csv")
-    appointments_df = process_appointments(appointments_df)
+    appointments_df = process_appointments(appointments_df, CLINIC_CONFIG)
     all_postal_codes = process_postal_codes(data_path / "NL.txt")
     with open(
         project_folder / "output" / "models" / "no_show_model_cv.pickle", "rb"
