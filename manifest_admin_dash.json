@@ -65,12 +65,6 @@
     "pyproject.toml": {
       "checksum": "f7f0b183e0a13e18ebbfb3a62961ace0"
     },
-    "requirements-dev.lock": {
-      "checksum": "0810b1a8af12cd53e3862c13c924588a"
-    },
-    "requirements.lock": {
-      "checksum": "88f0350a5db5d90dcf65d3e172c418af"
-    },
     "run/admin_dash.py": {
       "checksum": "a06acd77b7d96e960dcd77a80443e843"
     },
