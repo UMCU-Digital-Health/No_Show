@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - admin dashboard now also shows clinics outside of RCT
 - moved sql filters to config
+- authentication now fails when X_API_KEY environment variable is not set
 
 ### Changed
 - clinic_name used in dashboard now refers to TeleQ name

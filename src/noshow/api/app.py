@@ -108,7 +108,7 @@ async def predict(
     Dict[str, Any]
         Prediction output in FHIR format
     """
-    if api_key != os.getenv("X_API_KEY"):
+    if api_key != os.environ["X_API_KEY"]:
         raise HTTPException(403, "Unauthorized, Api Key not valid")
 
     if start_date is None:
