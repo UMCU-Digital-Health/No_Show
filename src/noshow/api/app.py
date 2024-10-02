@@ -119,7 +119,7 @@ async def predict(
     start_time = datetime.now()
 
     input_df = load_appointment_json(input)
-    appointments_df = process_appointments(input_df, CLINIC_CONFIG)
+    appointments_df = process_appointments(input_df, CLINIC_CONFIG, start_date)
     all_postalcodes = process_postal_codes(project_path / "data" / "raw" / "NL.txt")
 
     model = load_model()

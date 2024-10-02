@@ -1,3 +1,4 @@
+from datetime import date
 from pathlib import Path
 from typing import Dict, List, Union
 
@@ -86,7 +87,9 @@ def load_appointment_csv(csv_path: Union[str, Path]) -> pd.DataFrame:
 
 
 def process_appointments(
-    appointments_df: pd.DataFrame, clinic_config: Dict[str, ClinicConfig]
+    appointments_df: pd.DataFrame,
+    clinic_config: Dict[str, ClinicConfig],
+    start_date: str | None = None,
 ) -> pd.DataFrame:
     """Process the appointments data
 
@@ -94,13 +97,18 @@ def process_appointments(
     ----------
     appointments_df : Union[str, Path]
         The pandas dataframe with appointments data from either csv or json
+    clinic_config : Dict[str, ClinicConfig]
+        The clinic configuration, containing filters and clinic info
+    start_date : str, optional
+        The start date for the predictions, if given will filter out appointments of
+        patients that do not have an appointment on this date, by default None
 
     Returns
     -------
     pd.DataFrame
         Cleaned appointment DataFrame that can be used for feature building
     """
-    appointments_df = apply_config_filters(appointments_df, clinic_config)
+    appointments_df = apply_config_filters(appointments_df, clinic_config, start_date)
 
     appointments_df["no_show"] = "show"
     appointments_df.loc[appointments_df["cancelationReason_code"] == "N", "no_show"] = (
@@ -169,7 +177,9 @@ def process_postal_codes(postalcodes_path: Union[str, Path]) -> pd.DataFrame:
 
 
 def apply_config_filters(
-    appointments_df: pd.DataFrame, clinic_config: Dict[str, ClinicConfig]
+    appointments_df: pd.DataFrame,
+    clinic_config: Dict[str, ClinicConfig],
+    start_date: str | None = None,
 ) -> pd.DataFrame:
     """Apply the clinic config filters to the appointments data
 
@@ -178,7 +188,10 @@ def apply_config_filters(
     appointments_df : pd.DataFrame
         The appointments data
     clinic_config : Dict[str, ClinicConfig]
-        The clinic config
+        The clinic configuration, containing filters and clinic info
+    start_date : str, optional
+        The start date for the predictions, if given will filter out appointments of
+        patients that do not have an appointment on this date, by default None
 
     Returns
     -------
@@ -206,4 +219,14 @@ def apply_config_filters(
 
         clinic_df_list.append(clinic_df)
 
-    return pd.concat(clinic_df_list)
+    total_df = pd.concat(clinic_df_list)
+
+    # After filtering there could still be appointments of patients that no longer have
+    # an appointment on the start date.
+    if start_date:
+        patient_list = total_df.loc[
+            total_df["start"].dt.date == date.fromisoformat(start_date), "pseudo_id"
+        ].unique()
+        total_df = total_df.loc[total_df["pseudo_id"].isin(patient_list)]
+
+    return total_df
