@@ -4,7 +4,15 @@ from typing import Dict, List, Union
 
 import pandas as pd
 
+from noshow.api.pydantic_models import Appointment
 from noshow.config import ClinicConfig
+
+
+def load_appointment_pydantic(input: List[Appointment]) -> pd.DataFrame:
+    appointments_df = pd.DataFrame([a.model_dump() for a in input])
+    appointments_df = appointments_df.replace("", None)
+
+    return appointments_df
 
 
 def load_appointment_json(input: List[Dict]) -> pd.DataFrame:
