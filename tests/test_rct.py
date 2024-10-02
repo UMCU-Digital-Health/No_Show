@@ -20,6 +20,7 @@ def sample_df():
         "prediction": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
         "hoofdagenda": ["A", "A", "B", "B", "C", "C", "D", "D", "E", "E"],
         "pseudo_id": [1, 2, 3, 1, 3, 2, 4, 1, 2, 4],
+        "clinic": ["C1", "C1", "C2", "C2", "C3", "C3", "C5", "C5", "C5", "C5"],
     }
     return pd.DataFrame(data)
 
@@ -129,12 +130,12 @@ def test_create_treatment_group_some_rct_agendas(sample_df, some_patients, sampl
     session = Mock()
     session.query.return_value.filter.return_value.all.return_value = some_patients
     result = create_treatment_groups(
-        sample_df, session, sample_bins, rct_agendas=["A", "B"]
+        sample_df, session, sample_bins, rct_agendas=["C1", "C5"]
     )
 
     assert (
-        result.loc[result["hoofdagenda"].isin(["A", "B"]), "treatment_group"] < 2
+        result.loc[result["clinic"].isin(["C1", "C5"]), "treatment_group"] < 2
     ).all()
     assert (
-        result.loc[~result["hoofdagenda"].isin(["A", "B"]), "treatment_group"] == 2
+        result.loc[~result["clinic"].isin(["C1", "C5"]), "treatment_group"] == 2
     ).all()
