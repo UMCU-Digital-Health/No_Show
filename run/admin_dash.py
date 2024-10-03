@@ -75,7 +75,7 @@ def kpi_page():
             .where(
                 (cast(ApiPrediction.start_time, Date) >= date_input[0])
                 & (cast(ApiPrediction.start_time, Date) <= date_input[1])
-                & (ApiPatient.treatment_group == 1)
+                & (ApiPatient.treatment_group >= 1)
             )
         ).all()
 

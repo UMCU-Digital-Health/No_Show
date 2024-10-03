@@ -6,6 +6,8 @@ from typing import Dict, List
 import numpy as np
 import pandas as pd
 
+from noshow.config import ClinicConfig
+
 
 class FakeModel:
     def predict_proba(self, feature_table):
@@ -47,3 +49,49 @@ def fake_appointments() -> List[Dict]:
     with open(Path(__file__).parent / "data" / "test_appointments.json", "r") as f:
         appointments_json = json.load(f)
     return appointments_json
+
+
+def create_unit_test_clinic_config() -> Dict[str, ClinicConfig]:
+    """Create a clinic configuration for unit testing."""
+    return {
+        "revalidatie_en_sport": ClinicConfig(
+            include_rct=True,
+            phone_number="58831",
+            teleq_name="Sport en Revalidatie",
+            main_agenda_codes=["H1"],
+            subagenda_exclude=True,
+            subagendas=[],
+            appcode_exclude=False,
+            appcodes=[],
+        ),
+        "longziekten": ClinicConfig(
+            include_rct=True,
+            phone_number="58831",
+            teleq_name="Longziekten",
+            main_agenda_codes=["H2"],
+            subagenda_exclude=False,
+            subagendas=[],
+            appcode_exclude=False,
+            appcodes=[],
+        ),
+        "poli_blauw": ClinicConfig(
+            include_rct=True,
+            phone_number="58831",
+            teleq_name="Poli Blauw",
+            main_agenda_codes=["H3"],
+            subagenda_exclude=False,
+            subagendas=["S3", "S5"],
+            appcode_exclude=False,
+            appcodes=[],
+        ),
+        "cardiologie": ClinicConfig(
+            include_rct=True,
+            phone_number="58831",
+            teleq_name="Cardiologie",
+            main_agenda_codes=["H4"],
+            subagenda_exclude=False,
+            subagendas=[],
+            appcode_exclude=False,
+            appcodes=[],
+        ),
+    }

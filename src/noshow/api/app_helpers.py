@@ -157,9 +157,7 @@ def create_treatment_groups(
 
     # Treatment group 2 means excluded from RCT
     if rct_agendas is not None:
-        predictions.loc[
-            ~predictions["hoofdagenda"].isin(rct_agendas), "treatment_group"
-        ] = 2
+        predictions.loc[~predictions["clinic"].isin(rct_agendas), "treatment_group"] = 2
 
     predictions = predictions.sort_values("prediction", ascending=False)
     # apply bins based on supplied fixed score_bins

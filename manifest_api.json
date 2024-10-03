@@ -80,12 +80,6 @@
     "pyproject.toml": {
       "checksum": "2b0a3c016e76327704e8eafb3a15923a"
     },
-    "requirements-dev.lock": {
-      "checksum": "c511b193e9662d13db553b013b384df0"
-    },
-    "requirements.lock": {
-      "checksum": "155c2fe9e66839a865de99d15bf791b7"
-    },
     "run/app.py": {
       "checksum": "07ea1ee70ce2cfdd157a5d234a54cbfb"
     },
