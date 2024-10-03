@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1] - 2024-10-03
+
+### Changed
+- Use Pydantic for data validation in API
+- Updated unit tests to also use pydantic models
+
 ## [1.3.0] - 2024-09-25
 
 ### Fixed

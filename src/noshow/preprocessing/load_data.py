@@ -9,48 +9,20 @@ from noshow.config import ClinicConfig
 
 
 def load_appointment_pydantic(input: List[Appointment]) -> pd.DataFrame:
-    appointments_df = pd.DataFrame([a.model_dump() for a in input])
-    appointments_df = appointments_df.replace("", None)
-
-    return appointments_df
-
-
-def load_appointment_json(input: List[Dict]) -> pd.DataFrame:
-    """Load prediction data from a JSON dictionary
+    """Load prediction data from a list of Appointments
 
     Parameters
     ----------
-    input : List[Dict]
-        The input data as a dictionary in the records orientation
-        (every dictionary corresponds to a row)
+    input : List[Appointment]
+        The input data as a list of Appointments
 
     Returns
     -------
     pd.DataFrame
-        The loaded JSON data as pandas dataframe
+        The loaded data as pandas dataframe
     """
-    appointments_df = pd.DataFrame.from_records(input, coerce_float=True)
-
+    appointments_df = pd.DataFrame([a.model_dump() for a in input])
     appointments_df = appointments_df.replace("", None)
-    appointments_df["created"] = pd.to_datetime(
-        appointments_df["created"].astype(float), unit="ms"
-    )
-    appointments_df["start"] = pd.to_datetime(
-        appointments_df["start"].astype(float), unit="ms"
-    )
-    appointments_df["end"] = pd.to_datetime(
-        appointments_df["end"].astype(float), unit="ms"
-    )
-    appointments_df["gearriveerd"] = pd.to_datetime(
-        appointments_df["gearriveerd"].astype(float), unit="ms"
-    )
-    appointments_df["birthDate"] = pd.to_datetime(
-        appointments_df["birthDate"].astype(float), unit="ms"
-    )
-
-    appointments_df["address_postalCodeNumbersNL"] = appointments_df[
-        "address_postalCodeNumbersNL"
-    ].astype(float)
 
     # Clinic name and description are sometimes unknown since HiX6.3
     appointments_df.loc[appointments_df["name"].isnull(), "name"] = "Onbekend"

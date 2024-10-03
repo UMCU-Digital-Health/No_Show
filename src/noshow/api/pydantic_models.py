@@ -4,6 +4,8 @@ from pydantic import BaseModel
 
 
 class Appointment(BaseModel):
+    """Pydantic model for appointment data, used by the FastAPI predict endpoint"""
+
     APP_ID: str
     pseudo_id: str
     hoofdagenda: str
@@ -26,6 +28,7 @@ class Appointment(BaseModel):
     name: str | None
     description: str | None
     name_text: str | None
+    patient_id: str | None
     name_given1_callMe: str | None
     telecom1_value: str | None
     telecom2_value: str | None

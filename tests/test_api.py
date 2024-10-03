@@ -50,7 +50,7 @@ class FakeDB(Session):
 
 @pytest.mark.asyncio
 async def test_predict_endpoint(monkeypatch):
-    appointments_json = fake_appointments()
+    appointments_pydantic = fake_appointments()
     monkeypatch.setattr(app, "get_bins", fake_bins)
     monkeypatch.setattr(app, "process_postal_codes", fake_postal_codes)
     monkeypatch.setattr(app, "load_model", fake_model)
@@ -63,6 +63,6 @@ async def test_predict_endpoint(monkeypatch):
     monkeypatch.setenv("DB_USER", "")
     monkeypatch.setenv("X_API_KEY", "test")
 
-    output = await predict(appointments_json, "2024-07-16", FakeDB(), "test")
+    output = await predict(appointments_pydantic, "2024-07-16", FakeDB(), "test")
     output_df = pd.DataFrame(output)
     assert output_df.shape == (5, 17)

@@ -13,11 +13,14 @@ from test_noshow import (
 from noshow.features.feature_pipeline import create_features, select_feature_columns
 from noshow.model.predict import create_prediction
 from noshow.model.train_model import train_cv_model
-from noshow.preprocessing.load_data import load_appointment_json, process_appointments
+from noshow.preprocessing.load_data import (
+    load_appointment_pydantic,
+    process_appointments,
+)
 
 
 def test_create_prediction():
-    appointments_df = load_appointment_json(fake_appointments())
+    appointments_df = load_appointment_pydantic(fake_appointments())
     appointments_df = process_appointments(
         appointments_df, create_unit_test_clinic_config()
     )
@@ -38,7 +41,7 @@ def test_create_prediction():
 
 
 def test_train_model():
-    appointments_df = load_appointment_json(fake_appointments())
+    appointments_df = load_appointment_pydantic(fake_appointments())
     appointments_df = process_appointments(
         appointments_df, create_unit_test_clinic_config()
     )
