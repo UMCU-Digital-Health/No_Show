@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 
 class Appointment(BaseModel):
@@ -19,7 +19,7 @@ class Appointment(BaseModel):
     gearriveerd: datetime | None
     created: datetime
     minutesDuration: int
-    status: str
+    status: str | None
     status_code_original: str | None
     cancelationReason_code: str | None
     cancelationReason_display: str | None
@@ -34,3 +34,10 @@ class Appointment(BaseModel):
     telecom2_value: str | None
     telecom3_value: str | None
     birthDate: date
+
+    @field_validator("birthDate", mode="before")
+    def convert_milliseconds_to_datetime(cls, value):
+        """birthDate is always returned as ms, not seconds so change validator"""
+        if isinstance(value, (str, int, float)):
+            return date.fromtimestamp(float(value) / 1000)
+        return value
