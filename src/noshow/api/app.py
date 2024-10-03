@@ -18,6 +18,7 @@ from noshow.api.app_helpers import (
     load_model,
     remove_sensitive_info,
 )
+from noshow.api.pydantic_models import Appointment
 from noshow.config import CLINIC_CONFIG, KEEP_SENSITIVE_DATA
 from noshow.database.models import (
     ApiPatient,
@@ -28,7 +29,7 @@ from noshow.database.models import (
 )
 from noshow.model.predict import create_prediction
 from noshow.preprocessing.load_data import (
-    load_appointment_json,
+    load_appointment_pydantic,
     process_appointments,
     process_postal_codes,
 )
@@ -87,7 +88,7 @@ def get_db():
 
 @app.post("/predict")
 async def predict(
-    input: List[Dict],
+    input: List[Appointment],
     start_date: Optional[str] = None,
     db: Session = Depends(get_db),
     api_key: str = Depends(api_key_header),
@@ -118,7 +119,7 @@ async def predict(
     project_path = Path(__file__).parents[3]
     start_time = datetime.now()
 
-    input_df = load_appointment_json(input)
+    input_df = load_appointment_pydantic(input)
     appointments_df = process_appointments(input_df, CLINIC_CONFIG, start_date)
     all_postalcodes = process_postal_codes(project_path / "data" / "raw" / "NL.txt")
 

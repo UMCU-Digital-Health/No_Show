@@ -6,6 +6,7 @@ from typing import Dict, List
 import numpy as np
 import pandas as pd
 
+from noshow.api.pydantic_models import Appointment
 from noshow.config import ClinicConfig
 
 
@@ -45,10 +46,10 @@ def fake_bins():
     return {}
 
 
-def fake_appointments() -> List[Dict]:
+def fake_appointments() -> List[Appointment]:
     with open(Path(__file__).parent / "data" / "test_appointments.json", "r") as f:
         appointments_json = json.load(f)
-    return appointments_json
+    return [Appointment(**a) for a in appointments_json]
 
 
 def create_unit_test_clinic_config() -> Dict[str, ClinicConfig]:

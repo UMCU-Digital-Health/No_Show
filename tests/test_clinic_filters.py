@@ -1,12 +1,15 @@
 from test_noshow import fake_appointments
 
 from noshow.config import ClinicConfig
-from noshow.preprocessing.load_data import apply_config_filters, load_appointment_json
+from noshow.preprocessing.load_data import (
+    apply_config_filters,
+    load_appointment_pydantic,
+)
 
 
 def test_include_subagendas():
-    appointments_json = fake_appointments()
-    appointments_df = load_appointment_json(appointments_json)
+    appointments_pydantic = fake_appointments()
+    appointments_df = load_appointment_pydantic(appointments_pydantic)
 
     clinic_config = {
         "totaal_agenda": ClinicConfig(
@@ -26,8 +29,8 @@ def test_include_subagendas():
 
 
 def test_exclude_subagendas():
-    appointments_json = fake_appointments()
-    appointments_df = load_appointment_json(appointments_json)
+    appointments_pydantic = fake_appointments()
+    appointments_df = load_appointment_pydantic(appointments_pydantic)
 
     clinic_config = {
         "totaal_agenda": ClinicConfig(
@@ -47,8 +50,8 @@ def test_exclude_subagendas():
 
 
 def test_include_appcodes():
-    appointments_json = fake_appointments()
-    appointments_df = load_appointment_json(appointments_json)
+    appointments_pydantic = fake_appointments()
+    appointments_df = load_appointment_pydantic(appointments_pydantic)
 
     clinic_config = {
         "totaal_agenda": ClinicConfig(
@@ -68,8 +71,8 @@ def test_include_appcodes():
 
 
 def test_exclude_appcodes():
-    appointments_json = fake_appointments()
-    appointments_df = load_appointment_json(appointments_json)
+    appointments_pydantic = fake_appointments()
+    appointments_df = load_appointment_pydantic(appointments_pydantic)
 
     clinic_config = {
         "totaal_agenda": ClinicConfig(
