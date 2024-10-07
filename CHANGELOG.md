@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.2] - 2024-10-07
+
+### Fixed
+- Postal code is no longer required when using the API, empty postal codes will result in the appointment being dropped later during feature building
+
 ## [1.3.1] - 2024-10-03
 
 ### Changed

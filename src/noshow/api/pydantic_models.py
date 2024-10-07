@@ -24,7 +24,7 @@ class Appointment(BaseModel):
     cancelationReason_code: str | None
     cancelationReason_display: str | None
     BIRTH_YEAR: int
-    address_postalCodeNumbersNL: int
+    address_postalCodeNumbersNL: int | None
     name: str | None
     description: str | None
     name_text: str | None
