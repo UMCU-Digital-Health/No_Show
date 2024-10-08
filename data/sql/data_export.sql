@@ -99,7 +99,7 @@ WHERE 1=1
         )
     AND APP.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
     AND APP.created >= '2015-01-01'
-    AND APP.created <= '2024-05-31'
+    AND APP.created <= '2024-10-01'
     AND APP.status <> 'booked'
     AND ENC.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
     AND ENC.type2_code NOT IN ('T', 'S', 'M')
