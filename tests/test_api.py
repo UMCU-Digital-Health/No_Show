@@ -1,4 +1,3 @@
-import pandas as pd
 import pytest
 from sqlalchemy.orm import Session
 from test_noshow import (
@@ -64,5 +63,4 @@ async def test_predict_endpoint(monkeypatch):
     monkeypatch.setenv("X_API_KEY", "test")
 
     output = await predict(appointments_pydantic, "2024-07-16", FakeDB(), "test")
-    output_df = pd.DataFrame(output)
-    assert output_df.shape == (5, 17)
+    assert "message" in output

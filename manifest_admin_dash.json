@@ -41,9 +41,6 @@
     "data/dataset_card.md": {
       "checksum": "b1affb9bf9e84a4721a61ab70d017c45"
     },
-    "data/processed/.gitkeep": {
-      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
-    },
     "data/processed/fixed_pred_score_bin.json": {
       "checksum": "8f30e8935c07d5dc5f0dcefe739d626b"
     },

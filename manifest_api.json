@@ -44,9 +44,6 @@
     "data/dataset_card.md": {
       "checksum": "8e9c1ad06da9191965a70fc3c1c14747"
     },
-    "data/processed/.gitkeep": {
-      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
-    },
     "data/processed/fixed_pred_score_bin.json": {
       "checksum": "edc09f5a24202e398888f108280cda2d"
     },
@@ -55,9 +52,6 @@
     },
     "data/raw/NL.txt.dvc": {
       "checksum": "f3e37287e3ecb53c3d0230c7c042035d"
-    },
-    "data/raw/gitkeep": {
-      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
     "deploy.sh": {
       "checksum": "0de252d918314092524baf73e003c014"
@@ -73,9 +67,6 @@
     },
     "manifest_dash.json": {
       "checksum": "2cc39523168242ac2c30f9ff5d6af2c0"
-    },
-    "output/models/.gitkeep": {
-      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
     "output/models/no_show_model_cv.pickle": {
       "checksum": "d754ad05309b61b28c6a9fff0d8ad177"
