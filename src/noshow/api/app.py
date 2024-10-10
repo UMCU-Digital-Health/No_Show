@@ -92,7 +92,7 @@ async def predict(
     start_date: Optional[str] = None,
     db: Session = Depends(get_db),
     api_key: str = Depends(api_key_header),
-) -> Dict:
+) -> List[Dict]:
     """
     Predict the probability of a patient having a no-show.
 
@@ -106,8 +106,8 @@ async def predict(
 
     Returns
     -------
-    Dict[str, Any]
-        Prediction output in FHIR format
+    List[Dict[str, Any]]
+        Predictions for each patient in the input list.
     """
     if api_key != os.environ["X_API_KEY"]:
         raise HTTPException(403, "Unauthorized, Api Key not valid")
@@ -226,7 +226,7 @@ async def predict(
 
     fix_outdated_appointments(db, prediction_df["APP_ID"], start_date)
 
-    return {"message": f"{len(prediction_df)} predictions made"}
+    return prediction_df.reset_index().to_dict(orient="records")
 
 
 @app.get("/")

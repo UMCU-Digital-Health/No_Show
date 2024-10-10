@@ -18,7 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Moved queries to separate folder
 - Removed old pilot query and data
-- Return confirmation message instead of predictions when using API
 - Retrained and deployed model
 
 ## [1.3.2] - 2024-10-07
