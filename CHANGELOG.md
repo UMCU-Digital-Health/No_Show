@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2024-10-08
+
+### Fixed
+- Updated pydantic model to allow empty string for postal code and update birthDate validator
+
+### Added
+- Added agenda codes for first scale-up phase
+
+### Changed
+- Moved queries to separate folder
+- Removed old pilot query and data
+- Retrained and deployed model
+
 ## [1.3.2] - 2024-10-07
 
 ### Fixed

@@ -106,8 +106,8 @@ async def predict(
 
     Returns
     -------
-    Dict[str, Any]
-        Prediction output in FHIR format
+    List[Dict[str, Any]]
+        Predictions for each patient in the input list.
     """
     if api_key != os.environ["X_API_KEY"]:
         raise HTTPException(403, "Unauthorized, Api Key not valid")
@@ -139,7 +139,13 @@ async def predict(
     rct_agendas = [
         clinic for clinic, config in CLINIC_CONFIG.items() if config.include_rct
     ]
-    prediction_df = create_treatment_groups(prediction_df, db, get_bins(), rct_agendas)
+    if rct_agendas is None or len(rct_agendas) == 0:
+        logger.info("No RCT agendas, defaulting to treatment group 2")
+        prediction_df["treatment_group"] = 2
+    else:
+        prediction_df = create_treatment_groups(
+            prediction_df, db, get_bins(), rct_agendas
+        )
 
     remove_sensitive_info(db, start_time, lookback_days=KEEP_SENSITIVE_DATA)
 

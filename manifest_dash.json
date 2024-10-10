@@ -41,9 +41,6 @@
     "data/dataset_card.md": {
       "checksum": "b1affb9bf9e84a4721a61ab70d017c45"
     },
-    "data/processed/.gitkeep": {
-      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
-    },
     "data/processed/fixed_pred_score_bin.json": {
       "checksum": "1d8f7b0282e6fd5fd32822bf16022530"
     },
@@ -52,9 +49,6 @@
     },
     "data/raw/NL.txt.dvc": {
       "checksum": "f3e37287e3ecb53c3d0230c7c042035d"
-    },
-    "data/raw/gitkeep": {
-      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
     "deploy.sh": {
       "checksum": "21971b0584e7574dea4fa31a9b562930"

@@ -33,11 +33,24 @@ class Appointment(BaseModel):
     telecom1_value: str | None
     telecom2_value: str | None
     telecom3_value: str | None
-    birthDate: date
+    birthDate: datetime
 
     @field_validator("birthDate", mode="before")
     def convert_milliseconds_to_datetime(cls, value):
         """birthDate is always returned as ms, not seconds so change validator"""
-        if isinstance(value, (str, int, float)):
+        if (
+            isinstance(value, str)
+            and value.replace(".", "").replace("-", "").isnumeric()
+        ):
             return date.fromtimestamp(float(value) / 1000)
+        if isinstance(value, (int, float)):
+            return date.fromtimestamp(float(value) / 1000)
+        # If value is already a string in the correct format, return it
+        return value
+
+    @field_validator("address_postalCodeNumbersNL", mode="before")
+    def convert_empty_postal_code(cls, value):
+        """Postalcodes are sometimes empty, convert them to None"""
+        if value == "":
+            return None
         return value

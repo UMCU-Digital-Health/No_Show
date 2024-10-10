@@ -59,22 +59,66 @@ WHERE 1=1
     AND HOOFDAGENDA.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgenda'
     AND HOOFDAGENDA.active = 1
     AND HOOFDAGENDA.identifier_value IN (
-            -- Revalidatie en sport
-            'ZH0307',  -- RF&S Revalidatiegeneeskunde
-            'ZH0435',  -- RF&S Sportgeneeskunde
-            -- Poli blauw
-            'ZH0156', -- Kind-Nefrologie 
-            'ZH0139', -- Kind-Endocrinologie
-            'ZH0138', -- Kind-Dermatologie 
-            'ZH0129', -- Kind-Algemene Pediatrie
-            -- Longziekten
-            'ZH0183',  -- Longziekten
-            'ZH0034',  -- Centrum voor Thuisbeademing
-            -- Cardiologie
-            'ZH0017',  -- cardiologie
-            -- Neurologie
-            'ZH0318'  -- Spieren voor Spieren kinderen
-        )
+        -- Revalidatie en sport
+        'ZH0307',  -- RF&S Revalidatiegeneeskunde
+        'ZH0435',  -- RF&S Sportgeneeskunde
+        -- Poli blauw
+        'ZH0156', -- Kind-Nefrologie 
+        'ZH0139', -- Kind-Endocrinologie
+        'ZH0138', -- Kind-Dermatologie 
+        'ZH0129', -- Kind-Algemene Pediatrie
+        'ZH0152', -- Kind-KLZ
+        'ZH0130', -- Kind-Allergologie
+        'ZH0150', -- Kind-Immunologie
+        'ZH0149', -- Kind-Hematologie
+        'ZH0154', -- Kind-MDL
+        'ZH0171', -- Kind-Urologie
+        -- Poli rood
+        'ZH0153', -- Kind-KNO
+        'ZH0133', -- Kind-Bijzondere tandheelkunde
+        'ZH0151', -- Kind-Kaakchirurgie
+        'ZH0162', -- Kind-Orthodontie
+        'ZH0165', -- Kind-Plastische chirurgie
+        'ZH0159', -- Kind-Neurologie
+        'ZH0158', -- Kind-Neurochirurgie
+        'ZH0148', -- Kind-Gynaecologie
+        'ZH0155', -- Kind-Metabole ziekten
+        'ZH0135', -- Kind-Chirurgie
+        'ZH0163', -- Kind-Orthopedie
+        'ZH0169', -- Kind-Revalidatie
+        'ZH0157', -- Kind-Neonatologie
+        'ZH0164', -- Kind-Pijnbehandeling
+        'ZH0131', -- Kind-Anesthesiologie
+        -- Kind Cardiologie
+        'ZH0134',
+        -- Longziekten
+        'ZH0183',  -- Longziekten
+        'ZH0034',  -- Centrum voor Thuisbeademing
+        -- Cardiologie
+        'ZH0017',  -- cardiologie
+        -- Neurologie
+        'ZH0318',  -- Spieren voor Spieren kinderen
+        -- Benigne Hematologie
+        'ZH0410', -- Van creveldkliniek
+        --Dermatologie
+        'ZH0087', 
+        -- Allergologie
+        'ZH0007',
+        -- Reumatologie
+        'ZH0305',
+        -- MDL
+        'ZH0184',
+        -- Nefrologie
+        'ZH0193',
+        -- Geriatrie
+        'ZH0111',
+        -- Interne geneeskunde
+        'ZH0123', -- Interne geneeskunde
+        'ZH0122', -- Infectieziekten
+        'ZH0088', -- Diabetologie
+        'ZH0096', -- Endocrinologie
+        'ZH0413' -- Vasculaire geneeskunde
+    )
     AND APP.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
     AND APP.[created] >= '2015-01-01'
     AND APP.[start] <= @end_date
@@ -106,14 +150,58 @@ WHERE 1=1
                 'ZH0139', -- Kind-Endocrinologie
                 'ZH0138', -- Kind-Dermatologie 
                 'ZH0129', -- Kind-Algemene Pediatrie
+                'ZH0152', -- Kind-KLZ
+                'ZH0130', -- Kind-Allergologie
+                'ZH0150', -- Kind-Immunologie
+                'ZH0149', -- Kind-Hematologie
+                'ZH0154', -- Kind-MDL
+                'ZH0171', -- Kind-Urologie
+                -- Poli rood
+                'ZH0153', -- Kind-KNO
+                'ZH0133', -- Kind-Bijzondere tandheelkunde
+                'ZH0151', -- Kind-Kaakchirurgie
+                'ZH0162', -- Kind-Orthodontie
+                'ZH0165', -- Kind-Plastische chirurgie
+                'ZH0159', -- Kind-Neurologie
+                'ZH0158', -- Kind-Neurochirurgie
+                'ZH0148', -- Kind-Gynaecologie
+                'ZH0155', -- Kind-Metabole ziekten
+                'ZH0135', -- Kind-Chirurgie
+                'ZH0163', -- Kind-Orthopedie
+                'ZH0169', -- Kind-Revalidatie
+                'ZH0157', -- Kind-Neonatologie
+                'ZH0164', -- Kind-Pijnbehandeling
+                'ZH0131', -- Kind-Anesthesiologie
+                -- Kind Cardiologie
+                'ZH0134',
                 -- Longziekten
                 'ZH0183',  -- Longziekten
                 'ZH0034',  -- Centrum voor Thuisbeademing
                 -- Cardiologie
                 'ZH0017',  -- cardiologie
                 -- Neurologie
-                'ZH0318'  -- Spieren voor Spieren kinderen
-            ) 
+                'ZH0318',  -- Spieren voor Spieren kinderen
+                -- Benigne Hematologie
+                'ZH0410', -- Van creveldkliniek
+                --Dermatologie
+                'ZH0087', 
+                -- Allergologie
+                'ZH0007',
+                -- Reumatologie
+                'ZH0305',
+                -- MDL
+                'ZH0184',
+                -- Nefrologie
+                'ZH0193',
+                -- Geriatrie
+                'ZH0111',
+                -- Interne geneeskunde
+                'ZH0123', -- Interne geneeskunde
+                'ZH0122', -- Infectieziekten
+                'ZH0088', -- Diabetologie
+                'ZH0096', -- Endocrinologie
+                'ZH0413' -- Vasculaire geneeskunde
+            )
             AND APP2.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
             AND CONVERT(DATE, APP2.[start]) = @start_date
             AND APP2.[status] = 'booked'
