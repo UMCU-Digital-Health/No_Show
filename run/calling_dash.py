@@ -99,8 +99,8 @@ def main():
                 ApiPrediction.id,
                 ApiPrediction.start_time,
                 ApiPrediction.clinic_name,
+                ApiPrediction.clinic_teleq_unit,
                 ApiPrediction.clinic_reception,
-                ApiPrediction.clinic_phone_number,
                 ApiCallResponse.call_status,
                 ApiRequest.timestamp,
             )

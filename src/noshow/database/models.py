@@ -52,6 +52,7 @@ class ApiPrediction(Base):
     clinic_name: Mapped[str]
     clinic_reception: Mapped[str]
     clinic_phone_number: Mapped[str]
+    clinic_teleq_unit: Mapped[str] = mapped_column(String, nullable=True)
     request_id: Mapped[int] = mapped_column(
         Integer, ForeignKey(ApiRequest.id), init=False
     )
