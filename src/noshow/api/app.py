@@ -213,11 +213,12 @@ async def predict(
             apiprediction.prediction = row["prediction"]
             apiprediction.start_time = row["start"]
             apiprediction.request_relation = apirequest
-            apiprediction.clinic_name = CLINIC_CONFIG[row["clinic"]].teleq_name
+            apiprediction.clinic_name = row["hoofdagenda"]
             apiprediction.clinic_reception = row["description"]
             apiprediction.clinic_phone_number = CLINIC_CONFIG[
                 row["clinic"]
             ].phone_number
+            apiprediction.clinic_teleq_unit = CLINIC_CONFIG[row["clinic"]].teleq_name
             apiprediction.active = True
 
         db.merge(apisensitive)
