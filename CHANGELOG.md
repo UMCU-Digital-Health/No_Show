@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.1] - 2024-10-10
+
+### Fixed
+- Calling dash now both shows main agenda name and TeleQ name to prevent confusion when TeleQ name does not clearly indicate for which clinic the appointment is
+
+### Changed
+- clinic phone number is still stored in the database, but no longer shown in the calling dash, since any rescheduling needs to be done through TeleQ
+
 ## [1.4.0] - 2024-10-08
 
 ### Fixed
