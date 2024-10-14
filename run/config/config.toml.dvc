@@ -1,5 +1,5 @@
 outs:
-- md5: ddf3a59cbbbabf8b1837baaa446ff86e
-  size: 10434
+- md5: d276ec6d4915caa2260dfa8023ea6fe9
+  size: 10351
   hash: md5
   path: config.toml
