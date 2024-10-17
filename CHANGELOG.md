@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.3] - 2024-10-17
+
+### Fixed
+- Show predictions for the right treatment group in de monitoring tab of the admin dash
+- Fixed x-axis alignment of the monitoring tab graph
+
+### Changed
+- Updated KPIs in the KPI tab of the admin dash
+
 ## [1.4.2] - 2024-10-14
 
 ### Changed
