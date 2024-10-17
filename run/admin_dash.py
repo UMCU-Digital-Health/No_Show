@@ -30,10 +30,14 @@ db_database = os.environ["DB_DATABASE"]
 
 
 def calc_calling_percentage(
-    call_results_df: pd.DataFrame, call_outcomes: list[str]
+    call_results_df: pd.DataFrame,
+    call_outcomes: list[str],
+    include_absolute: bool = True,
 ) -> str:
     """Calculates the percentage of rows that have `call_outcomes` and
     returns it as a string with two decimal places and a percentage sign.
+
+    Also optionally include the absolute number of rows with `call_outcomes`.
 
     Parameters
     ----------
@@ -51,6 +55,8 @@ def calc_calling_percentage(
         call_results_df[call_results_df["call_outcome"].isin(call_outcomes)]
     )
     total = len(call_results_df)
+    if include_absolute:
+        return f"{num_outcomes} ({num_outcomes / total * 100:.2f}%)"
     return f"{num_outcomes / total * 100:.2f}%"
 
 
@@ -114,29 +120,35 @@ def kpi_page():
 
     metric_cols = st.columns(5)
     metric_cols[0].metric(
-        "Aantal Hoofdagenda's", call_results_df["clinic_name"].nunique()
+        "Aantal patienten gebeld",
+        calc_calling_percentage(
+            call_results_df,
+            [
+                "Herinnerd",
+                "Verzet/Geannuleerd",
+                "Onbereikbaar",
+                "Voicemail ingesproken",
+            ],
+        ),
+        help="Aantal patienten dat is gebeld, onafhankelijk van of ze bereikbaar waren",
     )
     metric_cols[1].metric(
-        "Aantal patienten herinnerd",
-        len(call_results_df[call_results_df["call_outcome"] == "Herinnerd"]),
+        "Aantal patienten bereikt",
+        calc_calling_percentage(call_results_df, ["Herinnerd", "Verzet/Geannuleerd"]),
+        help=(
+            "Aantal patienten dat is bereikt (herinnerd aan de afspraak "
+            "of afspraak verzet/afgezegd)"
+        ),
     )
     metric_cols[2].metric(
-        "Aantal afspraken verzet of geannuleerd",
-        len(call_results_df[call_results_df["call_outcome"] == "Verzet/Geannuleerd"]),
-    )
-    percentage_reached = calc_calling_percentage(
-        call_results_df, ["Herinnerd", "Verzet/Geannuleerd"]
+        "Aantal patienten herinnerd",
+        calc_calling_percentage(call_results_df, ["Herinnerd"]),
+        help="Aantal patienten dat is herinnerd aan de afspraak",
     )
     metric_cols[3].metric(
-        "Percentage patienten bereikt",
-        percentage_reached,
-    )
-    percentage_called = calc_calling_percentage(
-        call_results_df, ["Herinnerd", "Verzet/Geannuleerd", "Onbereikbaar"]
-    )
-    metric_cols[4].metric(
-        "Percentage patienten gebeld",
-        percentage_called,
+        "Aantal afspraken verzet of geannuleerd",
+        calc_calling_percentage(call_results_df, ["Verzet/Geannuleerd"]),
+        help="Aantal patienten dat de afspraak heeft verzet of geannuleerd",
     )
 
     st.write("### Uitkomsten per dag")
@@ -148,9 +160,12 @@ def kpi_page():
     )
     bar_chart = (
         alt.Chart(call_results_df)
-        .mark_bar()
         .encode(
-            x=alt.X("date:T").timeUnit("yearmonthdate"),
+            x=alt.X(
+                "yearmonthdate(date):O",
+                axis=alt.Axis(title="Datum", labelAlign="center", labelAngle=0),
+                bandPosition=0.5,
+            ),
             y="count()",
             color=alt.Color(
                 "call_outcome",
@@ -164,6 +179,7 @@ def kpi_page():
             ),
             order=alt.Order("color_sort", sort="descending"),
         )
+        .mark_bar()
     )
     st.altair_chart(bar_chart, use_container_width=True)
 
@@ -191,7 +207,7 @@ def monitoring_page():
             .where(
                 (cast(ApiRequest.timestamp, Date) >= date_input[0])
                 & (cast(ApiRequest.timestamp, Date) <= date_input[1])
-                & (ApiPatient.treatment_group == 1)
+                & (ApiPatient.treatment_group >= 1)
             )
         ).all()
 
