@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.2] - 2024-10-14
+
+### Changed
+- Removed three subagendas from filtering for Allergologie
+- Kind-KNO is a separate agenda (not part of Poli Rood)
+
 ## [1.4.1] - 2024-10-10
 
 ### Fixed
