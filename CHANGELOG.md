@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Removed 'sociale pediatrie' from subagendas
 - Set mute period to 2 months
+- Updated requirements to solve dependabot alert
 
 ## [1.4.3] - 2024-10-17
 
