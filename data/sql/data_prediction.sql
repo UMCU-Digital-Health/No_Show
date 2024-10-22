@@ -23,7 +23,7 @@ SELECT APP.identifier_value AS APP_ID
     ,ENC.type1_code AS afspraak_code
     ,APP.[start]
     ,APP.[end]
-    ,ENC.[statusHistory2_period_start] AS gearriveerd
+    ,ENC.[arrival] AS gearriveerd
     ,APP.[created]
     ,APP.[minutesDuration]
     ,APP.[status]
