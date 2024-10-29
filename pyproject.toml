@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "noshow"
-version = "1.4.5"
+version = "1.4.6"
 authors = [
   { name="Ruben Peters", email="r.peters-7@umcutrecht.nl" },
   { name="Eric Wolters", email="e.j.wolters-4@umcutrecht.nl" }
@@ -54,6 +54,7 @@ dev-dependencies = [
     "uvicorn~=0.28.0",
     "pytest-asyncio~=0.23.6",
     "pytest-cov>=5.0.0",
+    "alembic>=1.13.3",
 ]
 
 [tool.isort]

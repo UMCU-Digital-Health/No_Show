@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.6] - 2024-10-29
+
+### Fixed
+- Removed TTL in patient list in calling dashboard and also show patient that were called today to prevent patients from disappearing during calls
+- Corrected database column types so databases are identical over different environments
+
+### Added
+- Added Alembic for database migrations
+
+
 ## [1.4.5] - 2024-10-21
 
 ### Fixed

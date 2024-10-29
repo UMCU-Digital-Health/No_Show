@@ -6,6 +6,7 @@ from sqlalchemy import Date, cast, create_engine, func, select
 from sqlalchemy.orm import Session, sessionmaker
 
 from noshow.config import MUTE_PERIOD
+from noshow.database.connection import get_connection_string, get_engine
 from noshow.database.models import ApiPatient, ApiPrediction
 
 
@@ -32,13 +33,13 @@ def init_session(user: str, passwd: str, host: str, port: str, db: str) -> sessi
         The returned SQLAlchemy engine used for queries
     """
 
-    CONNECTSTRING = rf"mssql+pymssql://{user}:{passwd}@{host}:{port}/{db}"
-    engine = create_engine(CONNECTSTRING)
+    connect_str = get_connection_string(user, passwd, host, port, db)
+    engine = get_engine(connect_str)
     session_object = sessionmaker(bind=engine)
     return session_object
 
 
-@st.cache_data(ttl=600)
+@st.cache_data
 def get_patient_list(_session: Session, date_input: date) -> List[str]:
     """Get the patient list ordered by prediction
 
@@ -72,6 +73,7 @@ def get_patient_list(_session: Session, date_input: date) -> List[str]:
         .where(
             (ApiPatient.last_call_date.is_(None))
             | (ApiPatient.last_call_date <= cast(threshold_date, Date))
+            | (ApiPatient.last_call_date == date.today())
         )
         .where(ApiPatient.treatment_group >= 1)
         .where((ApiPatient.opt_out.is_(None)) | (ApiPatient.opt_out == 0))
