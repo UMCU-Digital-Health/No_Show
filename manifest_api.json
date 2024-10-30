@@ -6,7 +6,7 @@
     "entrypoint": "run.app:app"
   },
   "python": {
-    "version": "3.11.7",
+    "version": "3.11.10",
     "package_manager": {
       "name": "pip",
       "version": "23.3.1",
@@ -15,7 +15,7 @@
   },
   "files": {
     "requirements.txt": {
-      "checksum": "3858b62abeb3e8f26af98e4f16abed3e"
+      "checksum": "f70c5842ab5ed362f02f9e51e8056a6f"
     },
     ".dvcignore": {
       "checksum": "34659c119a2634fe318cd6a4822df435"
@@ -33,7 +33,7 @@
       "checksum": "99594759045ead1f8535775e35169a3d"
     },
     "CHANGELOG.md": {
-      "checksum": "f4513fa41981e6753b0d91502fa11c63"
+      "checksum": "0f741890be14219f021df1965cf70426"
     },
     "LICENSE": {
       "checksum": "770bb10345b6c86b9f5dc743de74aadf"
@@ -57,37 +57,37 @@
       "checksum": "0de252d918314092524baf73e003c014"
     },
     "dvc.lock": {
-      "checksum": "8e4ee569dcd7d826017e7d8f7f6413e4"
+      "checksum": "c7cc4aa03c818f205dcd4cd8044b887a"
     },
     "dvc.yaml": {
       "checksum": "e14888b51b20aa7ed8d1a7a8d63e33a9"
     },
     "manifest_api.json": {
-      "checksum": "721f97985b53cfbc82c9fd8660248b9f"
+      "checksum": "ddf3dbd0fd8b52b16d7a241a173b6f09"
     },
     "manifest_dash.json": {
-      "checksum": "2cc39523168242ac2c30f9ff5d6af2c0"
+      "checksum": "833b64601035f3f2b8721762d38fa264"
     },
     "output/models/no_show_model_cv.pickle": {
-      "checksum": "d754ad05309b61b28c6a9fff0d8ad177"
+      "checksum": "3d81bdcc860f51a1843593988ac2c1f6"
     },
     "pyproject.toml": {
-      "checksum": "5f637f1e689b6a23deb46e3bfbddc749"
+      "checksum": "5dd2d2470bd8383f9cff197ccee8f8d6"
     },
     "run/admin_dash.py": {
-      "checksum": "79f9f665466959b23b421b1f6eb05543"
+      "checksum": "23d27b06dab4a9c50e802b573bf3dd39"
     },
     "run/app.py": {
       "checksum": "07ea1ee70ce2cfdd157a5d234a54cbfb"
     },
     "run/calling_dash.py": {
-      "checksum": "338a395c8b8a8cc741b15f03ffada712"
+      "checksum": "8f812b7cca6d9649df19332017f0f930"
     },
     "run/config/config.toml": {
-      "checksum": "55d914731e8349a5c87f7e4329f98a1c"
+      "checksum": "fc166438569074175c386c4a31d0184c"
     },
     "run/config/config.toml.dvc": {
-      "checksum": "a47a99744442acf4f8e73e871a931879"
+      "checksum": "9859113746e147a7efab10481e7a1769"
     },
     "setup.cfg": {
       "checksum": "bbbe201f135ed769da1877db5cc56fb6"
@@ -96,13 +96,13 @@
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
     "src/noshow/api/app.py": {
-      "checksum": "57b4712c8e3e84ec4a05665bb2c4192d"
+      "checksum": "7c1a69733b40bf9ca543c3dd397ec088"
     },
     "src/noshow/api/app_helpers.py": {
       "checksum": "8cdf328dafcecc5ae20754d5b063a067"
     },
     "src/noshow/api/pydantic_models.py": {
-      "checksum": "4f51dd0166e29892299ea7ed1c03a01b"
+      "checksum": "d8964b991b1d1b1de9a7962519c193e3"
     },
     "src/noshow/config.py": {
       "checksum": "2773e64669bd1b2d9e3a1663974634e4"
@@ -111,16 +111,19 @@
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
     "src/noshow/dashboard/connection.py": {
-      "checksum": "9257391d6d8d616e57f9368af477a704"
+      "checksum": "c7491be3828089c576062b3a933a8bdf"
     },
     "src/noshow/dashboard/helper.py": {
-      "checksum": "dd4f2e75aa3181c55eef945cb84f3136"
+      "checksum": "e1d6be5d1c69dd3ba2979fc9b0a166ff"
     },
     "src/noshow/database/__init__.py": {
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
+    "src/noshow/database/connection.py": {
+      "checksum": "9c1fab4632ca7e9b353a906d4719d243"
+    },
     "src/noshow/database/models.py": {
-      "checksum": "0641a09cc84e075a35dfb808c828efdc"
+      "checksum": "14812e855bd5dced17e236848feef11e"
     },
     "src/noshow/features/appointment_features.py": {
       "checksum": "3c58c90ca0b5df7bbce4a328ca235e58"
@@ -163,6 +166,9 @@
     },
     "src/noshow/visualisation/features_plots.py": {
       "checksum": "4bc6f06a7afb732c57147c4f011256d3"
+    },
+    "uv.lock": {
+      "checksum": "603a1be208265e9a0ed7a57aa64e8535"
     }
   }
 }
