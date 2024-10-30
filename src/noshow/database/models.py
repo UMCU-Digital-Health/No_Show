@@ -73,7 +73,7 @@ class ApiSensitiveInfo(Base):
     __table_args__ = {"schema": "noshow"}
 
     patient_id: Mapped[str] = mapped_column(String(64), primary_key=True, index=True)
-    hix_number: Mapped[str] = mapped_column(String, nullable=True)
+    hix_number: Mapped[str] = mapped_column(String(255), nullable=True)
     full_name: Mapped[str]
     first_name: Mapped[str] = mapped_column(String, nullable=True)
     birth_date: Mapped[date] = mapped_column(Date, nullable=True)
@@ -87,6 +87,7 @@ class ApiCallResponse(Base):
     __table_args__ = {"schema": "noshow"}
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, init=False)
+    timestamp: Mapped[datetime] = mapped_column(DateTime, nullable=True, init=False)
     call_status: Mapped[str]
     call_outcome: Mapped[str]
     remarks: Mapped[str]
