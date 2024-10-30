@@ -245,12 +245,18 @@ def main():
             ),
             type="primary",
         )
+        if current_response.timestamp is not None:
+            st.caption(
+                f"Laatst opgeslagen om: {current_response.timestamp:%Y-%m-%d %H:%M:%S}"
+            )
     st.button(
         "Vorige",
         on_click=previous_preds,
     )
     st.divider()
-    st.write(f"Laatste update: {last_updated:%Y-%m-%d %H:%M:%S}")
+    st.caption(
+        f"Laatste voorspellingen gegenereerd om: {last_updated:%Y-%m-%d %H:%M:%S}"
+    )
 
 
 if __name__ == "__main__":

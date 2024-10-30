@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from typing import List
 
 import pandas as pd
@@ -140,6 +140,7 @@ def next_preds(
     call_response.call_status = st.session_state.status_input
     call_response.call_outcome = st.session_state.res_input
     call_response.remarks = st.session_state.opm_input
+    call_response.timestamp = datetime.now()
     current_patient.call_number = st.session_state.number_input
 
     if call_response.call_status == "Wordt gebeld":
