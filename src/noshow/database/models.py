@@ -88,6 +88,7 @@ class ApiCallResponse(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, init=False)
     timestamp: Mapped[datetime] = mapped_column(DateTime, nullable=True, init=False)
+    user: Mapped[str] = mapped_column(String(100), nullable=True, init=False)
     call_status: Mapped[str]
     call_outcome: Mapped[str]
     remarks: Mapped[str]
