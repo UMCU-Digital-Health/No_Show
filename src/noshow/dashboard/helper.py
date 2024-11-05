@@ -1,3 +1,5 @@
+import json
+import logging
 from datetime import date, datetime
 from typing import List
 
@@ -5,8 +7,11 @@ import pandas as pd
 import streamlit as st
 from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
+from streamlit.runtime.context import StreamlitHeaders
 
 from noshow.database.models import ApiCallResponse, ApiPatient, ApiSensitiveInfo
+
+logger = logging.getLogger(__name__)
 
 
 def render_patient_info(
@@ -123,6 +128,7 @@ def next_preds(
     Session: sessionmaker,
     call_response: ApiCallResponse,
     current_patient: ApiPatient,
+    user_name: str,
 ) -> None:
     """Go to the next prediction and save results
 
@@ -136,11 +142,14 @@ def next_preds(
         call response object that needs to be edited
     current_patient : ApiPatient
         current patient object
+    user_name : str
+        The current user e-mail
     """
     call_response.call_status = st.session_state.status_input
     call_response.call_outcome = st.session_state.res_input
     call_response.remarks = st.session_state.opm_input
     call_response.timestamp = datetime.now()
+    call_response.user = user_name
     current_patient.call_number = st.session_state.number_input
 
     if call_response.call_status == "Wordt gebeld":
@@ -225,3 +234,25 @@ def search_number(
             st.info(
                 "Geen patient gevonden met dit telefoonnummer op deze dag", icon="ℹ️"
             )
+
+
+def get_user(headers: StreamlitHeaders) -> str:
+    """Get the user from the streamlit headers
+
+    Parameters
+    ----------
+    header : StreamlitHeaders
+        Streamlit headers object, contains a RStudio-Connect-Credentials header
+        when deployed to PositConnect
+
+    Returns
+    -------
+    str
+        The user e-mail in lowercase
+    """
+    credential_header = headers.get("RStudio-Connect-Credentials")
+    if not credential_header:
+        logger.warning("Rsconnect credentials not found")
+        return "No user"
+    credential_header = json.loads(credential_header)
+    return credential_header.get("user").lower()

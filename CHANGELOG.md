@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.7] - 2024-11-04
+
+### Changed
+- Updated manifest files
+
+### Added
+- Username now also saved when filling in call response
+
+### Fixed
+- Alembic now applies ruff format before linter, to prevent errors when generating migrate scripts
+
 ## [1.4.6] - 2024-10-29
 
 ### Fixed

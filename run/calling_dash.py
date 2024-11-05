@@ -11,6 +11,7 @@ from sqlalchemy import select
 
 from noshow.dashboard.connection import get_patient_list, init_session
 from noshow.dashboard.helper import (
+    get_user,
     highlight_row,
     navigate_patients,
     next_preds,
@@ -71,7 +72,9 @@ def main():
         },
     )
 
+    user_name = get_user(st.context.headers)
     with st.sidebar:
+        st.write(f"Ingelogd als: {user_name}")
         date_input = st.date_input(
             "Voor welke dag wil je bellen (standaard over 3 werkdagen)",
             date_3_days,
@@ -242,6 +245,7 @@ def main():
                 Session,
                 current_response,
                 current_patient_nmbr,
+                user_name,
             ),
             type="primary",
         )
