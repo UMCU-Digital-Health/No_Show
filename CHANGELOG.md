@@ -13,8 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New clinics added to the queries and config
 
 ### Changed
-- Removed deprecated setup.cfg file
 - Updated dependencies
+
+### Removed
+- Removed deprecated setup.cfg file
 
 ## [1.4.7] - 2024-11-04
 
