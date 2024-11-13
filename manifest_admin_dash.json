@@ -86,9 +86,6 @@
     "run/config/config.toml.dvc": {
       "checksum": "9859113746e147a7efab10481e7a1769"
     },
-    "setup.cfg": {
-      "checksum": "bbbe201f135ed769da1877db5cc56fb6"
-    },
     "src/noshow/__init__.py": {
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },

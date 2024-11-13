@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.8] - 2024-11-13
+
+### Added
+- New clinics added to the queries and config
+
+### Changed
+- Updated dependencies
+
+### Removed
+- Removed deprecated setup.cfg file
+
 ## [1.4.7] - 2024-11-04
 
 ### Changed

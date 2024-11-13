@@ -80,9 +80,6 @@
     "run/config/config.toml": {
       "checksum": "fc166438569074175c386c4a31d0184c"
     },
-    "setup.cfg": {
-      "checksum": "bbbe201f135ed769da1877db5cc56fb6"
-    },
     "src/noshow/__init__.py": {
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
