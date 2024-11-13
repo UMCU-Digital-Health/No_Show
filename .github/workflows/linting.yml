@@ -26,4 +26,4 @@ jobs:
 
     - name: Analysing the code with ruff
       run: |
-        uv ruff check .
+        uv run ruff check .
