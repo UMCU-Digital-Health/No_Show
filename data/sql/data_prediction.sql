@@ -117,7 +117,25 @@ WHERE 1=1
         'ZH0122', -- Infectieziekten
         'ZH0088', -- Diabetologie
         'ZH0096', -- Endocrinologie
-        'ZH0413' -- Vasculaire geneeskunde
+        'ZH0413', -- Vasculaire geneeskunde
+        -- Longfunctie
+        'ZH0182',
+        -- Neurologie & neurochiurgie
+        'ZH0005', -- Algemene neurochirurgie
+        'ZH0006', -- Algemene neurologie
+        'ZH0035', -- Cerebrovasculaire ziekten
+        'ZH0194', -- Neuro oncologie
+        -- Neuromusculaire ziekten
+        'ZH0197', -- Neuromusculaire ziekten
+        'ZH0105', -- Functionele neurochirurgie
+        -- Zorglijn affectieve en psychotische stoornissen
+        'ZH0298', -- PSY stemming en psychose
+        -- Zorglijn Diagnostiek en vroege psychose
+        'ZH0299', -- PSY Diagnostiek en vroege psychose
+        -- Zorglijn Ontwikkeling in perspectief
+        'ZH0300', -- PSY Ontwikkeling in perspectief
+        -- Zorglijn Acute en intensieve zorg
+        'ZH0297' -- PSY Acute en intensieve zorg
     )
     AND APP.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
     AND APP.[created] >= '2015-01-01'
@@ -200,7 +218,25 @@ WHERE 1=1
                 'ZH0122', -- Infectieziekten
                 'ZH0088', -- Diabetologie
                 'ZH0096', -- Endocrinologie
-                'ZH0413' -- Vasculaire geneeskunde
+                'ZH0413', -- Vasculaire geneeskunde
+                -- Longfunctie
+                'ZH0182',
+                -- Neurologie & neurochiurgie
+                'ZH0005', -- Algemene neurochirurgie
+                'ZH0006', -- Algemene neurologie
+                'ZH0035', -- Cerebrovasculaire ziekten
+                'ZH0194', -- Neuro oncologie
+                -- Neuromusculaire ziekten
+                'ZH0197', -- Neuromusculaire ziekten
+                'ZH0105', -- Functionele neurochirurgie
+                -- Zorglijn affectieve en psychotische stoornissen
+                'ZH0298', -- PSY stemming en psychose
+                -- Zorglijn Diagnostiek en vroege psychose
+                'ZH0299', -- PSY Diagnostiek en vroege psychose
+                -- Zorglijn Ontwikkeling in perspectief
+                'ZH0300', -- PSY Ontwikkeling in perspectief
+                -- Zorglijn Acute en intensieve zorg
+                'ZH0297' -- PSY Acute en intensieve zorg
             )
             AND APP2.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
             AND CONVERT(DATE, APP2.[start]) = @start_date
