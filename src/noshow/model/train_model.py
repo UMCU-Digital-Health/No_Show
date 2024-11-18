@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict, Union
 
 import pandas as pd
-from dvclive import Live
+from dvclive.live import Live
 from sklearn.base import BaseEstimator
 from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.model_selection import GridSearchCV, StratifiedGroupKFold, train_test_split
