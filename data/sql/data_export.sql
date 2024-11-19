@@ -113,8 +113,9 @@ WHERE 1=1
             -- Zorglijn Ontwikkeling in perspectief
             'ZH0300', -- PSY Ontwikkeling in perspectief
             -- Zorglijn Acute en intensieve zorg
-            'ZH0297' -- PSY Acute en intensieve zorg
-
+            'ZH0297', -- PSY Acute en intensieve zorg
+            -- Oncologische urologie
+            'ZH0033' -- B&O Urologische oncologie
         )
     AND APP.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
     AND APP.created >= '2015-01-01'

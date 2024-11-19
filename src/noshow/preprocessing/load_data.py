@@ -51,6 +51,7 @@ def load_appointment_csv(csv_path: Union[str, Path]) -> pd.DataFrame:
         csv_path,
         parse_dates=["created"],
         date_format="ISO8601",
+        dtype={"specialty_code": "object"},  # Avoids Dtype Mixed warning
     )
 
     appointments_df["start"] = pd.to_datetime(
