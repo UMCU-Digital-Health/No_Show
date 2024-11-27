@@ -13,11 +13,10 @@ from noshow.dashboard.connection import get_patient_list, init_session
 from noshow.dashboard.helper import (
     get_user,
     highlight_row,
-    navigate_patients,
     next_preds,
     previous_preds,
     render_patient_info,
-    search_number,
+    render_patient_selection,
 )
 from noshow.database.models import (
     ApiCallResponse,
@@ -91,12 +90,14 @@ def main():
     with Session() as session:
         patient_ids = get_patient_list(session, date_input)
         if not patient_ids:
+            render_patient_selection([], None, Session, enable_dev_mode)
             st.header(f"Geen afspraken op {date_input}")
             return None
 
         current_patient = session.get(
             ApiSensitiveInfo, patient_ids[st.session_state["name_idx"]]
         )
+
         patient_predictions = session.execute(
             select(
                 ApiPrediction.id,
@@ -117,150 +118,151 @@ def main():
             .order_by(ApiPrediction.start_time)
         ).all()
     all_predictions_df = pd.DataFrame(patient_predictions)
-    last_updated = max(all_predictions_df["timestamp"])
-    all_predictions_df = all_predictions_df.drop(columns="timestamp")
-    all_predictions_df.loc[
-        all_predictions_df["call_status"] == "Gebeld", "call_status"
-    ] = "🟢"
-    if "Wordt gebeld" in all_predictions_df["call_status"].values:
+    try:
+        last_updated = max(all_predictions_df["timestamp"])
+        all_predictions_df = all_predictions_df.drop(columns="timestamp")
         all_predictions_df.loc[
-            ~(all_predictions_df["call_status"] == "🟢"), "call_status"
-        ] = "📞"
-    all_predictions_df.loc[
-        ~all_predictions_df["call_status"].isin(["🟢", "📞"]),
-        "call_status",
-    ] = "🔴"
-    pred_id = all_predictions_df.iat[st.session_state["pred_idx"], 0]
+            all_predictions_df["call_status"] == "Gebeld", "call_status"
+        ] = "🟢"
+        if "Wordt gebeld" in all_predictions_df["call_status"].values:
+            all_predictions_df.loc[
+                ~(all_predictions_df["call_status"] == "🟢"), "call_status"
+            ] = "📞"
+        all_predictions_df.loc[
+            ~all_predictions_df["call_status"].isin(["🟢", "📞"]),
+            "call_status",
+        ] = "🔴"
+        pred_id = all_predictions_df.iat[st.session_state["pred_idx"], 0]
 
-    # load information related to call history
-    with Session() as session:
-        current_response = session.get(ApiPrediction, pred_id).callresponse_relation
-        current_patient_nmbr = session.get(
-            ApiPatient, patient_ids[st.session_state["name_idx"]]
-        )
-    if not current_response:
-        current_response = ApiCallResponse(
-            call_status="Niet gebeld",
-            call_outcome="Geen",
-            remarks="",
-            prediction_id=pred_id,
-        )
-    # convert rows that are initiallised as None to 0
-    if current_patient_nmbr.call_number is None:
-        current_patient_nmbr.call_number = 0
-
-    status_list = [
-        "Niet gebeld",
-        "Wordt gebeld",
-        "Gebeld",
-        "Onbereikbaar",
-    ]
-    res_list = [
-        "Herinnerd",
-        "Verzet/Geannuleerd",
-        "Geen",
-        "Bel me niet",
-        "Voicemail ingesproken",
-    ]
-    call_number_list = [
-        "Niet van toepassing",
-        "Mobielnummer",
-        "Thuis telefoonnummer",
-        "Overig telefoonnummer",
-    ]
-
-    # Main content of streamlit app
-    st.write(f"## Patient {st.session_state['name_idx'] + 1}/{len(patient_ids)}")
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.button(
-            "Vorige patient",
-            on_click=navigate_patients,
-            args=(len(patient_ids), False, current_response.call_status),
-        )
-    with col2:
-        with st.popover(
-            "🔍 Zoeken", help="Zoek op telefoonnummer om een patient te vinden."
-        ):
-            phone_number = st.text_input("Zoek op telefoonnummer...")
-            st.button(
-                "Zoek",
-                on_click=search_number,
-                args=(Session, phone_number, patient_ids),
+        # load information related to call history
+        with Session() as session:
+            current_response = session.get(ApiPrediction, pred_id).callresponse_relation
+            current_patient_nmbr = session.get(
+                ApiPatient, patient_ids[st.session_state["name_idx"]]
             )
-    with col3:
-        st.button(
-            "Volgende patient",
-            on_click=navigate_patients,
-            args=(len(patient_ids), True, current_response.call_status),
-        )
-    st.header("Patient-gegevens")
-    if enable_dev_mode:
-        st.write(f"- ID: {patient_ids[st.session_state['name_idx']]}")
-
-    render_patient_info(
-        Session,
-        current_response,
-        current_patient,
-        current_patient_nmbr,
-        call_number_list,
-    )
-
-    st.header("Afspraakoverzicht")
-    if not enable_dev_mode:
-        all_predictions_df = all_predictions_df.drop(columns="id")
-    st.dataframe(
-        all_predictions_df.style.apply(highlight_row, axis=1),
-        use_container_width=True,
-        hide_index=True,
-    )
-
-    with st.form("patient_form", clear_on_submit=True):
-        st.selectbox(
-            "Status gesprek:",
-            options=status_list,
-            index=status_list.index(current_response.call_status),
-            key="status_input",
-        )
-        st.selectbox(
-            "Resultaat gesprek: ",
-            options=res_list,
-            index=res_list.index(current_response.call_outcome),
-            key="res_input",
-        )
-        options_idx = [0, 1, 2, 3]
-        st.selectbox(
-            "Contact gemaakt via: ",
-            options=options_idx,
-            format_func=lambda x: call_number_list[x],
-            index=options_idx.index(current_patient_nmbr.call_number),
-            key="number_input",
-        )
-        st.text_input("Opmerkingen: ", value=current_response.remarks, key="opm_input")
-        st.form_submit_button(
-            "Opslaan",
-            on_click=next_preds,
-            args=(
-                len(all_predictions_df),
-                Session,
-                current_response,
-                current_patient_nmbr,
-                user_name,
-            ),
-            type="primary",
-        )
-        if current_response.timestamp is not None:
-            st.caption(
-                f"Laatst opgeslagen om: {current_response.timestamp:%Y-%m-%d %H:%M:%S}"
+        if not current_response:
+            current_response = ApiCallResponse(
+                call_status="Niet gebeld",
+                call_outcome="Geen",
+                remarks="",
+                prediction_id=pred_id,
             )
-    st.button(
-        "Vorige",
-        on_click=previous_preds,
-    )
-    st.divider()
-    st.caption(
-        f"Laatste voorspellingen gegenereerd om: {last_updated:%Y-%m-%d %H:%M:%S}"
-    )
+        # convert rows that are initiallised as None to 0
+        if current_patient_nmbr.call_number is None:
+            current_patient_nmbr.call_number = 0
+
+        status_list = [
+            "Niet gebeld",
+            "Wordt gebeld",
+            "Gebeld",
+            "Onbereikbaar",
+        ]
+        res_list = [
+            "Herinnerd",
+            "Verzet/Geannuleerd",
+            "Geen",
+            "Bel me niet",
+            "Voicemail ingesproken",
+        ]
+        call_number_list = [
+            "Niet van toepassing",
+            "Mobielnummer",
+            "Thuis telefoonnummer",
+            "Overig telefoonnummer",
+        ]
+
+        # Main content of streamlit app
+        render_patient_selection(
+            patient_ids, current_response, Session, enable_dev_mode
+        )
+
+        render_patient_info(
+            Session,
+            current_response,
+            current_patient,
+            current_patient_nmbr,
+            call_number_list,
+        )
+
+        st.header("Afspraakoverzicht")
+        if not enable_dev_mode:
+            all_predictions_df = all_predictions_df.drop(columns="id")
+        st.dataframe(
+            all_predictions_df.style.apply(highlight_row, axis=1),
+            use_container_width=True,
+            hide_index=True,
+        )
+
+        with st.form("patient_form", clear_on_submit=True):
+            st.selectbox(
+                "Status gesprek:",
+                options=status_list,
+                index=status_list.index(current_response.call_status),
+                key="status_input",
+            )
+            st.selectbox(
+                "Resultaat gesprek: ",
+                options=res_list,
+                index=res_list.index(current_response.call_outcome),
+                key="res_input",
+            )
+            options_idx = [0, 1, 2, 3]
+            st.selectbox(
+                "Contact gemaakt via: ",
+                options=options_idx,
+                format_func=lambda x: call_number_list[x],
+                index=options_idx.index(current_patient_nmbr.call_number),
+                key="number_input",
+            )
+            st.text_input(
+                "Opmerkingen: ", value=current_response.remarks, key="opm_input"
+            )
+            st.form_submit_button(
+                "Opslaan",
+                on_click=next_preds,
+                args=(
+                    len(all_predictions_df),
+                    Session,
+                    current_response,
+                    current_patient_nmbr,
+                    user_name,
+                ),
+                type="primary",
+            )
+            if current_response.timestamp is not None:
+                st.caption(
+                    f"Laatst opgeslagen om: {
+                        current_response.timestamp:%Y-%m-%d %H:%M:%S
+                        }"
+                )
+        st.button(
+            "Vorige",
+            on_click=previous_preds,
+        )
+        st.divider()
+        st.caption(
+            f"Laatste voorspellingen gegenereerd om: {last_updated:%Y-%m-%d %H:%M:%S}"
+        )
+    except KeyError:
+        if all_predictions_df.empty:
+            # check if patient exists in ApiPrediction
+            if not session.get(
+                ApiPrediction, patient_ids[st.session_state["name_idx"]]
+            ):
+                current_response = ApiCallResponse(
+                    call_status="Niet gebeld",
+                    call_outcome="Geen",
+                    remarks="",
+                    prediction_id="Unknown",
+                )
+                render_patient_selection(
+                    patient_ids, current_response, Session, enable_dev_mode
+                )
+                st.header("Geen afspraken voor patient")
+            else:
+                raise KeyError(
+                    "Predictions are empty while patient exists in database"
+                ) from None
 
 
 if __name__ == "__main__":

@@ -14,6 +14,41 @@ from noshow.database.models import ApiCallResponse, ApiPatient, ApiSensitiveInfo
 logger = logging.getLogger(__name__)
 
 
+def render_patient_selection(
+    patient_ids: List[str],
+    current_response: ApiCallResponse,
+    Session: sessionmaker,
+    enable_dev_mode: bool = False,
+) -> None:
+    st.write(f"## Patient {st.session_state['name_idx'] + 1}/{len(patient_ids)}")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.button(
+            "Vorige patient",
+            on_click=navigate_patients,
+            args=(len(patient_ids), False, current_response.call_status),
+        )
+    with col2:
+        with st.popover(
+            "🔍 Zoeken", help="Zoek op telefoonnummer om een patient te vinden."
+        ):
+            phone_number = st.text_input("Zoek op telefoonnummer...")
+            st.button(
+                "Zoek",
+                on_click=search_number,
+                args=(Session, phone_number, patient_ids),
+            )
+    with col3:
+        st.button(
+            "Volgende patient",
+            on_click=navigate_patients,
+            args=(len(patient_ids), True, current_response.call_status),
+        )
+    st.header("Patient-gegevens")
+    if enable_dev_mode:
+        st.write(f"- ID: {patient_ids[st.session_state['name_idx']]}")
+
+
 def render_patient_info(
     Session: sessionmaker,
     current_response: ApiCallResponse,
