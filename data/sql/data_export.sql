@@ -115,7 +115,21 @@ WHERE 1=1
             -- Zorglijn Acute en intensieve zorg
             'ZH0297', -- PSY Acute en intensieve zorg
             -- Oncologische urologie
-            'ZH0033' -- B&O Urologische oncologie
+            'ZH0033', -- B&O Urologische oncologie
+            -- Hartfunctie
+            'ZH0116', -- Functie Hart
+            -- Medische oncoloie
+            'ZH0028', -- B&O Medische oncologie
+            -- Hematologie
+            'ZH0025', -- B&O Hematologie
+            -- Gynaecologische oncologie
+            'ZH0024', -- B&O Gynaecologische oncologie
+            -- Chirurgische oncologie
+            'ZH0020', -- B&O Chirurgische oncologie
+            -- Hoofd Hals oncologie
+            'ZH0027', -- B&O KNH oncologie
+            -- Functie KNF
+            'ZH0175' -- Functie KNF
         )
     AND APP.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
     AND APP.created >= '2015-01-01'
