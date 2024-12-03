@@ -16,17 +16,27 @@ logger = logging.getLogger(__name__)
 
 def render_patient_selection(
     patient_ids: List[str],
-    current_response: ApiCallResponse,
     Session: sessionmaker,
     enable_dev_mode: bool = False,
 ) -> None:
+    """Render the patient selection buttons
+
+    Parameters
+    ----------
+    patient_ids : List[str]
+        List of patient ids
+    Session : sessionmaker
+        SQLAlchemy sessionmaker object
+    enable_dev_mode : bool, optional
+        If extra dev info should be displayed, by default False
+    """
     st.write(f"## Patient {st.session_state['name_idx'] + 1}/{len(patient_ids)}")
     col1, col2, col3 = st.columns(3)
     with col1:
         st.button(
             "Vorige patient",
             on_click=navigate_patients,
-            args=(len(patient_ids), False, current_response.call_status),
+            args=(len(patient_ids), False),
         )
     with col2:
         with st.popover(
@@ -42,7 +52,7 @@ def render_patient_selection(
         st.button(
             "Volgende patient",
             on_click=navigate_patients,
-            args=(len(patient_ids), True, current_response.call_status),
+            args=(len(patient_ids), True),
         )
     st.header("Patient-gegevens")
     if enable_dev_mode:
@@ -85,7 +95,9 @@ def render_patient_info(
         )
     else:
         if current_patient:
-            if current_response.call_status != "Wordt gebeld":
+            if current_response.call_status == "Wordt gebeld":
+                st.warning("Deze patient wordt momenteel gebeld!", icon="📞")
+            else:
                 st.warning("Deze patient is al gebeld!", icon="⚠️")
             st.write(f"- Naam: {current_patient.full_name or 'Onbekend'}")
             st.write(f"- Voornaam: {current_patient.first_name or 'Onbekend'}")
@@ -207,9 +219,7 @@ def next_preds(
         st.session_state["pred_idx"] += 1
 
 
-def navigate_patients(
-    list_len: int, navigate_forward: bool = True, call_status: str = "Niet gebeld"
-):
+def navigate_patients(list_len: int, navigate_forward: bool = True):
     """Navigate through patients
 
     Navigates through the patients list and reset the prediction index
@@ -221,13 +231,7 @@ def navigate_patients(
     navigate_forward : bool, optional
         Whether to navigate forward or backword, by default True
     """
-    if call_status == "Wordt gebeld":
-        st.error(
-            "Status is 'Wordt gebeld', verander de status voordat je verder gaat.",
-            icon="🛑",
-        )
-        return
-    elif navigate_forward:
+    if navigate_forward:
         if st.session_state["name_idx"] + 1 < list_len:
             st.session_state["name_idx"] += 1
             st.session_state["pred_idx"] = 0
