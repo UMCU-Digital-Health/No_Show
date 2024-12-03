@@ -5,8 +5,8 @@ stages:
     deps:
     - path: data/processed/featuretable.parquet
       hash: md5
-      md5: 2e19a371788b567426ebb9ee7528b118
-      size: 94648072
+      md5: 4e754146b5f7ea804ab79691e19038d4
+      size: 100497640
     - path: src/noshow/model/train_model.py
       hash: md5
       md5: 12587629eddb081d94bc997c8d100dd4
@@ -14,8 +14,8 @@ stages:
     outs:
     - path: output/models/no_show_model_cv.pickle
       hash: md5
-      md5: 71bf250ff7b8d9922ea7626b300ef94d
-      size: 1595521
+      md5: dfc2275999ae50e74a9ab8459372ddfa
+      size: 1939776
   feature_building:
     cmd: python src/noshow/features/feature_pipeline.py
     deps:
@@ -24,8 +24,8 @@ stages:
       size: 279455
     - path: data/raw/poliafspraken_no_show.csv
       hash: md5
-      md5: 46c186d0fd0d69609b08131997cba338
-      size: 507224267
+      md5: 31983d8a20d487417a9da7cf024c7ecc
+      size: 487004530
     - path: src/noshow/features/feature_pipeline.py
       hash: md5
       md5: 71ffb7a162976bde11e0aed72ea19f98
@@ -33,5 +33,5 @@ stages:
     outs:
     - path: data/processed/featuretable.parquet
       hash: md5
-      md5: 2e19a371788b567426ebb9ee7528b118
-      size: 94648072
+      md5: 4e754146b5f7ea804ab79691e19038d4
+      size: 100497640
