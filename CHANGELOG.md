@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.10] - 2024-12-03
+
+### Changed
+- Updated agendas to next scale up step and rerun pipelines
+
 ## [1.4.9] - 2024-11-18
 
 ### Changed
