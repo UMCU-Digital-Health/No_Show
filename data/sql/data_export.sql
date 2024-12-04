@@ -19,17 +19,17 @@ SELECT APP.identifier_value AS APP_ID
     ,ADDR.[address_postalCodeNumbersNL]
     ,LOC.[name]
     ,LOC.[description]
-FROM [DWH].[models].[HealthcareService] SUBAGENDA JOIN [DWH].[models].[HealthcareService] HOOFDAGENDA
+FROM [PUB].[no_show].[HealthcareService] SUBAGENDA JOIN [PUB].[no_show].[HealthcareService] HOOFDAGENDA
         ON SUBAGENDA.partOf_HealthcareService_value = HOOFDAGENDA.identifier_value AND SUBAGENDA.partOf_HealthcareService_system = HOOFDAGENDA.identifier_system
-    JOIN [DWH].[models].[Appointment] APP 
+    JOIN [PUB].[no_show].[Appointment] APP 
         ON APP.participant_actor_HealthcareService_value = SUBAGENDA.identifier_value AND APP.participant_actor_HealthcareService_system = SUBAGENDA.identifier_system
-    JOIN [DWH].[models].Encounter ENC
+    JOIN [PUB].[no_show].Encounter ENC
         ON ENC.appointment_Appointment_system = APP.identifier_system AND ENC.appointment_Appointment_value = APP.identifier_value
-    LEFT JOIN [DWH].[models].Location LOC
+    LEFT JOIN [PUB].[no_show].Location LOC
         ON ENC.location_Location_system = LOC.identifier_system AND ENC.location_Location_value = LOC.identifier_value
-    JOIN [DWH].[models].[Patient] PAT
+    JOIN [PUB].[no_show].[Patient] PAT
         ON APP.[participant_actor_Patient_value] = PAT.identifier_value
-    LEFT JOIN [DWH].[models].[Patient_Address] ADDR
+    LEFT JOIN [PUB].[no_show].[Patient_Address] ADDR
         ON ADDR.[parent_identifier_value] = PAT.identifier_value 
 WHERE 1=1
     AND SUBAGENDA.active = 1
@@ -115,11 +115,25 @@ WHERE 1=1
             -- Zorglijn Acute en intensieve zorg
             'ZH0297', -- PSY Acute en intensieve zorg
             -- Oncologische urologie
-            'ZH0033' -- B&O Urologische oncologie
+            'ZH0033', -- B&O Urologische oncologie
+            -- Hartfunctie
+            'ZH0116', -- Functie Hart
+            -- Medische oncoloie
+            'ZH0028', -- B&O Medische oncologie
+            -- Hematologie
+            'ZH0025', -- B&O Hematologie
+            -- Gynaecologische oncologie
+            'ZH0024', -- B&O Gynaecologische oncologie
+            -- Chirurgische oncologie
+            'ZH0020', -- B&O Chirurgische oncologie
+            -- Hoofd Hals oncologie
+            'ZH0027', -- B&O KNH oncologie
+            -- Functie KNF
+            'ZH0175' -- Functie KNF
         )
     AND APP.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
-    AND APP.created >= '2015-01-01'
-    AND APP.created <= '2024-10-01'
+    AND APP.created >= '2016-01-01'
+    AND APP.created <= '2024-11-01'
     AND APP.status <> 'booked'
     AND ENC.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
     AND ENC.type2_code NOT IN ('T', 'S', 'M')
