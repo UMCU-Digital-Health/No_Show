@@ -15,25 +15,13 @@
   },
   "files": {
     "requirements.txt": {
-      "checksum": "f70c5842ab5ed362f02f9e51e8056a6f"
-    },
-    ".dvcignore": {
-      "checksum": "34659c119a2634fe318cd6a4822df435"
-    },
-    ".example.env": {
-      "checksum": "a851d2b36a975d3155f448d08a4b7527"
-    },
-    ".gitignore": {
-      "checksum": "ca95646077c76f4dc6e795b7ef13d27c"
-    },
-    ".python-version": {
-      "checksum": "c0479ff484dacd51dc5ba0461b16b9bf"
+      "checksum": "8e5f1ee0ff8ac9a0f4133f995a4d578b"
     },
     ".streamlit/config.toml": {
       "checksum": "99594759045ead1f8535775e35169a3d"
     },
     "CHANGELOG.md": {
-      "checksum": "0f741890be14219f021df1965cf70426"
+      "checksum": "6eb11113c6b074c6762bb4cb187a20b1"
     },
     "LICENSE": {
       "checksum": "770bb10345b6c86b9f5dc743de74aadf"
@@ -57,28 +45,28 @@
       "checksum": "0de252d918314092524baf73e003c014"
     },
     "dvc.lock": {
-      "checksum": "c7cc4aa03c818f205dcd4cd8044b887a"
+      "checksum": "862a01ed24829ab773a883c2b26c2139"
     },
     "dvc.yaml": {
       "checksum": "e14888b51b20aa7ed8d1a7a8d63e33a9"
     },
     "manifest_api.json": {
-      "checksum": "ddf3dbd0fd8b52b16d7a241a173b6f09"
+      "checksum": "2dba93768018274c47a539775246bfac"
     },
     "manifest_dash.json": {
-      "checksum": "0dec95869d4660d05d8759834bdcd574"
+      "checksum": "174e7efbf55e8986322e363508770b4e"
     },
     "pyproject.toml": {
-      "checksum": "5dd2d2470bd8383f9cff197ccee8f8d6"
+      "checksum": "097b224357fed9d87fb1142a40a9a069"
     },
     "run/app.py": {
       "checksum": "07ea1ee70ce2cfdd157a5d234a54cbfb"
     },
     "run/calling_dash.py": {
-      "checksum": "8f812b7cca6d9649df19332017f0f930"
+      "checksum": "49ac44e5ac340369b217e059925fa00f"
     },
     "run/config/config.toml": {
-      "checksum": "fc166438569074175c386c4a31d0184c"
+      "checksum": "922735dc7dbcb39f8ab28e8cb7bb1297"
     },
     "src/noshow/__init__.py": {
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
@@ -102,7 +90,10 @@
       "checksum": "c7491be3828089c576062b3a933a8bdf"
     },
     "src/noshow/dashboard/helper.py": {
-      "checksum": "e1d6be5d1c69dd3ba2979fc9b0a166ff"
+      "checksum": "f0c16d371e6fef191b66612295710c1c"
+    },
+    "src/noshow/dashboard/layout.py": {
+      "checksum": "a9e441059474f4c1598d3792615eb839"
     },
     "src/noshow/database/__init__.py": {
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
@@ -111,7 +102,7 @@
       "checksum": "9c1fab4632ca7e9b353a906d4719d243"
     },
     "src/noshow/database/models.py": {
-      "checksum": "14812e855bd5dced17e236848feef11e"
+      "checksum": "1063625fca0b14299530df484ca568dc"
     },
     "src/noshow/features/appointment_features.py": {
       "checksum": "3c58c90ca0b5df7bbce4a328ca235e58"
@@ -135,7 +126,7 @@
       "checksum": "37a9c108b731c632608f5058c9e0f308"
     },
     "src/noshow/model/train_model.py": {
-      "checksum": "00964a947199825f721ebbbe0bb23da6"
+      "checksum": "12587629eddb081d94bc997c8d100dd4"
     },
     "src/noshow/preprocessing/__init__.py": {
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
@@ -144,7 +135,7 @@
       "checksum": "ad3285f5a7f55f0ca27a6c496212a05e"
     },
     "src/noshow/preprocessing/load_data.py": {
-      "checksum": "f63a1f950ab95b38fcf982b733f39f62"
+      "checksum": "879806e9891c1941e9bb6d87f8dd8b24"
     },
     "src/noshow/preprocessing/utils.py": {
       "checksum": "5c84176aa1d08e3c246120ff5e0b1abf"
@@ -156,7 +147,7 @@
       "checksum": "4bc6f06a7afb732c57147c4f011256d3"
     },
     "uv.lock": {
-      "checksum": "603a1be208265e9a0ed7a57aa64e8535"
+      "checksum": "4552ffe53847634578747e254a08112f"
     }
   }
 }

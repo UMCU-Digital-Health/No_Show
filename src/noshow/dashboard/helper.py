@@ -14,60 +14,6 @@ from noshow.database.models import ApiCallResponse, ApiPatient, ApiSensitiveInfo
 logger = logging.getLogger(__name__)
 
 
-def render_patient_info(
-    Session: sessionmaker,
-    current_response: ApiCallResponse,
-    current_patient: ApiSensitiveInfo,
-    current_patient_nmbr: ApiPatient,
-    call_number_list: List[str],
-) -> None:
-    """Render patient information
-
-    This function is responsible for rendering the patient information on the dashboard.
-
-    Parameters
-    ----------
-    Session : sessionmaker
-        The SQLAlchemy sessionmaker object used for database operations.
-    current_response : ApiCallResponse
-        The current call response object.
-    current_patient : ApiSensitiveInfo
-        The current patient object containing sensitive information.
-    current_patient_nmbr : ApiPatient
-        The current patient object containing the call number.
-    call_number_list : List[str]
-        The list of call number types.
-    """
-    if current_response.call_status == "Niet gebeld":
-        st.button(
-            "Start met bellen patient",
-            on_click=start_calling,
-            args=(
-                Session,
-                current_response,
-            ),
-            type="primary",
-        )
-    else:
-        if current_patient:
-            if current_response.call_status != "Wordt gebeld":
-                st.warning("Deze patient is al gebeld!", icon="⚠️")
-            st.write(f"- Naam: {current_patient.full_name or 'Onbekend'}")
-            st.write(f"- Voornaam: {current_patient.first_name or 'Onbekend'}")
-            st.write(f"- Patientnummer: {current_patient.hix_number or 'Onbekend'}")
-            st.write(f"- Geboortedatum: {current_patient.birth_date or 'Onbekend'}")
-            st.write(f"- Mobiel: {current_patient.mobile_phone or 'Onbekend'}")
-            st.write(f"- Thuis: {current_patient.home_phone or 'Onbekend'}")
-            st.write(f"- Overig nummer: {current_patient.other_phone or 'Onbekend'}")
-            st.write("")
-            if not current_patient_nmbr.call_number:
-                current_patient_nmbr.call_number = 0
-            call_number_type = call_number_list[current_patient_nmbr.call_number]
-            st.write(f"- Eerder contact ging via: {call_number_type or 'Onbekend'}")
-        else:
-            st.write("Patientgegevens zijn verwijderd.")
-
-
 def highlight_row(row: pd.Series) -> List[str]:
     """Highlight a row in a pandas dataframe
 
@@ -172,9 +118,7 @@ def next_preds(
         st.session_state["pred_idx"] += 1
 
 
-def navigate_patients(
-    list_len: int, navigate_forward: bool = True, call_status: str = "Niet gebeld"
-):
+def navigate_patients(list_len: int, navigate_forward: bool = True):
     """Navigate through patients
 
     Navigates through the patients list and reset the prediction index
@@ -186,13 +130,7 @@ def navigate_patients(
     navigate_forward : bool, optional
         Whether to navigate forward or backword, by default True
     """
-    if call_status == "Wordt gebeld":
-        st.error(
-            "Status is 'Wordt gebeld', verander de status voordat je verder gaat.",
-            icon="🛑",
-        )
-        return
-    elif navigate_forward:
+    if navigate_forward:
         if st.session_state["name_idx"] + 1 < list_len:
             st.session_state["name_idx"] += 1
             st.session_state["pred_idx"] = 0

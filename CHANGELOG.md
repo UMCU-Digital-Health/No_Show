@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.11] - 2024-12-03
+
+### Changed
+- Dashboard now displays a warning when a patient is currently being called, instead of preventing the user from going to the next patient
+- Dashboard will give an informative error when a prediction is no longer available, instead of crashing. Furthermore the user can still navigate to the next patient when this occurs
+- Patient selection buttons now moved to a separate function
+- Refactor render functions to new module
+
 ## [1.4.10] - 2024-12-03
 
 ### Changed
