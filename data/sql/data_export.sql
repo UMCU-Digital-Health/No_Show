@@ -129,7 +129,41 @@ WHERE 1=1
             -- Hoofd Hals oncologie
             'ZH0027', -- B&O KNH oncologie
             -- Functie KNF
-            'ZH0175' -- Functie KNF
+            'ZH0175', -- Functie KNF
+            -- Orthopedie
+            'ZH0210', -- Orthopedie
+            -- Urologie
+            'ZH0324', -- Urologie
+            -- Plastische chirurgie
+            'ZH0213', -- Plastische Chirurgie
+            -- Traumatologie Heelkunde
+            'ZH0343', -- Traumatologie
+            'ZH0117', -- Heelkunde
+            -- Vaatchirurgie
+            'ZH0401', -- Vaatcentrum
+            -- KNO
+            'ZH0178', -- KNO
+            -- Functiecentrum KNO
+            'ZH0104', -- Functiecentrum KNO
+            -- MKA
+            'ZH0026', -- B&O Kaakchirurgie en oncologie
+            'ZH0191', -- Mondziekten / kaakchirugie
+            -- Bijzondere tandheelkunde
+            'ZH0002', -- A&G
+            'ZH0014', -- Bijzondere tandheelkunde
+            -- Oogheelkunde
+            'ZH0208', -- Oogheelkunde
+            'CS0140', -- Functie oogheelkunde
+            -- Anesthesiologie
+            'ZH0010', -- Anesthesiologie
+            -- Pijncentrum
+            'ZH0211', -- Pijnbehandeling
+            -- Genetica
+            'ZH0110', -- Genetica
+            'ZH0160', -- Kind-ontwikkelingsachterstand
+            -- Prikpoli
+            '020434', -- Kind-laboratorium
+            'ZH0414' -- VAS-teamagenda            
         )
     AND APP.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
     AND APP.created >= '2016-01-01'
