@@ -163,7 +163,9 @@ WHERE 1=1
             'ZH0160', -- Kind-ontwikkelingsachterstand
             -- Prikpoli
             '020434', -- Kind-laboratorium
-            'ZH0414' -- VAS-teamagenda            
+            'ZH0414', -- VAS-teamagenda            
+            -- Fertiliteit & gyneacologie
+            'ZH04222' -- Voortplanting & gynaecologie
         )
     AND APP.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
     AND APP.created >= '2016-01-01'
