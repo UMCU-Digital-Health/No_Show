@@ -4,11 +4,14 @@ import csv
 import logging
 from pathlib import Path
 
+from rich.console import Console
+from rich.logging import RichHandler
 from sqlalchemy import text
 
 from noshow.database.connection import get_connection_string, get_engine
 
 logger = logging.getLogger(__name__)
+console = Console()
 
 
 def export_data(
@@ -46,25 +49,29 @@ def export_data(
         result = conn.execution_options(stream_results=True).execute(text(sql_query))
         logger.info("Export query executed successfully")
 
-        with open(output_csv, "w", newline="") as csvfile:
-            writer = csv.writer(csvfile)
+        with console.status("[bold green]Exporting data to CSV..."):
+            with open(output_csv, "w", newline="") as csvfile:
+                writer = csv.writer(csvfile)
 
-            # Write the header row
-            writer.writerow(result.keys())
+                # Write the header row
+                writer.writerow(result.keys())
 
-            # Write data in batches
-            while True:
-                rows = result.fetchmany(batch_size)
-                if not rows:
-                    break
-                writer.writerows(rows)
+                # Write data in batches
+                while True:
+                    rows = result.fetchmany(batch_size)
+                    if not rows:
+                        break
+                    writer.writerows(rows)
 
     logger.info(f"Data exported to {output_csv}")
 
 
 if __name__ == "__main__":
+    FORMAT = "%(message)s"
     logging.basicConfig(
-        level=logging.DEBUG,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        level="NOTSET",
+        format=FORMAT,
+        datefmt="[%X]",
+        handlers=[RichHandler(rich_tracebacks=True, markup=True)],
     )
     export_data()
