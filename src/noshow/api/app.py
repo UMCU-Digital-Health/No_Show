@@ -119,9 +119,17 @@ async def predict(
     project_path = Path(__file__).parents[3]
     start_time = datetime.now()
 
+    if len(input) == 0:
+        logger.error("No appointments provided")
+        return [{}]
+
     input_df = load_appointment_pydantic(input)
     appointments_df = process_appointments(input_df, CLINIC_CONFIG, start_date)
     all_postalcodes = process_postal_codes(project_path / "data" / "raw" / "NL.txt")
+
+    if appointments_df.empty:
+        logger.error("No appointments for the given start date and filters")
+        return [{}]
 
     model = load_model()
     prediction_df = create_prediction(
