@@ -1,3 +1,4 @@
+import logging
 import pickle
 import random
 from datetime import datetime, timedelta
@@ -9,7 +10,15 @@ import pandas as pd
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
-from noshow.database.models import ApiPatient, ApiPrediction, ApiSensitiveInfo
+from noshow.config import CLINIC_CONFIG
+from noshow.database.models import (
+    ApiPatient,
+    ApiPrediction,
+    ApiRequest,
+    ApiSensitiveInfo,
+)
+
+logger = logging.getLogger(__name__)
 
 
 def load_model(model_path: Union[str, Path, None] = None) -> Any:
@@ -191,9 +200,7 @@ def create_treatment_groups(
 def store_predictions(
     prediction_df: pd.DataFrame,
     db: Session,
-    logger: Any,
-    apirequest: Any,
-    CLINIC_CONFIG: Dict[str, Any],
+    apirequest: ApiRequest,
 ) -> None:
     """
     Store predictions in the database.
@@ -204,12 +211,8 @@ def store_predictions(
         DataFrame containing the predictions.
     db : Session
         Database session.
-    logger : Any
-        Logger for logging warnings and information.
     apirequest : Any
         API request object related to the predictions.
-    CLINIC_CONFIG : Dict[str, Any]
-        Configuration dictionary for clinic details.
     """
     for _, row in prediction_df.iterrows():
         apisensitive = db.get(ApiSensitiveInfo, row["pseudo_id"])

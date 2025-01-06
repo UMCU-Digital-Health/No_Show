@@ -166,7 +166,7 @@ async def predict(
     )
     db.add(apirequest)
 
-    store_predictions(prediction_df, db, logger, apirequest, CLINIC_CONFIG)
+    store_predictions(prediction_df, db, apirequest)
 
     fix_outdated_appointments(db, prediction_df["APP_ID"], start_date)
 
