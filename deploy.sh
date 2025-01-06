@@ -6,6 +6,7 @@ do
     fi
 done
 
+# necessary for certifi to find the right certificate if run without conda forge's ca-certificates
 export SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt
 
 read -p "What do you want to deploy? Options: 'admin-dash'/1 ; 'calling-dash'/2 ; 'calling-dash-test'/3 ; 'api'/4 ; 'api-test'/5 " APPLICATION
