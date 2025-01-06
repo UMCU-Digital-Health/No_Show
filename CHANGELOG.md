@@ -10,7 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Error warmings incase no appointments are provided
+- Added ssl-certificate fix in deploy script
+- Added expetion tests
 
+### Changed
+- Saving of predictions is now located in helper function
 
 ## [1.5.0] - 2024-12-10
 
