@@ -9,12 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.5.1] - 2024-12-23
 
 ### Added
-- Error warmings incase no appointments are provided
+- Error warmings in case no appointments are provided
 - Added ssl-certificate fix in deploy script
-- Added expetion tests
+- Added unit tests for empty predictions
 
 ### Changed
 - Saving of predictions is now located in helper function
+- Updated requirements to solve dependabot alert
 
 ## [1.5.0] - 2024-12-10
 

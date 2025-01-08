@@ -60,6 +60,7 @@ async def test_predict_endpoint(monkeypatch):
         app, "create_treatment_groups", lambda x, y, z, q: x.assign(treatment_group=1)
     )
     monkeypatch.setattr(app, "CLINIC_CONFIG", create_unit_test_clinic_config())
+    monkeypatch.setattr(app_helpers, "CLINIC_CONFIG", create_unit_test_clinic_config())
     monkeypatch.setenv("DB_USER", "")
     monkeypatch.setenv("X_API_KEY", "test")
 
