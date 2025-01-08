@@ -17,14 +17,12 @@ from noshow.api.app_helpers import (
     fix_outdated_appointments,
     load_model,
     remove_sensitive_info,
+    store_predictions,
 )
 from noshow.api.pydantic_models import Appointment
 from noshow.config import CLINIC_CONFIG, KEEP_SENSITIVE_DATA
 from noshow.database.models import (
-    ApiPatient,
-    ApiPrediction,
     ApiRequest,
-    ApiSensitiveInfo,
     Base,
 )
 from noshow.model.predict import create_prediction
@@ -119,9 +117,17 @@ async def predict(
     project_path = Path(__file__).parents[3]
     start_time = datetime.now()
 
+    if len(input) == 0:
+        raise HTTPException(status_code=400, detail="Input cannot be empty.")
+
     input_df = load_appointment_pydantic(input)
     appointments_df = process_appointments(input_df, CLINIC_CONFIG, start_date)
     all_postalcodes = process_postal_codes(project_path / "data" / "raw" / "NL.txt")
+
+    if appointments_df.empty:
+        raise HTTPException(
+            status_code=400, detail="No appointments for the start date and filters"
+        )
 
     model = load_model()
     prediction_df = create_prediction(
@@ -160,71 +166,7 @@ async def predict(
     )
     db.add(apirequest)
 
-    for _, row in prediction_df.iterrows():
-        apisensitive = db.get(ApiSensitiveInfo, row["pseudo_id"])
-
-        if not apisensitive:
-            if row["name_text"] is None:
-                row["name_text"] = ""
-                logger.warning(
-                    f"Patient {row['pseudo_id']} has no name_text, "
-                    "replacing with empty string"
-                )
-
-            apisensitive = ApiSensitiveInfo(
-                patient_id=row["pseudo_id"],
-                hix_number=row["patient_id"],
-                full_name=row["name_text"],
-                first_name=row["name_given1_callMe"],
-                birth_date=row["birthDate"],
-                mobile_phone=row["telecom1_value"],
-                home_phone=row["telecom2_value"],
-                other_phone=row["telecom3_value"],
-            )
-        else:
-            # name and birthdate can't change, but phone number might
-            apisensitive.mobile_phone = row["telecom1_value"]
-            apisensitive.home_phone = row["telecom2_value"]
-            apisensitive.other_phone = row["telecom3_value"]
-
-        apipatient = db.get(ApiPatient, row["pseudo_id"])
-        if not apipatient:
-            apipatient = ApiPatient(
-                id=row["pseudo_id"],
-            )
-        apipatient.treatment_group = int(row["treatment_group"])
-        apiprediction = db.get(ApiPrediction, row["APP_ID"])
-        if not apiprediction:
-            apiprediction = ApiPrediction(
-                id=row["APP_ID"],
-                patient_id=row["pseudo_id"],
-                prediction=row["prediction"],
-                start_time=row["start"],
-                request_relation=apirequest,
-                patient_relation=apipatient,
-                clinic_name=row["hoofdagenda"],
-                clinic_reception=row["description"],
-                clinic_phone_number=CLINIC_CONFIG[row["clinic"]].phone_number,
-                clinic_teleq_unit=CLINIC_CONFIG[row["clinic"]].teleq_name,
-                active=True,
-            )
-        else:
-            # All values of a prediction can be updated except the ID and treatment
-            apiprediction.prediction = row["prediction"]
-            apiprediction.start_time = row["start"]
-            apiprediction.request_relation = apirequest
-            apiprediction.clinic_name = row["hoofdagenda"]
-            apiprediction.clinic_reception = row["description"]
-            apiprediction.clinic_phone_number = CLINIC_CONFIG[
-                row["clinic"]
-            ].phone_number
-            apiprediction.clinic_teleq_unit = CLINIC_CONFIG[row["clinic"]].teleq_name
-            apiprediction.active = True
-
-        db.merge(apisensitive)
-        db.merge(apiprediction)
-        db.merge(apipatient)
-        db.commit()
+    store_predictions(prediction_df, db, apirequest)
 
     fix_outdated_appointments(db, prediction_df["APP_ID"], start_date)
 
