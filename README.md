@@ -36,7 +36,7 @@ Deployment is done through the manifest files.
 ## Applications
 
 ### Prediction Api
-The prediction API is a fastapi application that runs once per day and gives predictions for all input appointments given the start date. The API expects the complete history of all appointments of a patient to construct the features, but will only return predictions that are on the `start_date` or later. 
+The prediction API is a fastapi application that runs every two hours and gives predictions for all input appointments given the start date. The API expects the complete history of all appointments of a patient to construct the features, but will only return predictions that are on the `start_date` or later. 
 
 The API also saves the prediction and information of the request to a database. Furthermore it will delete all previous rows of sensitive information (name, birthdate, phone number) and only add the sensitive info for the predictions of that day. This way we only store sensitive info for the day in which the patient needs te be called. All other info will be collected and used to validate the results of the pilot.
 

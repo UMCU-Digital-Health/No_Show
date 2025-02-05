@@ -208,7 +208,8 @@ def render_appointment_overview(
         )
         if current_response.timestamp is not None:
             st.caption(
-                f"Laatst opgeslagen om: {current_response.timestamp:%Y-%m-%d %H:%M:%S}"
+                f"Laatst opgeslagen om: {current_response.timestamp:%Y-%m-%d %H:%M:%S},"
+                f" door: {current_response.user}"
             )
     st.button(
         "Vorige",
