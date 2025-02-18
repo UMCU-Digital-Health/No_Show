@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from noshow.config import MUTE_PERIOD
 from noshow.database.connection import get_connection_string, get_engine
-from noshow.database.models import ApiPatient, ApiPrediction
+from noshow.database.models import ApiCallResponse, ApiPatient, ApiPrediction
 
 
 @st.cache_resource
@@ -68,16 +68,18 @@ def get_patient_list(_session: Session, date_input: date) -> List[str]:
             func.max(ApiPrediction.prediction),
         )
         .outerjoin(ApiPrediction.patient_relation)
+        .outerjoin(ApiPrediction.callresponse_relation)
         .where(ApiPrediction.start_time.cast(Date) == date_input)
         .where(ApiPrediction.active)
         .where(
-            (ApiPatient.last_call_date.is_(None))
-            | (ApiPatient.last_call_date <= cast(threshold_date, Date))
-            | (ApiPatient.last_call_date == date.today())
+            (ApiCallResponse.timestamp.is_(None))
+            | (cast(ApiCallResponse.timestamp, Date) <= cast(threshold_date, Date))
+            | (cast(ApiCallResponse.timestamp, Date) == date.today())
         )
         .where(ApiPatient.treatment_group >= 1)
         .where((ApiPatient.opt_out.is_(None)) | (ApiPatient.opt_out == 0))
         .group_by(ApiPrediction.patient_id, ApiPatient.treatment_group)
+        .distinct(ApiPrediction.patient_id)
         .order_by(ApiPatient.treatment_group, func.max(ApiPrediction.prediction).desc())
     ).all()
 

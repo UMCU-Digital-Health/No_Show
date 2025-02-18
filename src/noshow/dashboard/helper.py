@@ -104,8 +104,6 @@ def next_preds(
             icon="🛑",
         )
         return
-    if call_response.call_status == "Gebeld":
-        current_patient.last_call_date = date.today()
     if call_response.call_outcome == "Bel me niet":
         current_patient.opt_out = 1
         call_response.call_status = "Gebeld"
