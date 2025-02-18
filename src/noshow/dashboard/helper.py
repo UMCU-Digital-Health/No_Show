@@ -1,6 +1,6 @@
 import json
 import logging
-from datetime import date, datetime
+from datetime import datetime
 from typing import List
 
 import pandas as pd
