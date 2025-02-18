@@ -37,7 +37,6 @@ class ApiPatient(Base):
         index=True,
     )
     call_number: Mapped[int] = mapped_column(Integer, init=False, nullable=True)
-    last_call_date: Mapped[date] = mapped_column(Date, init=False, nullable=True)
     opt_out: Mapped[int] = mapped_column(Integer, init=False, nullable=True)
     treatment_group: Mapped[int] = mapped_column(Integer, init=False, nullable=True)
 
