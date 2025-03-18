@@ -83,11 +83,12 @@ def get_patient_list(_session: Session, date_input: date) -> List[str]:
     mute_list = _get_mute_list(_session)
 
     patient_dict = {}
-    for entry in call_list:
-        patient_id, clinic_name, _, prediction = entry
-        if (patient_id, clinic_name) not in mute_list:
-            if patient_id not in patient_dict or prediction > patient_dict[patient_id]:
-                patient_dict[patient_id] = prediction
+    for patient_id, clinic_name, _, prediction in call_list:
+        if (patient_id, clinic_name) not in mute_list and (
+            patient_id not in patient_dict or prediction > patient_dict[patient_id]
+        ):
+            patient_dict[patient_id] = prediction
+
     patient_ids = sorted(patient_dict, key=patient_dict.get, reverse=True)
 
     return patient_ids
