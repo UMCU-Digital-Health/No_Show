@@ -62,9 +62,7 @@ def get_patient_list(_session: Session, date_input: date) -> List[str]:
     call_list_query = (
         select(
             ApiPrediction.patient_id,
-            ApiPatient.treatment_group,
             ApiPrediction.clinic_name,
-            func.max(ApiPrediction.prediction),
         )
         .outerjoin(ApiPrediction.patient_relation)
         .where(ApiPrediction.start_time.cast(Date) == date_input)
@@ -80,21 +78,19 @@ def get_patient_list(_session: Session, date_input: date) -> List[str]:
     )
 
     call_list = _session.execute(call_list_query).all()
-    mute_list = _get_mute_list(_session)
+    mute_list = _get_mute_set(_session)
 
-    patient_dict = {}
-    for patient_id, clinic_name, _, prediction in call_list:
-        if (patient_id, clinic_name) not in mute_list and (
-            patient_id not in patient_dict or prediction > patient_dict[patient_id]
-        ):
-            patient_dict[patient_id] = prediction
-
-    patient_ids = sorted(patient_dict, key=patient_dict.get, reverse=True)
+    seen = set()
+    patient_ids = []
+    for patient_id, clinic_name in call_list:
+        if (patient_id, clinic_name) not in mute_list and (patient_id not in seen):
+            seen.add(patient_id)
+            patient_ids.append(patient_id)
 
     return patient_ids
 
 
-def _get_mute_list(_session: Session) -> set:
+def _get_mute_set(_session: Session) -> set:
     """Fetch a set of patient-clinic pairs who have been called in the mute_period."""
     threshold_date = date.today() - timedelta(days=round(MUTE_PERIOD * 30.5))
     mute_query = (
@@ -103,5 +99,5 @@ def _get_mute_list(_session: Session) -> set:
         .where(cast(ApiCallResponse.timestamp, Date) >= cast(threshold_date, Date))
         .distinct()
     )
-    mute_list = set(_session.execute(mute_query).fetchall())
-    return mute_list
+    mute_set = set(_session.execute(mute_query).fetchall())
+    return mute_set
