@@ -194,6 +194,7 @@ WHERE 1=1
     AND APP.[start] <= @end_date
     AND ENC.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
     AND ENC.type2_code NOT IN ('T', 'S', 'M')
+    AND NOT (ENC.type1_code = 'FAMF' OR ENC.type1_code = 'FAMT' OR ENC.type1_code = 'FAMS')
     AND ENC.type1_display NOT LIKE '%telefo%'
     AND ENC.type1_display NOT LIKE 'TC%'
     AND ENC.without_patient <> 1
@@ -347,6 +348,7 @@ WHERE 1=1
             AND APP2.[status] = 'booked'
             AND ENC2.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
             AND ENC2.type2_code NOT IN ('T', 'S', 'M')
+            AND NOT (ENC.type1_code = 'FAMF' OR ENC.type1_code = 'FAMT' OR ENC.type1_code = 'FAMS')
             AND ENC2.type1_display NOT LIKE '%telefo%'
             AND ENC2.type1_display NOT LIKE 'TC%'
             AND ENC2.without_patient <> 1

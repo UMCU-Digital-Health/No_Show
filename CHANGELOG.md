@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [1.5.3] - 2025-03-18
+
+### Changed
+- Changed data_export.sql and data_prediction.sql to remove appointment codes referring to family conversations. These type of appointments only occured twelve times in the raw data, therefore it is not necessary to train the model again. 
+
 ## [1.5.2] - 2025-02-05
 
 ### Added
