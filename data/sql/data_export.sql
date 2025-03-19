@@ -175,7 +175,7 @@ WHERE 1=1
     AND ENC.type2_code NOT IN ('T', 'S', 'M')
     AND ENC.type1_display NOT LIKE '%telefo%'
     AND ENC.type1_display NOT LIKE 'TC%'
-    AND NOT (ENC.type1_code = 'FAMF' OR ENC.type1_code = 'FAMT' OR ENC.type1_code = 'FAMS')
+    AND ENC.type1_code NOT IN ('FAMF', 'FAMT', 'FAMS')
     AND ENC.without_patient <> 1
     AND ADDR.address_active = 1
 ORDER BY HOOFDAGENDA.name, SUBAGENDA.name, APP.start
