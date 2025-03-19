@@ -78,12 +78,12 @@ def get_patient_list(_session: Session, date_input: date) -> List[str]:
     )
 
     call_list = _session.execute(call_list_query).all()
-    mute_list = _get_mute_set(_session)
+    mute_set = _get_mute_set(_session)
 
     seen = set()
     patient_ids = []
     for patient_id, clinic_name in call_list:
-        if (patient_id, clinic_name) not in mute_list and (patient_id not in seen):
+        if (patient_id, clinic_name) not in mute_set and (patient_id not in seen):
             seen.add(patient_id)
             patient_ids.append(patient_id)
 
