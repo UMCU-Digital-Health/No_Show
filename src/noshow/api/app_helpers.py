@@ -256,7 +256,7 @@ def store_predictions(
                 start_time=row["start"],
                 request_relation=apirequest,
                 patient_relation=apipatient,
-                clinic_name=row["clinic"],
+                clinic_name=row["hoofdagenda"],
                 clinic_reception=row["description"],
                 clinic_phone_number=CLINIC_CONFIG[row["clinic"]].phone_number,
                 clinic_teleq_unit=CLINIC_CONFIG[row["clinic"]].teleq_name,
