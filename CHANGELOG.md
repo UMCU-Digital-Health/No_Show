@@ -6,10 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-## [1.5.3] - 2025-03-18
+
+## [1.5.5] - 2025-03-24
 
 ### Changed
 - Changed data_export.sql and data_prediction.sql to remove appointment codes referring to family conversations. These type of appointments only occured twelve times in the raw data, therefore it is not necessary to train the model again. 
+
+## [1.5.4] - 2025-03-24
+### Changed
+- Reversed change from clinic_name in ApiPredidiction from clinic back to main agenda.
+
+## [1.5.3] - 2025-03-19
+### Added
+- Mute patients based on combination patient-clinic, instead of only the last call date of the patient
+
+### Changed
+- Changed clinic_name in ApiPrediction to actual clinic name instead of main agenda
+
+### Removed
+- Last call date column from ApiPatient table
+
 
 ## [1.5.2] - 2025-02-05
 
