@@ -17,7 +17,7 @@ This repo contains the code for the No-Show prediction model, currently implemen
 For more information on implemented AI-tools, see <https://research.umcutrecht.nl/ai-applications-in-use>
 
 ## Contributing or using in your organisation
-We welcome issues or pull requests! The easiest way to use this repo in your own organisation is to fork the repo. You can then change the data pipelines to fit with your organisation. If you need help, either add an issue or send an e-mail to [AI for Health](datascience@umcutrecht.nl)
+We welcome issues or pull requests! The easiest way to use this repo in your own organisation is to fork the repo. You can then change the data pipelines to fit with your organisation. If you need help, either add an issue or send an e-mail to [AI for Health](datascience@umcutrecht.nl).
 
 ## Installation
 
@@ -69,7 +69,7 @@ python run/app.py
 ```
 
 ### Calling dashboard
-The calling dashboard is a Streamlit dashboard that will be used by the person who will call the patients. It will show the prediction in 3 working days sorted by decreasing predicted risk and will also include other appointments of those patients between 3 days and 10 days. This way we make sure that a patient is not called multiple times per week. The dashboard will also show if the patient was already previously called and a patient should only be called if at least one appointment hasn't been discussed with the patient yet. The result of calling the patient will also be stored in the dashboard and will be used to track who needs to be called, as well as validating the outcomes.
+The calling dashboard is a Streamlit dashboard that will be used by the person who will call the patients. It will show the prediction in 3 working days sorted by decreasing predicted risk and will also include other appointments of those patients between 3 days and 10 days. This way we make sure that a patient is not called multiple times per week. The result of calling the patient will also be stored in the dashboard and will be used to track who needs to be called, as well as validating the outcomes.
 
 To run the dashboard locally run:
 
