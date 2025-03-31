@@ -3,6 +3,8 @@
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 ![Python Version from PEP 621 TOML](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2FUMCU-Digital-Health%2FNo_Show%2Frefs%2Fheads%2Fmain%2Fpyproject.toml)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/UMCU-Digital-Health/No_Show/unit_test.yml)
+![GitHub License](https://img.shields.io/github/license/UMCU-Digital-Health/No_Show)
+
 
 <img src="https://cdn.worldvectorlogo.com/logos/umc-utrecht-1.svg" alt="UMCU Logo" width="400"/>
 
