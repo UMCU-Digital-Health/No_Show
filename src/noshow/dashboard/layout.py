@@ -26,7 +26,6 @@ RES_LIST = [
     "Herinnerd",
     "Verzet/Geannuleerd",
     "Geen",
-    "Bel me niet",
     "Voicemail ingesproken",
 ]
 CALL_NUMBER_LIST = [
@@ -194,6 +193,13 @@ def render_appointment_overview(
             key="number_input",
         )
         st.text_input("Opmerkingen: ", value=current_response.remarks, key="opm_input")
+
+        st.checkbox(
+            "De patiënt heeft aangegeven niet meer telefonisch benaderd te willen worden.",
+            value=(current_patient_nmbr.opt_out == 1),
+            key="opt_out_checkbox",
+        )
+
         st.form_submit_button(
             "Opslaan",
             on_click=next_preds,

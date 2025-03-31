@@ -33,11 +33,14 @@ def calc_calling_percentage(
     call_results_df: pd.DataFrame,
     call_outcomes: list[str],
     include_absolute: bool = True,
+    include_opt_out: bool = False,
 ) -> str:
     """Calculates the percentage of rows that have `call_outcomes` and
     returns it as a string with two decimal places and a percentage sign.
 
     Also optionally include the absolute number of rows with `call_outcomes`.
+    If `include_opt_out` is True, the percentage is calculated based on
+    the total number of rows with `call_outcomes` and `opt_out` = 1.
 
     Parameters
     ----------
@@ -51,10 +54,22 @@ def calc_calling_percentage(
     str
         The percentage formatted as a string
     """
-    num_outcomes = len(
-        call_results_df[call_results_df["call_outcome"].isin(call_outcomes)]
-    )
+    if include_opt_out:
+        num_outcomes = len(
+            call_results_df[
+                (call_results_df["call_outcome"].isin(call_outcomes))
+                & (call_results_df["opt_out"] == 1)
+            ]
+        )
+    else:
+        num_outcomes = len(
+            call_results_df[call_results_df["call_outcome"].isin(call_outcomes)]
+        )
+
     total = len(call_results_df)
+    if total == 0:
+        return "0 (0.00%)" if include_absolute else "0.00%"
+
     if include_absolute:
         return f"{num_outcomes} ({num_outcomes / total * 100:.2f}%)"
     return f"{num_outcomes / total * 100:.2f}%"
@@ -75,6 +90,7 @@ def kpi_page():
                 ApiPrediction.clinic_name,
                 ApiCallResponse.call_status,
                 ApiCallResponse.call_outcome,
+                ApiPatient.opt_out,
             )
             .outerjoin(ApiPrediction.callresponse_relation)
             .outerjoin(ApiPrediction.patient_relation)
@@ -97,13 +113,13 @@ def kpi_page():
     call_results_df.loc[call_results_df["call_outcome"] == "Geen", "call_outcome"] = (
         "Onbereikbaar"
     )
+
     call_results_df["color_sort"] = call_results_df["call_outcome"].map(
         {
             "Niet gebeld": 0,
             "Onbereikbaar": 1,
             "Herinnerd": 2,
             "Verzet/Geannuleerd": 3,
-            "Bel me niet": 4,
         }
     )
 
@@ -151,6 +167,26 @@ def kpi_page():
         help="Aantal patienten dat de afspraak heeft verzet of geannuleerd",
     )
 
+    metric_cols[4].metric(
+        "Aantal patienten met opt-out",
+        calc_calling_percentage(
+            call_results_df,
+            [
+                "Herinnerd",
+                "Verzet/Geannuleerd",
+                "Geen",
+                "Bel me niet",
+                "Voicemail ingesproken",
+                "Onbereikbaar",
+            ],
+            include_opt_out=True,
+        ),
+        help=(
+            "Aantal patiënten die gebeld zijn ('Herinnerd' of 'Verzet/Geannuleerd') en "
+            "hebben aangegeven in de toekomst niet meer gebeld te willen worden."
+        ),
+    )
+
     st.write("### Uitkomsten per dag")
     st.write(
         "Hieronder staat in de grafiek het aantal telefoontjes per dag van de "
@@ -158,8 +194,44 @@ def kpi_page():
         "Let op dat de datum de dag van de afspraak is, de patienten worden "
         "drie dagen voor de afspraak gebeld."
     )
+
+    # Add a checkbox to toggle the display of 'Niet gebeld'
+    show_not_called = st.checkbox("Toon niet gebelde patiënten", value=False)
+
+    # Adjust the call_outcomes based on the checkbox state
+    call_outcomes_plot = (
+        [
+            "Niet gebeld",
+            "Onbereikbaar",
+            "Herinnerd",
+            "Verzet/Geannuleerd",
+            "Voicemail ingesproken",
+        ]
+        if show_not_called
+        else [
+            "Onbereikbaar",
+            "Herinnerd",
+            "Verzet/Geannuleerd",
+            "Voicemail ingesproken",
+        ]
+    )
+
+    order_mapping = {
+        "Herinnerd": 0,
+        "Verzet/Geannuleerd": 1,
+        "Voicemail ingesproken": 2,
+        "Onbereikbaar": 3,
+        "Niet gebeld": 4,
+    }
+
+    call_results_df["order"] = (
+        call_results_df["call_outcome"].map(order_mapping).fillna(-1)
+    )
+
     bar_chart = (
-        alt.Chart(call_results_df)
+        alt.Chart(
+            call_results_df[call_results_df["call_outcome"].isin(call_outcomes_plot)]
+        )
         .encode(
             x=alt.X(
                 "yearmonthdate(date):O",
@@ -169,15 +241,27 @@ def kpi_page():
             y="count()",
             color=alt.Color(
                 "call_outcome",
-                sort=[
-                    "Niet gebeld",
-                    "Onbereikbaar",
-                    "Herinnerd",
-                    "Verzet/Geannuleerd",
-                    "Bel me niet",
-                ],
+                scale=alt.Scale(
+                    domain=[
+                        "Herinnerd",
+                        "Verzet/Geannuleerd",
+                        "Voicemail ingesproken",
+                        "Onbereikbaar",
+                        "Niet gebeld",
+                    ],
+                    range=[
+                        "#006400",  # Dark green
+                        "#90ee90",  # Light green
+                        "#FFB90F",  # Yellow
+                        "#CD5C5C",  # Orange
+                        "#7171C6",  # Blue
+                    ],
+                ),
             ),
-            order=alt.Order("color_sort", sort="descending"),
+            order=alt.Order(
+                "order:Q",
+                sort="ascending",
+            ),
         )
         .mark_bar()
     )

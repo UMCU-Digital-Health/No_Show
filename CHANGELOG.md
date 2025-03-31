@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.6] - 2025-03-31
+
+### Changed
+- Changed 'Bel me niet' from a selectbox option of 'Resultaat gesprek' to a separate checkbox. 
+
+### Added
+- Option to show the number of patients who were not called seperatly in the admin dashboard by selecting a checkbox. 
+
+
 ## [1.5.5] - 2025-03-24
 
 ### Changed
