@@ -205,21 +205,8 @@ def kpi_page():
     if show_not_called:
         call_outcomes_plot.append("Niet gebeld")
 
-    order_mapping = {
-        k: i
-        for i, k in enumerate(
-            [
-                "Herinnerd",
-                "Verzet/Geannuleerd",
-                "Voicemail ingesproken",
-                "Onbereikbaar",
-                "Niet gebeld",
-            ]
-        )
-    }
-    call_results_df["order"] = (
-        call_results_df["call_outcome"].map(order_mapping).fillna(-1)
-    )
+    order_mapping = {k: i for i, k in enumerate(call_outcomes_plot)}
+    call_results_df["order"] = call_results_df["call_outcome"].map(order_mapping)
 
     bar_chart = (
         alt.Chart(
