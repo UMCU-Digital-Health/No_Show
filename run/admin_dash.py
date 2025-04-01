@@ -195,35 +195,28 @@ def kpi_page():
         "drie dagen voor de afspraak gebeld."
     )
 
-    # Add a checkbox to toggle the display of 'Niet gebeld'
     show_not_called = st.checkbox("Toon niet gebelde patiënten", value=False)
-
-    # Adjust the call_outcomes based on the checkbox state
-    call_outcomes_plot = (
-        [
-            "Niet gebeld",
-            "Onbereikbaar",
-            "Herinnerd",
-            "Verzet/Geannuleerd",
-            "Voicemail ingesproken",
-        ]
-        if show_not_called
-        else [
-            "Onbereikbaar",
-            "Herinnerd",
-            "Verzet/Geannuleerd",
-            "Voicemail ingesproken",
-        ]
-    )
+    call_outcomes_plot = [
+        "Herinnerd",
+        "Verzet/Geannuleerd",
+        "Voicemail ingesproken",
+        "Onbereikbaar",
+    ]
+    if show_not_called:
+        call_outcomes_plot.append("Niet gebeld")
 
     order_mapping = {
-        "Herinnerd": 0,
-        "Verzet/Geannuleerd": 1,
-        "Voicemail ingesproken": 2,
-        "Onbereikbaar": 3,
-        "Niet gebeld": 4,
+        k: i
+        for i, k in enumerate(
+            [
+                "Herinnerd",
+                "Verzet/Geannuleerd",
+                "Voicemail ingesproken",
+                "Onbereikbaar",
+                "Niet gebeld",
+            ]
+        )
     }
-
     call_results_df["order"] = (
         call_results_df["call_outcome"].map(order_mapping).fillna(-1)
     )
@@ -232,6 +225,7 @@ def kpi_page():
         alt.Chart(
             call_results_df[call_results_df["call_outcome"].isin(call_outcomes_plot)]
         )
+        .mark_bar()
         .encode(
             x=alt.X(
                 "yearmonthdate(date):O",
@@ -242,28 +236,12 @@ def kpi_page():
             color=alt.Color(
                 "call_outcome",
                 scale=alt.Scale(
-                    domain=[
-                        "Herinnerd",
-                        "Verzet/Geannuleerd",
-                        "Voicemail ingesproken",
-                        "Onbereikbaar",
-                        "Niet gebeld",
-                    ],
-                    range=[
-                        "#006400",  # Dark green
-                        "#90ee90",  # Light green
-                        "#FFB90F",  # Yellow
-                        "#CD5C5C",  # Orange
-                        "#7171C6",  # Blue
-                    ],
+                    domain=list(order_mapping.keys()),
+                    range=["#006400", "#90ee90", "#FFB90F", "#CD5C5C", "#7171C6"],
                 ),
             ),
-            order=alt.Order(
-                "order:Q",
-                sort="ascending",
-            ),
+            order=alt.Order("order:Q", sort="ascending"),
         )
-        .mark_bar()
     )
     st.altair_chart(bar_chart, use_container_width=True)
 

@@ -195,7 +195,10 @@ def render_appointment_overview(
         st.text_input("Opmerkingen: ", value=current_response.remarks, key="opm_input")
 
         st.checkbox(
-            "De patiënt heeft aangegeven niet meer telefonisch benaderd te willen worden.",
+            (
+                "De patiënt heeft aangegeven niet meer telefonisch "
+                "benaderd te willen worden."
+            ),
             value=(current_patient_nmbr.opt_out == 1),
             key="opt_out_checkbox",
         )
