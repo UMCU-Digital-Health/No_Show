@@ -97,6 +97,7 @@ def next_preds(
     call_response.timestamp = datetime.now()
     call_response.user = user_name
     current_patient.call_number = st.session_state.number_input
+    current_patient.opt_out = st.session_state.opt_out_checkbox
 
     if call_response.call_status == "Wordt gebeld":
         st.error(
@@ -104,9 +105,6 @@ def next_preds(
             icon="🛑",
         )
         return
-    if call_response.call_outcome == "Bel me niet":
-        current_patient.opt_out = 1
-        call_response.call_status = "Gebeld"
 
     with Session() as session:
         session.merge(call_response)
