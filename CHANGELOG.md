@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.7] - 2025-04-15
+
+### Changed
+- Updated example .env file
+- Updated No-show codes to match recent changes in HiX
+
 ## [1.5.6] - 2025-03-31
 
 ### Changed

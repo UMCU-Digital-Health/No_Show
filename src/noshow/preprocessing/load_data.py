@@ -91,10 +91,12 @@ def process_appointments(
     """
     appointments_df = apply_config_filters(appointments_df, clinic_config, start_date)
 
+    no_show_codes = ["N", "0000000012", "0000000013"]
+
     appointments_df["no_show"] = "show"
-    appointments_df.loc[appointments_df["cancelationReason_code"] == "N", "no_show"] = (
-        "no_show"
-    )
+    appointments_df.loc[
+        appointments_df["cancelationReason_code"].isin(no_show_codes), "no_show"
+    ] = "no_show"
 
     # Some patients have multiple postal codes
     appointments_df = appointments_df.drop_duplicates(
