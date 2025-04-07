@@ -1,13 +1,19 @@
 import logging
+import tomllib
 from pathlib import Path
 from typing import Dict, List
 
-import tomli
 from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 
 CONFIG_PATH = Path(__file__).parents[2] / "run" / "config" / "config.toml"
+
+
+class PreprocessConfig(BaseModel):
+    """Preprocessing configuration, contains the codes used for no-shows in HiX"""
+
+    no_show_codes: list[str] = ["N", "0000000012", "0000000013"]
 
 
 class FeatureBuildingConfig(BaseModel):
@@ -45,6 +51,7 @@ class ClinicConfig(BaseModel):
 class ProjectConfig(BaseModel):
     """Main project configuration, holds all configuration settings for the project."""
 
+    preprocess: PreprocessConfig
     feature_building: FeatureBuildingConfig
     dashboard: DashboardConfig
     clinic: Dict[str, ClinicConfig]
@@ -65,12 +72,13 @@ def load_config(config_path: Path) -> ProjectConfig:
     """
     if config_path.exists():
         with open(config_path, "rb") as f:
-            config_dict = tomli.load(f)
+            config_dict = tomllib.load(f)
             return ProjectConfig(**config_dict)
 
     # For unit testing, return test values
     logger.error(f"Config file not found: {config_path}")
     return ProjectConfig(
+        preprocess=PreprocessConfig(),
         feature_building=FeatureBuildingConfig(),
         dashboard=DashboardConfig(),
         clinic={
@@ -89,6 +97,8 @@ def load_config(config_path: Path) -> ProjectConfig:
 
 
 project_config = load_config(CONFIG_PATH)
+
+NO_SHOW_CODES = project_config.preprocess.no_show_codes
 MUTE_PERIOD = project_config.dashboard.mute_period
 KEEP_SENSITIVE_DATA = project_config.dashboard.keep_sensitive_data
 

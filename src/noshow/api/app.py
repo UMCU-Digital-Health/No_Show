@@ -1,11 +1,11 @@
 import json
 import logging
 import os
+import tomllib
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
 
-import tomli
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.security.api_key import APIKeyHeader
@@ -40,7 +40,7 @@ load_dotenv()
 app = FastAPI()
 
 with open(Path(__file__).parents[3] / "pyproject.toml", "rb") as f:
-    config = tomli.load(f)
+    config = tomllib.load(f)
 
 API_VERSION = config["project"]["version"]
 

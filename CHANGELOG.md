@@ -11,7 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Updated example .env file
-- Updated No-show codes to match recent changes in HiX
+- Updated No-show codes to match recent changes in HiX and moved to config file
+- Moved from tomli to build-in tomllib
+- Updated requirements
+
 
 ## [1.5.6] - 2025-03-31
 
