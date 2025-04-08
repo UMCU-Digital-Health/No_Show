@@ -19,6 +19,10 @@ class FakeExecute:
         print("requested all results...")
         return []
 
+    def fetchall(self):
+        print("requested all results...")
+        return []
+
 
 class FakeWhere:
     def where(self, stmt):
@@ -37,6 +41,7 @@ class FakeDB(Session):
 
     def execute(self, stmt):
         print(f"{stmt} executed...")
+        return FakeExecute()
 
     def scalars(self, stmt):
         execute_res = FakeExecute()
