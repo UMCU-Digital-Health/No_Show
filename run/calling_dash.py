@@ -148,7 +148,7 @@ def main():
     if not current_response:
         current_response = ApiCallResponse(
             call_status="Niet gebeld",
-            call_outcome="Geen",
+            call_outcome="Onbereikbaar",
             remarks="",
             prediction_id=pred_id,
         )

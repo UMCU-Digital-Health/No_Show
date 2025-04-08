@@ -97,6 +97,7 @@ def _get_mute_set(_session: Session) -> set:
         select(ApiPrediction.patient_id, ApiPrediction.clinic_name)
         .outerjoin(ApiPrediction.callresponse_relation)
         .where(cast(ApiCallResponse.timestamp, Date) >= cast(threshold_date, Date))
+        .where(cast(ApiCallResponse.timestamp, Date) < cast(date.today(), Date))
         .where(ApiCallResponse.call_status.in_(["Gebeld", "Onbereikbaar"]))
         .distinct()
     )

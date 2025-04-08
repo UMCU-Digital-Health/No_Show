@@ -1,15 +1,20 @@
 import json
 import logging
-from datetime import datetime
+from datetime import date, datetime
 from typing import List
 
 import pandas as pd
 import streamlit as st
-from sqlalchemy import select
+from sqlalchemy import Date, cast, select
 from sqlalchemy.orm import sessionmaker
 from streamlit.runtime.context import StreamlitHeaders
 
-from noshow.database.models import ApiCallResponse, ApiPatient, ApiSensitiveInfo
+from noshow.database.models import (
+    ApiCallResponse,
+    ApiPatient,
+    ApiPrediction,
+    ApiSensitiveInfo,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -63,6 +68,7 @@ def start_calling(Session: sessionmaker, call_response: ApiCallResponse):
     None
     """
     call_response.call_status = "Wordt gebeld"
+    st.session_state["being_called"] = True
 
     with Session() as session:
         session.merge(call_response)
@@ -91,7 +97,7 @@ def next_preds(
     user_name : str
         The current user e-mail
     """
-    call_response.call_status = st.session_state.status_input
+    call_response.call_status = "Gebeld"
     call_response.call_outcome = st.session_state.res_input
     call_response.remarks = st.session_state.opm_input
     call_response.timestamp = datetime.now()
@@ -99,17 +105,13 @@ def next_preds(
     current_patient.call_number = st.session_state.number_input
     current_patient.opt_out = st.session_state.opt_out_checkbox
 
-    if call_response.call_status == "Wordt gebeld":
-        st.error(
-            "Status is 'Word Gebeld', verander de status voordat je verder gaat.",
-            icon="🛑",
-        )
-        return
-
     with Session() as session:
         session.merge(call_response)
         session.merge(current_patient)
         session.commit()
+
+    st.session_state["saved"] = True
+
     if st.session_state["pred_idx"] + 1 < list_len:
         st.session_state["pred_idx"] += 1
 
@@ -117,23 +119,72 @@ def next_preds(
 def navigate_patients(list_len: int, navigate_forward: bool = True):
     """Navigate through patients
 
-    Navigates through the patients list and reset the prediction index
+    Navigates through the patients list and resets the prediction index
 
     Parameters
     ----------
     list_len : int
         Length of patient list
     navigate_forward : bool, optional
-        Whether to navigate forward or backword, by default True
+        Whether to navigate forward or backward, by default True
     """
+
+    if not st.session_state.get("saved", False) and st.session_state.get(
+        "being_called", False
+    ):
+        st.warning("Klik eerst op 'Opslaan' voordat u verder gaat.")
+        return
+
     if navigate_forward:
         if st.session_state["name_idx"] + 1 < list_len:
             st.session_state["name_idx"] += 1
             st.session_state["pred_idx"] = 0
+            st.session_state["being_called"] = False
+            st.session_state["saved"] = False
     else:
         if st.session_state["name_idx"] > 0:
             st.session_state["name_idx"] -= 1
             st.session_state["pred_idx"] = 0
+            st.session_state["being_called"] = False
+            st.session_state["saved"] = False
+
+
+def navigate_uncalled(Session: sessionmaker, patient_ids: list[str]) -> None:
+    """Navigate to the first patient who has not been called today.
+
+    Parameters
+    ----------
+    Session : sessionmaker
+        SQLAlchemy sessionmaker object
+    patient_ids : list[str]
+        List of patient IDs
+    """
+    with Session() as session:
+        called_today = (
+            session.execute(
+                select(ApiPrediction.patient_id)
+                .outerjoin(ApiPrediction.callresponse_relation)
+                .where(
+                    cast(ApiCallResponse.timestamp, Date) == cast(date.today(), Date)
+                )
+                .distinct()
+            )
+            .scalars()
+            .all()
+        )
+        uncalled_patient = next(
+            (
+                patient_id
+                for patient_id in patient_ids
+                if patient_id not in called_today
+            ),
+            None,
+        )
+        if uncalled_patient:
+            st.session_state["name_idx"] = patient_ids.index(uncalled_patient)
+            st.session_state["pred_idx"] = 0
+        else:
+            st.info("Alle patiënten zijn vandaag al gebeld.", icon="ℹ️")
 
 
 def search_number(
