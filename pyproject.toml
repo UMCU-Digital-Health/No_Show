@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "noshow"
-version = "1.5.6"
+version = "1.5.7"
 authors = [
   { name="Ruben Peters", email="r.peters-7@umcutrecht.nl" },
   { name="Eric Wolters", email="e.j.wolters-4@umcutrecht.nl" }
@@ -29,7 +29,6 @@ dependencies =[
     "python-dotenv~=1.0",
     "pymssql<2.3.3",
     "streamlit>=1.30",
-    "tomli~=2.0",
     "relplot>=1.0",
     "pygit2<1.17", # Version 1.18 has no available wheels yet
 ]
