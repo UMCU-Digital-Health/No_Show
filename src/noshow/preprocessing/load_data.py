@@ -5,7 +5,7 @@ from typing import Dict, List, Union
 import pandas as pd
 
 from noshow.api.pydantic_models import Appointment
-from noshow.config import ClinicConfig
+from noshow.config import NO_SHOW_CODES, ClinicConfig
 
 
 def load_appointment_pydantic(input: List[Appointment]) -> pd.DataFrame:
@@ -92,9 +92,9 @@ def process_appointments(
     appointments_df = apply_config_filters(appointments_df, clinic_config, start_date)
 
     appointments_df["no_show"] = "show"
-    appointments_df.loc[appointments_df["cancelationReason_code"] == "N", "no_show"] = (
-        "no_show"
-    )
+    appointments_df.loc[
+        appointments_df["cancelationReason_code"].isin(NO_SHOW_CODES), "no_show"
+    ] = "no_show"
 
     # Some patients have multiple postal codes
     appointments_df = appointments_df.drop_duplicates(

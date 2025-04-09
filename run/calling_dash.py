@@ -1,11 +1,11 @@
 import os
+import tomllib
 from datetime import date, datetime
 from pathlib import Path
 from typing import cast
 
 import pandas as pd
 import streamlit as st
-import tomli
 from dotenv import load_dotenv
 from sqlalchemy import select
 
@@ -28,7 +28,7 @@ from noshow.preprocessing.utils import add_working_days
 load_dotenv()
 
 with open(Path(__file__).parents[1] / "pyproject.toml", "rb") as f:
-    config = tomli.load(f)
+    config = tomllib.load(f)
 
 VERSION = config["project"]["version"]
 
