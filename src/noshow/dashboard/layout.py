@@ -9,6 +9,7 @@ from sqlalchemy.orm import sessionmaker
 from noshow.dashboard.helper import (
     highlight_row,
     navigate_patients,
+    navigate_uncalled,
     next_preds,
     previous_preds,
     search_number,
@@ -16,17 +17,12 @@ from noshow.dashboard.helper import (
 )
 from noshow.database.models import ApiCallResponse, ApiPatient, ApiSensitiveInfo
 
-STATUS_LIST = [
-    "Niet gebeld",
-    "Wordt gebeld",
-    "Gebeld",
-    "Onbereikbaar",
-]
 RES_LIST = [
     "Herinnerd",
-    "Verzet/Geannuleerd",
-    "Geen",
     "Voicemail ingesproken",
+    "Verzet/Geannuleerd",
+    "Onbereikbaar",
+    "Geen",
 ]
 CALL_NUMBER_LIST = [
     "Niet van toepassing",
@@ -52,17 +48,19 @@ def render_patient_selection(
     enable_dev_mode : bool, optional
         If extra dev info should be displayed, by default False
     """
-    st.write(f"## Patient {st.session_state['name_idx'] + 1}/{len(patient_ids)}")
-    col1, col2, col3 = st.columns(3)
+    st.write(f"## Patiënt {st.session_state['name_idx'] + 1}/{len(patient_ids)}")
+    col1, col2, col3, col4 = st.columns(4)
+
     with col1:
         st.button(
-            "Vorige patient",
+            "Vorige patiënt",
             on_click=navigate_patients,
             args=(len(patient_ids), False),
+            type="primary",
         )
     with col2:
         with st.popover(
-            "🔍 Zoeken", help="Zoek op telefoonnummer om een patient te vinden."
+            "🔍 Zoeken", help="Zoek op telefoonnummer om een patiënt te vinden."
         ):
             phone_number = st.text_input("Zoek op telefoonnummer...")
             st.button(
@@ -72,11 +70,18 @@ def render_patient_selection(
             )
     with col3:
         st.button(
-            "Volgende patient",
+            "Niet-gebelde patiënt",
+            on_click=navigate_uncalled,
+            args=(Session, patient_ids),
+        )
+    with col4:
+        st.button(
+            "Volgende patiënt",
             on_click=navigate_patients,
             args=(len(patient_ids), True),
+            type="primary",
         )
-    st.header("Patient-gegevens")
+    st.header("Patiënt-gegevens")
     if enable_dev_mode:
         st.write(f"- ID: {patient_ids[st.session_state['name_idx']]}")
 
@@ -102,9 +107,12 @@ def render_patient_info(
     current_patient_nmbr : ApiPatient
         The current patient object containing the call number.
     """
-    if current_response.call_status == "Niet gebeld":
+    if (
+        current_response.call_status == "Niet gebeld"
+        and not st.session_state["being_called"]
+    ):
         st.button(
-            "Start met bellen patient",
+            "Start met bellen patiënt",
             on_click=start_calling,
             args=(
                 Session,
@@ -114,10 +122,13 @@ def render_patient_info(
         )
     else:
         if current_patient:
-            if current_response.call_status == "Wordt gebeld":
-                st.warning("Deze patient wordt momenteel gebeld!", icon="📞")
+            if (
+                current_response.call_status == "Wordt gebeld"
+                or st.session_state["being_called"]
+            ):
+                st.warning("Deze patiënt wordt momenteel gebeld!", icon="📞")
             else:
-                st.warning("Deze patient is al gebeld!", icon="⚠️")
+                st.warning("Deze patiënt is al gebeld!", icon="⚠️")
             st.write(f"- Naam: {current_patient.full_name or 'Onbekend'}")
             st.write(f"- Voornaam: {current_patient.first_name or 'Onbekend'}")
             st.write(f"- Patientnummer: {current_patient.hix_number or 'Onbekend'}")
@@ -131,7 +142,7 @@ def render_patient_info(
             call_number_type = CALL_NUMBER_LIST[current_patient_nmbr.call_number]
             st.write(f"- Eerder contact ging via: {call_number_type or 'Onbekend'}")
         else:
-            st.write("Patientgegevens zijn verwijderd.")
+            st.write("Patiëntgegevens zijn verwijderd.")
 
 
 def render_appointment_overview(
@@ -173,12 +184,6 @@ def render_appointment_overview(
 
     with st.form("patient_form", clear_on_submit=True):
         st.selectbox(
-            "Status gesprek:",
-            options=STATUS_LIST,
-            index=STATUS_LIST.index(current_response.call_status),
-            key="status_input",
-        )
-        st.selectbox(
             "Resultaat gesprek: ",
             options=RES_LIST,
             index=RES_LIST.index(current_response.call_outcome),
@@ -215,6 +220,7 @@ def render_appointment_overview(
             ),
             type="primary",
         )
+
         if current_response.timestamp is not None:
             st.caption(
                 f"Laatst opgeslagen om: {current_response.timestamp:%Y-%m-%d %H:%M:%S},"
