@@ -23,6 +23,10 @@ class FakeExecute:
         print("requested all results...")
         return []
 
+    def scalar(self):
+        print("requested scalar result...")
+        return None
+
 
 class FakeWhere:
     def where(self, stmt):
