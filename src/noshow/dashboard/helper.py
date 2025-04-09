@@ -40,15 +40,8 @@ def highlight_row(row: pd.Series) -> List[str]:
         return [""] * len(row)
 
 
-def previous_preds(call_status: str = "Niet gebeld"):
+def previous_preds():
     """Go to previous prediction"""
-    if call_status == "Wordt gebeld":
-        st.error(
-            "Status is 'Wordt gebeld', verander de status voordat je verder gaat.",
-            icon="🛑",
-        )
-        return
-
     if st.session_state["pred_idx"] > 0:
         st.session_state["pred_idx"] -= 1
 
@@ -69,6 +62,7 @@ def start_calling(Session: sessionmaker, call_response: ApiCallResponse):
     """
     call_response.call_status = "Wordt gebeld"
     st.session_state["being_called"] = True
+    st.session_state["saved"] = False
 
     with Session() as session:
         session.merge(call_response)
@@ -97,7 +91,10 @@ def next_preds(
     user_name : str
         The current user e-mail
     """
-    call_response.call_status = "Gebeld"
+    if st.session_state.res_input == "Geen":
+        call_response.call_status = "Niet gebeld"
+    else:
+        call_response.call_status = "Gebeld"
     call_response.call_outcome = st.session_state.res_input
     call_response.remarks = st.session_state.opm_input
     call_response.timestamp = datetime.now()
@@ -110,10 +107,11 @@ def next_preds(
         session.merge(current_patient)
         session.commit()
 
-    st.session_state["saved"] = True
-
     if st.session_state["pred_idx"] + 1 < list_len:
         st.session_state["pred_idx"] += 1
+    else:
+        st.session_state["saved"] = True
+        st.session_state["being_called"] = False
 
 
 def navigate_patients(list_len: int, navigate_forward: bool = True):
@@ -129,10 +127,11 @@ def navigate_patients(list_len: int, navigate_forward: bool = True):
         Whether to navigate forward or backward, by default True
     """
 
-    if not st.session_state.get("saved", False) and st.session_state.get(
-        "being_called", False
-    ):
-        st.warning("Klik eerst op 'Opslaan' voordat u verder gaat.")
+    if not st.session_state["saved"] and st.session_state["being_called"]:
+        st.error(
+            "Klik eerst op 'Opslaan' voordat je verder gaat.",
+            icon="🛑",
+        )
         return
 
     if navigate_forward:
@@ -160,18 +159,24 @@ def navigate_uncalled(Session: sessionmaker, patient_ids: list[str]) -> None:
         List of patient IDs
     """
     with Session() as session:
-        called_today = (
-            session.execute(
-                select(ApiPrediction.patient_id)
-                .outerjoin(ApiPrediction.callresponse_relation)
-                .where(
-                    cast(ApiCallResponse.timestamp, Date) == cast(date.today(), Date)
+        query = (
+            select(ApiPrediction.patient_id)
+            .outerjoin(ApiPrediction.callresponse_relation)
+            .where(
+                ApiCallResponse.call_outcome.in_(
+                    [
+                        "Herinnerd",
+                        "Voicemail ingesproken",
+                        "Verzet/Geannuleerd",
+                        "Onbereikbaar",
+                    ]
                 )
-                .distinct()
             )
-            .scalars()
-            .all()
+            .where(cast(ApiCallResponse.timestamp, Date) == cast(date.today(), Date))
+            .where(ApiPrediction.active)
+            .distinct()
         )
+        called_today = session.execute(query).scalars().all()
         uncalled_patient = next(
             (
                 patient_id

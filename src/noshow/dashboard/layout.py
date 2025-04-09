@@ -22,6 +22,7 @@ RES_LIST = [
     "Voicemail ingesproken",
     "Verzet/Geannuleerd",
     "Onbereikbaar",
+    "Geen",
 ]
 CALL_NUMBER_LIST = [
     "Niet van toepassing",
@@ -55,6 +56,7 @@ def render_patient_selection(
             "Vorige patiënt",
             on_click=navigate_patients,
             args=(len(patient_ids), False),
+            type="primary",
         )
     with col2:
         with st.popover(
@@ -77,6 +79,7 @@ def render_patient_selection(
             "Volgende patiënt",
             on_click=navigate_patients,
             args=(len(patient_ids), True),
+            type="primary",
         )
     st.header("Patiënt-gegevens")
     if enable_dev_mode:
@@ -104,7 +107,10 @@ def render_patient_info(
     current_patient_nmbr : ApiPatient
         The current patient object containing the call number.
     """
-    if current_response.call_status == "Niet gebeld":
+    if (
+        current_response.call_status == "Niet gebeld"
+        and not st.session_state["being_called"]
+    ):
         st.button(
             "Start met bellen patiënt",
             on_click=start_calling,
@@ -116,7 +122,10 @@ def render_patient_info(
         )
     else:
         if current_patient:
-            if current_response.call_status == "Wordt gebeld":
+            if (
+                current_response.call_status == "Wordt gebeld"
+                or st.session_state["being_called"]
+            ):
                 st.warning("Deze patiënt wordt momenteel gebeld!", icon="📞")
             else:
                 st.warning("Deze patiënt is al gebeld!", icon="⚠️")
@@ -174,9 +183,6 @@ def render_appointment_overview(
     )
 
     with st.form("patient_form", clear_on_submit=True):
-        if current_response.call_outcome == "Geen":
-            current_response.call_outcome = "Onbereikbaar"
-
         st.selectbox(
             "Resultaat gesprek: ",
             options=RES_LIST,
