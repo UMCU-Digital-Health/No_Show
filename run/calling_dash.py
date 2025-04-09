@@ -43,6 +43,11 @@ if "name_idx" not in st.session_state:
     st.session_state["name_idx"] = 0
 if "pred_idx" not in st.session_state:
     st.session_state["pred_idx"] = 0
+if "being_called" not in st.session_state:
+    st.session_state["being_called"] = False
+if "saved" not in st.session_state:
+    st.session_state["saved"] = False
+
 
 date_3_days = add_working_days(datetime.today(), 3)
 
@@ -51,6 +56,8 @@ def reset_name_index() -> None:
     """Reset the name index when changing the date"""
     st.session_state["name_idx"] = 0
     st.session_state["pred_idx"] = 0
+    st.session_state["being_called"] = False
+    st.session_state["saved"] = False
 
 
 def main():
@@ -148,7 +155,7 @@ def main():
     if not current_response:
         current_response = ApiCallResponse(
             call_status="Niet gebeld",
-            call_outcome="Geen",
+            call_outcome="Onbereikbaar",
             remarks="",
             prediction_id=pred_id,
         )
