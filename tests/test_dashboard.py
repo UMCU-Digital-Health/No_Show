@@ -186,6 +186,7 @@ def test_navigate_patients(monkeypatch):
 def test_search_number(monkeypatch):
     """Test the function that searches for a number in the patient list."""
     # Mock the session state
+    monkeypatch.setattr("streamlit.session_state", FakeStreamlitSessionState())
 
     class FakeSessionMakerReturn:
         """Class to mock a sqlalchemy sessionmaker that returns a
@@ -198,15 +199,14 @@ def test_search_number(monkeypatch):
             pass
 
     class FakeDBReturn:
-        """Class to mock a sqlalchemy session that returns a patient for seach_number."""
+        """Class to mock a sqlalchemy session that returns a patient for
+        search_number."""
 
         def execute(self, stmt):
             return self
 
         def scalar(self):
             return "2"
-
-    monkeypatch.setattr("streamlit.session_state", FakeStreamlitSessionState())
 
     patient_ids = ["1", "2"]
     search_number(FakeSessionMakerReturn, "123456788", patient_ids)  # type: ignore
