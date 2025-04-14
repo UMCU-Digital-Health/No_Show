@@ -186,28 +186,32 @@ def test_navigate_patients(monkeypatch):
 def test_search_number(monkeypatch):
     """Test the function that searches for a number in the patient list."""
     # Mock the session state
+
+    class FakeSessionMakerReturn:
+        """Class to mock a sqlalchemy sessionmaker that returns a
+        patient for seach_number."""
+
+        def __enter__(self):
+            return FakeDBReturn()
+
+        def __exit__(self, exc_type, exc_value, traceback):
+            pass
+
+    class FakeDBReturn:
+        """Class to mock a sqlalchemy session that returns a patient for seach_number."""
+
+        def execute(self, stmt):
+            return self
+
+        def scalar(self):
+            return "2"
+
     monkeypatch.setattr("streamlit.session_state", FakeStreamlitSessionState())
 
-    # Case 1: Phone number exists in the patient list
     patient_ids = ["1", "2"]
-    with FakeSessionMaker() as session:
-        session.add(
-            ApiSensitiveInfo(
-                "1", "1", "Henk Jansen", "Henk", date(1950, 1, 1), "123456788", "", ""
-            )
-        )
-        search_number(FakeSessionMaker, "123456788", patient_ids)  # type: ignore
-        assert st.session_state["name_idx"] == 0
-        assert st.session_state["pred_idx"] == 0
-
-    # Case 2: Phone number does not exist in the patient list
-    with FakeSessionMaker() as session:
-        session.add(
-            ApiSensitiveInfo(
-                "3", "3", "John Doe", "John", date(1960, 1, 1), "987654321", "", ""
-            )
-        )
-        search_number(FakeSessionMaker, "987654321", patient_ids)  # type: ignore
+    search_number(FakeSessionMakerReturn, "123456788", patient_ids)  # type: ignore
+    assert st.session_state["name_idx"] == 1
+    assert st.session_state["pred_idx"] == 0
 
 
 def test_get_user():
