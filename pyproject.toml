@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "noshow"
-version = "1.6.0"
+version = "1.6.1"
 authors = [
   { name="Ruben Peters", email="r.peters-7@umcutrecht.nl" },
   { name="Eric Wolters", email="e.j.wolters-4@umcutrecht.nl" }
@@ -74,3 +74,6 @@ extend-immutable-calls = [
     "fastapi.params.Depends",
     "Security",
 ]
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "function"
