@@ -133,17 +133,15 @@ def main():
         return
     last_updated = all_predictions_df["timestamp"].max()
     all_predictions_df = all_predictions_df.drop(columns="timestamp")
-    all_predictions_df.loc[
-        all_predictions_df["call_status"] == "Gebeld", "call_status"
-    ] = "🟢"
-    if "Wordt gebeld" in all_predictions_df["call_status"].values:
-        all_predictions_df.loc[
-            ~(all_predictions_df["call_status"] == "🟢"), "call_status"
-        ] = "📞"
-    all_predictions_df.loc[
-        ~all_predictions_df["call_status"].isin(["🟢", "📞"]),
-        "call_status",
-    ] = "🔴"
+    all_predictions_df["call_status"] = all_predictions_df["call_status"].fillna("🔴")
+    all_predictions_df["call_status"] = all_predictions_df["call_status"].replace(
+        {"Gebeld": "🟢", "Wordt gebeld": "📞"}
+    )
+    if (
+        st.session_state["pred_idx"] != 0
+        and all_predictions_df.at[st.session_state["pred_idx"], "call_status"] == "🔴"
+    ):
+        all_predictions_df.at[st.session_state["pred_idx"], "call_status"] = "📞"
     pred_id = all_predictions_df.iat[st.session_state["pred_idx"], 0]
 
     # load information related to call history
