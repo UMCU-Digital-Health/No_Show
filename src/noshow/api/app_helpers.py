@@ -30,6 +30,8 @@ def load_model(model_path: Union[str, Path, None] = None) -> Any:
     with open(model_path, "rb") as f:
         model = pickle.load(f)
 
+    logger.info(f"Model loaded from {model_path}")
+
     return model
 
 
@@ -93,6 +95,7 @@ def fix_outdated_appointments(
             apiprediction.active = False
             session.merge(apiprediction)
             session.commit()
+    logger.info(f"Set {len(inactive_ids)} predictions to inactive")
 
 
 # Function to apply the appropriate bin edges to each group
@@ -279,3 +282,4 @@ def store_predictions(
         db.merge(apiprediction)
         db.merge(apipatient)
         db.commit()
+    logger.info(f"{len(prediction_df)} predictions stored in the database")

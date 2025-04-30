@@ -1,3 +1,4 @@
+import logging
 import os
 import tomllib
 from datetime import date, datetime
@@ -9,6 +10,7 @@ import streamlit as st
 from dotenv import load_dotenv
 from sqlalchemy import select
 
+from noshow.config import setup_root_logger
 from noshow.dashboard.connection import get_patient_list, init_session
 from noshow.dashboard.helper import get_user
 from noshow.dashboard.layout import (
@@ -27,17 +29,13 @@ from noshow.preprocessing.utils import add_working_days
 
 load_dotenv()
 
+logger = logging.getLogger(__name__)
+setup_root_logger()
+
 with open(Path(__file__).parents[1] / "pyproject.toml", "rb") as f:
     config = tomllib.load(f)
 
 VERSION = config["project"]["version"]
-
-# Global and env variables
-db_user = os.environ["DB_USER"]
-db_passwd = os.environ["DB_PASSWD"]
-db_host = os.environ["DB_HOST"]
-db_port = os.environ["DB_PORT"]
-db_database = os.environ["DB_DATABASE"]
 
 if "name_idx" not in st.session_state:
     st.session_state["name_idx"] = 0
@@ -91,7 +89,7 @@ def main():
     date_input = cast(date, date_input)
 
     # Retrieve data from application database
-    Session = init_session(db_user, db_passwd, db_host, db_port, db_database)
+    Session = init_session()
     with Session() as session:
         patient_ids = get_patient_list(session, date_input)
         if not patient_ids:
@@ -129,6 +127,9 @@ def main():
             "Voorspellingen voor deze patient zijn niet meer beschikbaar. "
             "Ga naar de volgende patient.",
             icon="🚫",
+        )
+        logger.warning(
+            "Predictions for current patient no longer available in the database."
         )
         return
     last_updated = all_predictions_df["timestamp"].max()

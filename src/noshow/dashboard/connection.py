@@ -1,3 +1,4 @@
+import logging
 from datetime import date, timedelta
 from typing import List
 
@@ -6,35 +7,25 @@ from sqlalchemy import Date, cast, func, select
 from sqlalchemy.orm import Session, sessionmaker
 
 from noshow.config import MUTE_PERIOD
-from noshow.database.connection import get_connection_string, get_engine
+from noshow.database.connection import CastDate, get_engine
 from noshow.database.models import ApiCallResponse, ApiPatient, ApiPrediction
+
+logger = logging.getLogger(__name__)
 
 
 @st.cache_resource
-def init_session(user: str, passwd: str, host: str, port: str, db: str) -> sessionmaker:
+def init_session() -> sessionmaker:
     """Initialize the connection to the database and cache the resource
 
-    Parameters
-    ----------
-    user : str
-        Username of the service account
-    passwd : str
-        Password of the service account
-    host : str
-        Host of the database
-    port : int
-        Database port
-    db : str
-        Database name
+    Expects the database environment variables to be set in the environment.
+
 
     Returns
     -------
-    Engine
+    sessionmaker
         The returned SQLAlchemy engine used for queries
     """
-
-    connect_str = get_connection_string(user, passwd, host, port, db)
-    engine = get_engine(connect_str)
+    engine = get_engine()
     session_object = sessionmaker(bind=engine)
     return session_object
 
@@ -65,7 +56,7 @@ def get_patient_list(_session: Session, date_input: date) -> List[str]:
             ApiPrediction.clinic_name,
         )
         .outerjoin(ApiPrediction.patient_relation)
-        .where(ApiPrediction.start_time.cast(Date) == date_input)
+        .where(CastDate(ApiPrediction.start_time) == date_input)
         .where(ApiPrediction.active)
         .where(ApiPatient.treatment_group >= 1)
         .where((ApiPatient.opt_out.is_(None)) | (ApiPatient.opt_out == 0))
@@ -87,6 +78,7 @@ def get_patient_list(_session: Session, date_input: date) -> List[str]:
             seen.add(patient_id)
             patient_ids.append(patient_id)
 
+    logger.info(f"Successfully retrieved {len(patient_ids)} patients from the database")
     return patient_ids
 
 
@@ -96,8 +88,8 @@ def _get_mute_set(_session: Session) -> set:
     mute_query = (
         select(ApiPrediction.patient_id, ApiPrediction.clinic_name)
         .outerjoin(ApiPrediction.callresponse_relation)
-        .where(cast(ApiCallResponse.timestamp, Date) >= cast(threshold_date, Date))
-        .where(cast(ApiCallResponse.timestamp, Date) < cast(date.today(), Date))
+        .where(CastDate(ApiCallResponse.timestamp) >= threshold_date)
+        .where(CastDate(ApiCallResponse.timestamp) < date.today())
         .where(ApiCallResponse.call_status.in_(["Gebeld", "Onbereikbaar"]))
         .distinct()
     )

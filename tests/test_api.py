@@ -74,8 +74,7 @@ async def test_predict_endpoint(monkeypatch):
     monkeypatch.setenv("X_API_KEY", "test")
 
     output = await predict(appointments_pydantic, "2024-07-16", FakeDB(), "test")
-    output_df = pd.DataFrame(output)
-    assert output_df.shape == (5, 17)
+    assert output == {"message": "5 predictions created and stored in db."}
 
 
 # teste empty appointments

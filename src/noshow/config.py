@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Dict, List
 
 from pydantic import BaseModel
+from rich.logging import RichHandler
 
 logger = logging.getLogger(__name__)
 
@@ -94,6 +95,23 @@ def load_config(config_path: Path) -> ProjectConfig:
             )
         },
     )
+
+
+def setup_root_logger() -> None:
+    """Setup the root logger for the project.
+
+    This function sets up the root logger with a specific format and level.
+    """
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.INFO)
+    console_handler = RichHandler()
+    console_handler.setFormatter(
+        logging.Formatter(
+            "%(message)s",
+            datefmt="[%X]",
+        )
+    )
+    root_logger.addHandler(console_handler)
 
 
 project_config = load_config(CONFIG_PATH)
