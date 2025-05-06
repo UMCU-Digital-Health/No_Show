@@ -155,9 +155,9 @@ async def predict(
     )
     db.add(apirequest)
 
-    store_predictions(prediction_df, db, apirequest)
+    appointment_ids = store_predictions(prediction_df, db, apirequest)
 
-    fix_outdated_appointments(db, prediction_df["APP_ID"], start_date)
+    fix_outdated_appointments(db, appointment_ids, start_date)
 
     return {"message": f"{len(prediction_df)} predictions created and stored in db."}
 
