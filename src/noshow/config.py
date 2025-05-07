@@ -32,7 +32,7 @@ class DashboardConfig(BaseModel):
     """
 
     mute_period: int = 0
-    keep_sensitive_data: int = 7
+    keep_sensitive_data: int = 14
 
 
 class ClinicConfig(BaseModel):

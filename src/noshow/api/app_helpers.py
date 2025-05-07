@@ -36,7 +36,7 @@ def load_model(model_path: Union[str, Path, None] = None) -> Any:
 
 
 def remove_sensitive_info(
-    session: Session, start_time: datetime, lookback_days: int = 7
+    session: Session, start_time: str, lookback_days: int = 7
 ) -> None:
     """Remove sensitive information for patients that have not been predicted on
     in the last `lookback_days` days.
@@ -45,14 +45,15 @@ def remove_sensitive_info(
     ----------
     session : Session
         Session variable that holds the database connection
-    start_time : datetime
-        The start time of the predictions
+    start_time : str
+        The start time of the predictions in the format YYYY-MM-DD
     lookback_days : int, optional
-        The number of days to look back, by default 7
+        The number of days to look back, by default 14
     """
+    start_date = datetime.strptime(start_time, "%Y-%m-%d")
     patients_with_recent_predictions = (
         select(ApiPrediction.patient_id)
-        .where(ApiPrediction.start_time > (start_time - timedelta(days=lookback_days)))
+        .where(ApiPrediction.start_time > (start_date - timedelta(days=lookback_days)))
         .distinct()
         .scalar_subquery()
     )

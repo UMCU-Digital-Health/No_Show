@@ -145,7 +145,7 @@ def main():
         ~all_predictions_df["call_status"].isin(["🟢", "📞"]),
         "call_status",
     ] = "🔴"
-    pred_id = all_predictions_df.iat[st.session_state["pred_idx"], 0]
+    pred_id = int(all_predictions_df.iat[st.session_state["pred_idx"], 0])
 
     # load information related to call history
     with Session() as session:

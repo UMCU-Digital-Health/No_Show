@@ -142,7 +142,7 @@ async def predict(
             prediction_df, db, get_bins(), rct_agendas
         )
 
-    remove_sensitive_info(db, start_time, lookback_days=KEEP_SENSITIVE_DATA)
+    remove_sensitive_info(db, start_date, lookback_days=KEEP_SENSITIVE_DATA)
 
     end_time = datetime.now()
     apirequest = ApiRequest(
