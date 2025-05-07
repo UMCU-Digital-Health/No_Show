@@ -3,7 +3,7 @@ from datetime import date, timedelta
 from typing import List
 
 import streamlit as st
-from sqlalchemy import Date, cast, func, select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session, sessionmaker
 
 from noshow.config import MUTE_PERIOD
