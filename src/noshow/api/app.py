@@ -71,7 +71,7 @@ def get_db():
 
 @app.post("/predict")
 async def predict(
-    input: list[Appointment],
+    appointments: list[Appointment],
     start_date: Optional[str] = None,
     db: Session = Depends(get_db),
     api_key: str = Depends(api_key_header),
@@ -81,7 +81,7 @@ async def predict(
 
     Parameters
     ----------
-    input : list[Appointment]
+    appointments : list[Appointment]
         List of appointments containing the input data of multiple patient.
     start_date: Optional[str]
         Start date of predictions, predictions will be made from that date,
@@ -89,7 +89,7 @@ async def predict(
 
     Returns
     -------
-    dict[str, Any]]
+    dict[str, Any]
        A dictionary containing a message with the number of predictions stored
     """
     if api_key != os.environ["X_API_KEY"]:
@@ -104,12 +104,12 @@ async def predict(
     project_path = Path(__file__).parents[3]
     start_time = datetime.now()
 
-    if len(input) == 0:
+    if len(appointments) == 0:
         logger.error("400: Input cannot be empty.")
         raise HTTPException(status_code=400, detail="Input cannot be empty.")
 
-    input_df = load_appointment_pydantic(input)
-    appointments_df = process_appointments(input_df, CLINIC_CONFIG, start_date)
+    appointments_df = load_appointment_pydantic(appointments)
+    appointments_df = process_appointments(appointments_df, CLINIC_CONFIG, start_date)
     all_postalcodes = process_postal_codes(project_path / "data" / "raw" / "NL.txt")
 
     if appointments_df.empty:
