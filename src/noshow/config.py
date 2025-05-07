@@ -102,16 +102,12 @@ def setup_root_logger() -> None:
 
     This function sets up the root logger with a specific format and level.
     """
-    root_logger = logging.getLogger()
-    root_logger.setLevel(logging.INFO)
-    console_handler = RichHandler()
-    console_handler.setFormatter(
-        logging.Formatter(
-            "%(message)s",
-            datefmt="[%X]",
-        )
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(message)s",
+        datefmt="[%X]",
+        handlers=[RichHandler()],
     )
-    root_logger.addHandler(console_handler)
 
 
 project_config = load_config(CONFIG_PATH)
