@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2025-04-30
+
+### Changed
+- Updated logging for dashboard and API, including better formatting
+- Updated code to work on both local SQLite and MSSQL databases, to enable local testing
+- Updated database models to use a new PK for predictions
+- Updated the API to save moved appointments as a new prediction (instead of overwriting the old one)
+- Changed the remove sensitive info script to use the start_date from the api instead of the current timestamp and increased the lookback period to 14 days
+- Predict API no longer returns the predictions, but only a message containing the number of predictions
+
+### Added
+- Added a local test dataset to use in the API, since the data in the tests folder requires a custom mock config
+
 ## [1.6.1] - 2025-04-09
 
 ### Changed

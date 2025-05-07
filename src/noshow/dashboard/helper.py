@@ -67,6 +67,7 @@ def start_calling(Session: sessionmaker, call_response: ApiCallResponse):
     with Session() as session:
         session.merge(call_response)
         session.commit()
+        logger.info("Calling started")
 
 
 def next_preds(
@@ -106,6 +107,7 @@ def next_preds(
         session.merge(call_response)
         session.merge(current_patient)
         session.commit()
+        logger.info("Call response saved to database")
 
     if st.session_state["pred_idx"] + 1 < list_len:
         st.session_state["pred_idx"] += 1
@@ -132,6 +134,7 @@ def navigate_patients(list_len: int, navigate_forward: bool = True):
             "Klik eerst op 'Opslaan' voordat je verder gaat.",
             icon="🛑",
         )
+        logger.warning("Trying to navigate while the call is still in progress.")
         return
 
     if navigate_forward:
@@ -220,10 +223,12 @@ def search_number(
         if patient_id and patient_id in patient_ids:
             st.session_state["name_idx"] = patient_ids.index(patient_id)
             st.session_state["pred_idx"] = 0
+            logger.info("Successfully found patient with phone number")
         else:
             st.info(
                 "Geen patient gevonden met dit telefoonnummer op deze dag", icon="ℹ️"
             )
+            logger.warning("Patient not found with this phone number on this day")
 
 
 def get_user(headers: StreamlitHeaders) -> str:

@@ -25,7 +25,7 @@ target_metadata.schema = "noshow"
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-CONNECT_STRING = get_connection_string()
+CONNECT_STRING, execution_options = get_connection_string()
 
 
 def run_migrations_offline() -> None:
@@ -60,7 +60,7 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    connectable = get_engine(CONNECT_STRING)
+    connectable = get_engine()
 
     with connectable.connect() as connection:
         context.configure(

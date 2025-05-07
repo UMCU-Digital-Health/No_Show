@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Dict, List
 
 from pydantic import BaseModel
+from rich.logging import RichHandler
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +32,7 @@ class DashboardConfig(BaseModel):
     """
 
     mute_period: int = 0
-    keep_sensitive_data: int = 7
+    keep_sensitive_data: int = 14
 
 
 class ClinicConfig(BaseModel):
@@ -93,6 +94,19 @@ def load_config(config_path: Path) -> ProjectConfig:
                 appcodes=["CF15", "CF30"],
             )
         },
+    )
+
+
+def setup_root_logger() -> None:
+    """Setup the root logger for the project.
+
+    This function sets up the root logger with a specific format and level.
+    """
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(message)s",
+        datefmt="[%X]",
+        handlers=[RichHandler()],
     )
 
 
