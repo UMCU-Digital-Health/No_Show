@@ -1,9 +1,12 @@
 from logging.config import fileConfig
 
 from alembic import context
+from dotenv import load_dotenv
 
 from noshow.database.connection import get_connection_string, get_engine
 from noshow.database.models import Base
+
+load_dotenv(override=True)  # VS Code corrupts the .env file so override
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -25,7 +28,7 @@ target_metadata.schema = "noshow"
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-CONNECT_STRING = get_connection_string()
+CONNECT_STRING, execution_options = get_connection_string()
 
 
 def run_migrations_offline() -> None:
@@ -60,7 +63,7 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    connectable = get_engine(CONNECT_STRING)
+    connectable = get_engine()
 
     with connectable.connect() as connection:
         context.configure(
