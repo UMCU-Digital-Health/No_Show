@@ -27,7 +27,7 @@ from noshow.database.models import (
 )
 from noshow.preprocessing.utils import add_working_days
 
-load_dotenv()
+load_dotenv(override=True)  # VS Code corrupts the .env file so override
 
 logger = logging.getLogger(__name__)
 setup_root_logger()
@@ -89,8 +89,8 @@ def main():
     date_input = cast(date, date_input)
 
     # Retrieve data from application database
-    Session = init_session()
-    with Session() as session:
+    session_object = init_session()
+    with session_object() as session:
         patient_ids = get_patient_list(session, date_input)
         if not patient_ids:
             st.header(f"Geen afspraken op {date_input}")
@@ -120,7 +120,7 @@ def main():
             .order_by(ApiPrediction.start_time)
         ).all()
 
-    render_patient_selection(patient_ids, Session, enable_dev_mode)
+    render_patient_selection(patient_ids, session_object, enable_dev_mode)
     all_predictions_df = pd.DataFrame(patient_predictions)
     if all_predictions_df.empty:
         st.error(
@@ -148,7 +148,7 @@ def main():
     pred_id = int(all_predictions_df.iat[st.session_state["pred_idx"], 0])
 
     # load information related to call history
-    with Session() as session:
+    with session_object() as session:
         current_response = session.get(ApiPrediction, pred_id).callresponse_relation
         current_patient_nmbr = session.get(
             ApiPatient, patient_ids[st.session_state["name_idx"]]
@@ -165,7 +165,7 @@ def main():
         current_patient_nmbr.call_number = 0
 
     render_patient_info(
-        Session,
+        session_object,
         current_response,
         current_patient,
         current_patient_nmbr,
@@ -173,7 +173,7 @@ def main():
 
     render_appointment_overview(
         all_predictions_df,
-        Session,
+        session_object,
         user_name,
         current_response,
         current_patient_nmbr,

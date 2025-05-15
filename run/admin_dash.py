@@ -21,7 +21,7 @@ from noshow.preprocessing.utils import add_working_days
 logger = logging.getLogger(__name__)
 setup_root_logger()
 
-load_dotenv()
+load_dotenv(override=True)  # VS Code corrupts the .env file so override
 
 date_3_days = add_working_days(datetime.today(), 3)
 
