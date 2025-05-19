@@ -42,7 +42,7 @@ def get_connection_string(
     -------
     tuple[str, Optional[dict]]
         A tuple containing the connection string and an optional dictionary for
-        additional connection options. If no user is provide and the environment
+        additional connection options. If no user is provided and the environment
         variable is empty, a SQLite connection string is returned with a schema
         translation map.
     """
