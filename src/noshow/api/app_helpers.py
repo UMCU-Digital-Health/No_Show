@@ -216,6 +216,11 @@ def store_predictions(
         Database session.
     apirequest : Any
         API request object related to the predictions.
+
+    Returns
+    -------
+    list[int]
+        List of internal prediction ID's for the stored predictions.
     """
     appointment_ids = []
     for _, row in prediction_df.iterrows():

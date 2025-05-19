@@ -155,10 +155,11 @@ async def predict(
     )
     db.add(apirequest)
 
-    appointment_ids = store_predictions(prediction_df, db, apirequest)
+    internal_pred_ids = store_predictions(prediction_df, db, apirequest)
 
-    fix_outdated_appointments(db, appointment_ids, start_date)
+    fix_outdated_appointments(db, internal_pred_ids, start_date)
 
+    logger.info("Predict endpoint finished successfully.")
     return {"message": f"{len(prediction_df)} predictions created and stored in db."}
 
 
