@@ -1,4 +1,6 @@
 import logging
+import os
+import sys
 import tomllib
 from pathlib import Path
 from typing import Dict, List
@@ -99,15 +101,30 @@ def load_config(config_path: Path) -> ProjectConfig:
 
 def setup_root_logger() -> None:
     """Setup the root logger for the project.
-
     This function sets up the root logger with a specific format and level.
     """
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(message)s",
-        datefmt="[%X]",
-        handlers=[RichHandler()],
-    )
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.INFO)
+    # Some packages have already initialized the root logger, so we need to remove
+    # their handlers first.
+    for handler in root_logger.handlers[:]:
+        root_logger.removeHandler(handler)
+
+    # Posit does not support rich logging, so use a simple console handler
+    if os.getenv("CONNECT_SERVER") is not None:
+        console_handler = logging.StreamHandler(sys.stdout)
+        console_handler.setFormatter(
+            logging.Formatter("%(levelname)s: [%(name)s] - %(message)s")
+        )
+    else:
+        console_handler = RichHandler()
+        console_handler.setFormatter(
+            logging.Formatter(
+                "%(message)s",
+                datefmt="[%X]",
+            )
+        )
+    root_logger.addHandler(console_handler)
 
 
 project_config = load_config(CONFIG_PATH)
