@@ -34,7 +34,7 @@ CALL_NUMBER_LIST = [
 
 def render_patient_selection(
     patient_ids: List[str],
-    Session: sessionmaker,
+    session_object: sessionmaker,
     enable_dev_mode: bool = False,
 ) -> None:
     """Render the patient selection buttons
@@ -43,7 +43,7 @@ def render_patient_selection(
     ----------
     patient_ids : List[str]
         List of patient ids
-    Session : sessionmaker
+    session_object : sessionmaker
         SQLAlchemy sessionmaker object
     enable_dev_mode : bool, optional
         If extra dev info should be displayed, by default False
@@ -66,13 +66,13 @@ def render_patient_selection(
             st.button(
                 "Zoek",
                 on_click=search_number,
-                args=(Session, phone_number, patient_ids),
+                args=(session_object, phone_number, patient_ids),
             )
     with col3:
         st.button(
             "Niet-gebelde patiënt",
             on_click=navigate_uncalled,
-            args=(Session, patient_ids),
+            args=(session_object, patient_ids),
         )
     with col4:
         st.button(
@@ -87,7 +87,7 @@ def render_patient_selection(
 
 
 def render_patient_info(
-    Session: sessionmaker,
+    session_object: sessionmaker,
     current_response: ApiCallResponse,
     current_patient: ApiSensitiveInfo,
     current_patient_nmbr: ApiPatient,
@@ -98,7 +98,7 @@ def render_patient_info(
 
     Parameters
     ----------
-    Session : sessionmaker
+    session_object : sessionmaker
         The SQLAlchemy sessionmaker object used for database operations.
     current_response : ApiCallResponse
         The current call response object.
@@ -115,7 +115,7 @@ def render_patient_info(
             "Start met bellen patiënt",
             on_click=start_calling,
             args=(
-                Session,
+                session_object,
                 current_response,
             ),
             type="primary",
@@ -147,7 +147,7 @@ def render_patient_info(
 
 def render_appointment_overview(
     all_predictions_df: pd.DataFrame,
-    Session: sessionmaker,
+    session_object: sessionmaker,
     user_name: str,
     current_response: ApiCallResponse,
     current_patient_nmbr: ApiPatient,
@@ -160,7 +160,7 @@ def render_appointment_overview(
     ----------
     all_predictions_df : pd.DataFrame
         The DataFrame containing all the predictions.
-    Session : sessionmaker
+    session_object : sessionmaker
         The SQLAlchemy sessionmaker object used for database operations.
     user_name : str
         The current user e-mail.
@@ -213,7 +213,7 @@ def render_appointment_overview(
             on_click=next_preds,
             args=(
                 len(all_predictions_df),
-                Session,
+                session_object,
                 current_response,
                 current_patient_nmbr,
                 user_name,

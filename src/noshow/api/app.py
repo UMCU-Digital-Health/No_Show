@@ -4,12 +4,11 @@ import os
 import tomllib
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.security.api_key import APIKeyHeader
-from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from noshow.api.app_helpers import (
@@ -20,7 +19,8 @@ from noshow.api.app_helpers import (
     store_predictions,
 )
 from noshow.api.pydantic_models import Appointment
-from noshow.config import CLINIC_CONFIG, KEEP_SENSITIVE_DATA
+from noshow.config import CLINIC_CONFIG, KEEP_SENSITIVE_DATA, setup_root_logger
+from noshow.database.connection import get_engine
 from noshow.database.models import (
     ApiRequest,
     Base,
@@ -34,6 +34,7 @@ from noshow.preprocessing.load_data import (
 from noshow.preprocessing.utils import add_working_days
 
 logger = logging.getLogger(__name__)
+setup_root_logger()
 
 load_dotenv()
 
@@ -44,23 +45,7 @@ with open(Path(__file__).parents[3] / "pyproject.toml", "rb") as f:
 
 API_VERSION = config["project"]["version"]
 
-DB_USER = os.getenv("DB_USER", "")
-DB_PASSWD = os.getenv("DB_PASSWD", "")
-DB_HOST = os.getenv("DB_HOST", "")
-DB_PORT = os.getenv("DB_PORT", 1433)
-DB_DATABASE = os.getenv("DB_DATABASE", "")
-
-if DB_USER == "":
-    print("Using debug SQLite database...")
-    SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
-    execution_options = {"schema_translate_map": {"noshow": None}}
-else:
-    SQLALCHEMY_DATABASE_URL = (
-        rf"mssql+pymssql://{DB_USER}:{DB_PASSWD}@{DB_HOST}:{DB_PORT}/{DB_DATABASE}"
-    )
-    execution_options = None
-
-engine = create_engine(SQLALCHEMY_DATABASE_URL, execution_options=execution_options)
+engine = get_engine()
 Base.metadata.create_all(engine)
 SessionLocal = sessionmaker(bind=engine)
 
@@ -86,45 +71,49 @@ def get_db():
 
 @app.post("/predict")
 async def predict(
-    input: List[Appointment],
+    appointments: list[Appointment],
     start_date: Optional[str] = None,
     db: Session = Depends(get_db),
     api_key: str = Depends(api_key_header),
-) -> List[Dict]:
+) -> dict:
     """
     Predict the probability of a patient having a no-show.
 
     Parameters
     ----------
-    input : List[Dict[str, str]]
-        List of dictionaries containing the input data of a single patient.
+    appointments : list[Appointment]
+        List of appointments containing the input data of multiple patient.
     start_date: Optional[str]
         Start date of predictions, predictions will be made from that date,
         by default the date in 3 weekdays (i.e. excluding the weekend)
 
     Returns
     -------
-    List[Dict[str, Any]]
-        Predictions for each patient in the input list.
+    dict[str, Any]
+       A dictionary containing a message with the number of predictions stored
     """
     if api_key != os.environ["X_API_KEY"]:
+        logger.error("403: Unauthorized, Api Key not valid")
         raise HTTPException(403, "Unauthorized, Api Key not valid")
 
     if start_date is None:
         start_date_dt = add_working_days(datetime.today(), 3)
         start_date = start_date_dt.strftime(r"%Y-%m-%d")
+        logger.warning(f"No start date provided, using {start_date}")
 
     project_path = Path(__file__).parents[3]
     start_time = datetime.now()
 
-    if len(input) == 0:
+    if len(appointments) == 0:
+        logger.error("400: Input cannot be empty.")
         raise HTTPException(status_code=400, detail="Input cannot be empty.")
 
-    input_df = load_appointment_pydantic(input)
-    appointments_df = process_appointments(input_df, CLINIC_CONFIG, start_date)
+    appointments_df = load_appointment_pydantic(appointments)
+    appointments_df = process_appointments(appointments_df, CLINIC_CONFIG, start_date)
     all_postalcodes = process_postal_codes(project_path / "data" / "raw" / "NL.txt")
 
     if appointments_df.empty:
+        logger.error("400: No appointments for the start date and filters")
         raise HTTPException(
             status_code=400, detail="No appointments for the start date and filters"
         )
@@ -153,7 +142,7 @@ async def predict(
             prediction_df, db, get_bins(), rct_agendas
         )
 
-    remove_sensitive_info(db, start_time, lookback_days=KEEP_SENSITIVE_DATA)
+    remove_sensitive_info(db, start_date, lookback_days=KEEP_SENSITIVE_DATA)
 
     end_time = datetime.now()
     apirequest = ApiRequest(
@@ -166,11 +155,12 @@ async def predict(
     )
     db.add(apirequest)
 
-    store_predictions(prediction_df, db, apirequest)
+    internal_pred_ids = store_predictions(prediction_df, db, apirequest)
 
-    fix_outdated_appointments(db, prediction_df["APP_ID"], start_date)
+    fix_outdated_appointments(db, internal_pred_ids, start_date)
 
-    return prediction_df.reset_index().to_dict(orient="records")
+    logger.info("Predict endpoint finished successfully.")
+    return {"message": f"{len(prediction_df)} predictions created and stored in db."}
 
 
 @app.get("/")
