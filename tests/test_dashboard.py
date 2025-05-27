@@ -70,13 +70,7 @@ class FakeStreamlitHeader:
 
 def test_init_session():
     """Test the init_session function."""
-    session_object = init_session(
-        user="test_user",
-        passwd="test_passwd",
-        host="test_host",
-        port="5432",
-        db="test_db",
-    )
+    session_object = init_session()
     assert session_object is not None
 
 

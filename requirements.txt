@@ -3,7 +3,7 @@
 -e .
 aiohappyeyeballs==2.6.1
     # via aiohttp
-aiohttp==3.11.16
+aiohttp==3.11.18
     # via
     #   aiohttp-retry
     #   fsspec
@@ -27,9 +27,9 @@ anyio==4.9.0
     # via starlette
 appdirs==1.4.4
     # via iterative-telemetry
-asyncssh==2.20.0
+asyncssh==2.21.0
     # via scmrepo
-atpublic==5.1
+atpublic==6.0.1
     # via flufl-lock
 attrs==25.3.0
     # via
@@ -45,19 +45,19 @@ blinker==1.9.0
     # via streamlit
 cachetools==5.5.2
     # via streamlit
-celery==5.5.0
+celery==5.5.2
     # via
     #   dvc
     #   dvc-task
-certifi==2025.1.31
+certifi==2025.4.26
     # via requests
 cffi==1.17.1
     # via
     #   cryptography
     #   pygit2
-charset-normalizer==3.4.1
+charset-normalizer==3.4.2
     # via requests
-click==8.1.8
+click==8.2.0
     # via
     #   celery
     #   click-didyoumean
@@ -78,9 +78,9 @@ colorama==0.4.6
     #   tqdm
 configobj==5.0.9
     # via dvc
-contourpy==1.3.1
+contourpy==1.3.2
     # via matplotlib
-cryptography==44.0.2
+cryptography==45.0.2
     # via asyncssh
 cycler==0.12.1
     # via matplotlib
@@ -101,11 +101,11 @@ dulwich==0.22.8
     #   dvc
     #   dvc-studio-client
     #   scmrepo
-dvc==3.59.1
+dvc==3.59.2
     # via
     #   dvclive
     #   noshow
-dvc-data==3.16.9
+dvc-data==3.16.10
     # via dvc
 dvc-http==2.32.0
     # via dvc
@@ -133,11 +133,11 @@ filelock==3.18.0
     # via iterative-telemetry
 flatten-dict==0.4.2
     # via dvc
-flufl-lock==8.1.0
+flufl-lock==8.2.0
     # via dvc
-fonttools==4.57.0
+fonttools==4.58.0
     # via matplotlib
-frozenlist==1.5.0
+frozenlist==1.6.0
     # via
     #   aiohttp
     #   aiosignal
@@ -163,7 +163,7 @@ gitpython==3.1.44
     #   streamlit
 grandalf==0.8
     # via dvc
-greenlet==3.1.1 ; (python_full_version < '3.14' and platform_machine == 'AMD64') or (python_full_version < '3.14' and platform_machine == 'WIN32') or (python_full_version < '3.14' and platform_machine == 'aarch64') or (python_full_version < '3.14' and platform_machine == 'amd64') or (python_full_version < '3.14' and platform_machine == 'ppc64le') or (python_full_version < '3.14' and platform_machine == 'win32') or (python_full_version < '3.14' and platform_machine == 'x86_64')
+greenlet==3.2.2 ; (python_full_version < '3.14' and platform_machine == 'AMD64') or (python_full_version < '3.14' and platform_machine == 'WIN32') or (python_full_version < '3.14' and platform_machine == 'aarch64') or (python_full_version < '3.14' and platform_machine == 'amd64') or (python_full_version < '3.14' and platform_machine == 'ppc64le') or (python_full_version < '3.14' and platform_machine == 'win32') or (python_full_version < '3.14' and platform_machine == 'x86_64')
     # via sqlalchemy
 gto==1.7.2
     # via
@@ -182,15 +182,15 @@ jinja2==3.1.6
     # via
     #   altair
     #   pydeck
-joblib==1.4.2
+joblib==1.5.0
     # via scikit-learn
 jsonschema==4.23.0
     # via altair
-jsonschema-specifications==2024.10.1
+jsonschema-specifications==2025.4.1
     # via jsonschema
 kiwisolver==1.4.8
     # via matplotlib
-kombu==5.5.2
+kombu==5.5.3
     # via
     #   celery
     #   dvc
@@ -199,22 +199,22 @@ markdown-it-py==3.0.0
     # via rich
 markupsafe==3.0.2
     # via jinja2
-matplotlib==3.10.1
+matplotlib==3.10.3
     # via
     #   noshow
     #   relplot
     #   seaborn
 mdurl==0.1.2
     # via markdown-it-py
-multidict==6.3.2
+multidict==6.4.3
     # via
     #   aiohttp
     #   yarl
-narwhals==1.34.0
+narwhals==1.40.0
     # via altair
 networkx==3.4.2
     # via dvc
-numpy==2.2.4
+numpy==2.2.6
     # via
     #   contourpy
     #   matplotlib
@@ -226,13 +226,13 @@ numpy==2.2.4
     #   scipy
     #   seaborn
     #   streamlit
-nvidia-ml-py==12.570.86
+nvidia-ml-py==12.575.51
     # via pynvml
 omegaconf==2.3.0
     # via
     #   dvc
     #   hydra-core
-orjson==3.10.16 ; implementation_name == 'cpython'
+orjson==3.10.18 ; implementation_name == 'cpython'
     # via
     #   dvc-data
     #   sqltrie
@@ -254,42 +254,42 @@ pathspec==0.12.1
     # via
     #   dvc
     #   scmrepo
-pillow==11.1.0
+pillow==11.2.1
     # via
     #   matplotlib
     #   streamlit
-platformdirs==4.3.7
+platformdirs==4.3.8
     # via dvc
-prompt-toolkit==3.0.50
+prompt-toolkit==3.0.51
     # via click-repl
 propcache==0.3.1
     # via
     #   aiohttp
     #   yarl
-protobuf==5.29.4
+protobuf==6.31.0
     # via streamlit
 psutil==7.0.0
     # via
     #   dvc
     #   dvclive
     #   flufl-lock
-pyarrow==19.0.1
+pyarrow==20.0.0
     # via
     #   noshow
     #   streamlit
 pycparser==2.22
     # via cffi
-pydantic==2.11.2
+pydantic==2.11.4
     # via
     #   fastapi
     #   gto
-pydantic-core==2.33.1
+pydantic-core==2.33.2
     # via pydantic
 pydeck==0.9.1
     # via streamlit
-pydot==3.0.4
+pydot==4.0.0
     # via dvc
-pygit2==1.16.0
+pygit2==1.18.0
     # via
     #   noshow
     #   scmrepo
@@ -301,7 +301,7 @@ pygtrie==2.5.0
     #   dvc-data
     #   scmrepo
     #   sqltrie
-pymssql==2.3.2
+pymssql==2.3.4
     # via noshow
 pynvml==12.0.0
     # via dvclive
@@ -341,7 +341,7 @@ rich==14.0.0
     #   dvc
     #   gto
     #   typer
-rpds-py==0.24.0
+rpds-py==0.25.0
     # via
     #   jsonschema
     #   referencing
@@ -352,16 +352,16 @@ ruamel-yaml==0.18.10
     #   gto
 ruamel-yaml-clib==0.2.12 ; python_full_version < '3.13' and platform_python_implementation == 'CPython'
     # via ruamel-yaml
-ruff==0.11.4
+ruff==0.11.10
 scikit-learn==1.6.1
     # via
     #   noshow
     #   relplot
-scipy==1.15.2
+scipy==1.15.3
     # via
     #   relplot
     #   scikit-learn
-scmrepo==3.3.10
+scmrepo==3.3.11
     # via
     #   dvc
     #   dvclive
@@ -370,7 +370,7 @@ seaborn==0.13.2
     # via relplot
 semver==3.0.4
     # via gto
-setuptools==78.1.0
+setuptools==80.7.1
     # via zc-lockfile
 shellingham==1.5.4
     # via typer
@@ -378,7 +378,7 @@ shortuuid==1.0.13
     # via
     #   dvc
     #   dvc-task
-shtab==1.7.1
+shtab==1.7.2
     # via dvc
 six==1.17.0
     # via
@@ -388,13 +388,13 @@ smmap==5.0.2
     # via gitdb
 sniffio==1.3.1
     # via anyio
-sqlalchemy==2.0.40
+sqlalchemy==2.0.41
     # via noshow
 sqltrie==0.11.2
     # via dvc-data
-starlette==0.46.1
+starlette==0.46.2
     # via fastapi
-streamlit==1.44.1
+streamlit==1.45.1
     # via noshow
 tabulate==0.9.0
     # via
@@ -408,7 +408,7 @@ toml==0.10.2
     # via streamlit
 tomlkit==0.13.2
     # via dvc
-tornado==6.4.2
+tornado==6.5
     # via streamlit
 tqdm==4.67.1
     # via
@@ -416,9 +416,9 @@ tqdm==4.67.1
     #   dvc-data
     #   fsspec
     #   scmrepo
-typer==0.15.2
+typer==0.15.3
     # via gto
-typing-extensions==4.13.1
+typing-extensions==4.13.2
     # via
     #   altair
     #   anyio
@@ -437,7 +437,7 @@ tzdata==2025.2
     # via
     #   kombu
     #   pandas
-urllib3==2.3.0
+urllib3==2.4.0
     # via
     #   dulwich
     #   requests
@@ -454,7 +454,7 @@ watchdog==6.0.0 ; sys_platform != 'darwin'
     # via streamlit
 wcwidth==0.2.13
     # via prompt-toolkit
-yarl==1.19.0
+yarl==1.20.0
     # via aiohttp
 zc-lockfile==3.0.post1
     # via dvc

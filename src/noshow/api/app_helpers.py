@@ -30,11 +30,13 @@ def load_model(model_path: Union[str, Path, None] = None) -> Any:
     with open(model_path, "rb") as f:
         model = pickle.load(f)
 
+    logger.info(f"Model loaded from {model_path}")
+
     return model
 
 
 def remove_sensitive_info(
-    session: Session, start_time: datetime, lookback_days: int = 7
+    session: Session, start_time: str, lookback_days: int = 7
 ) -> None:
     """Remove sensitive information for patients that have not been predicted on
     in the last `lookback_days` days.
@@ -43,14 +45,15 @@ def remove_sensitive_info(
     ----------
     session : Session
         Session variable that holds the database connection
-    start_time : datetime
-        The start time of the predictions
+    start_time : str
+        The start time of the predictions in the format YYYY-MM-DD
     lookback_days : int, optional
-        The number of days to look back, by default 7
+        The number of days to look back, by default 14
     """
+    start_date = datetime.strptime(start_time, "%Y-%m-%d")
     patients_with_recent_predictions = (
         select(ApiPrediction.patient_id)
-        .where(ApiPrediction.start_time > (start_time - timedelta(days=lookback_days)))
+        .where(ApiPrediction.start_time > (start_date - timedelta(days=lookback_days)))
         .distinct()
         .scalar_subquery()
     )
@@ -63,7 +66,7 @@ def remove_sensitive_info(
 
 
 def fix_outdated_appointments(
-    session: Session, app_ids: pd.Series, start_date: str
+    session: Session, app_ids: list[int], start_date: str
 ) -> None:
     """Set the status of outdated appointments on inactive
 
@@ -91,8 +94,8 @@ def fix_outdated_appointments(
         apiprediction = session.get(ApiPrediction, app_id)
         if apiprediction:
             apiprediction.active = False
-            session.merge(apiprediction)
             session.commit()
+    logger.info(f"Set {len(inactive_ids)} predictions to inactive")
 
 
 # Function to apply the appropriate bin edges to each group
@@ -201,7 +204,7 @@ def store_predictions(
     prediction_df: pd.DataFrame,
     db: Session,
     apirequest: ApiRequest,
-) -> None:
+) -> list[int]:
     """
     Store predictions in the database.
 
@@ -213,7 +216,13 @@ def store_predictions(
         Database session.
     apirequest : Any
         API request object related to the predictions.
+
+    Returns
+    -------
+    list[int]
+        List of internal prediction ID's for the stored predictions.
     """
+    appointment_ids = []
     for _, row in prediction_df.iterrows():
         apisensitive = db.get(ApiSensitiveInfo, row["pseudo_id"])
 
@@ -235,6 +244,7 @@ def store_predictions(
                 home_phone=row["telecom2_value"],
                 other_phone=row["telecom3_value"],
             )
+            db.add(apisensitive)
         else:
             # name and birthdate can't change, but phone number might
             apisensitive.mobile_phone = row["telecom1_value"]
@@ -246,11 +256,17 @@ def store_predictions(
             apipatient = ApiPatient(
                 id=row["pseudo_id"],
             )
+            db.add(apipatient)
         apipatient.treatment_group = int(row["treatment_group"])
-        apiprediction = db.get(ApiPrediction, row["APP_ID"])
+        apiprediction = db.execute(
+            select(ApiPrediction).where(
+                (ApiPrediction.appointment_id == row["APP_ID"])
+                & (ApiPrediction.start_time == row["start"])
+            )
+        ).scalar_one_or_none()
         if not apiprediction:
             apiprediction = ApiPrediction(
-                id=row["APP_ID"],
+                appointment_id=row["APP_ID"],
                 patient_id=row["pseudo_id"],
                 prediction=row["prediction"],
                 start_time=row["start"],
@@ -262,6 +278,7 @@ def store_predictions(
                 clinic_teleq_unit=CLINIC_CONFIG[row["clinic"]].teleq_name,
                 active=True,
             )
+            db.add(apiprediction)
         else:
             # All values of a prediction can be updated except the ID and treatment
             apiprediction.prediction = row["prediction"]
@@ -275,7 +292,7 @@ def store_predictions(
             apiprediction.clinic_teleq_unit = CLINIC_CONFIG[row["clinic"]].teleq_name
             apiprediction.active = True
 
-        db.merge(apisensitive)
-        db.merge(apiprediction)
-        db.merge(apipatient)
         db.commit()
+        appointment_ids.append(apiprediction.id)
+    logger.info(f"{len(prediction_df)} predictions stored in the database")
+    return appointment_ids
