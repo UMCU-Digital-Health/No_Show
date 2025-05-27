@@ -45,7 +45,9 @@ class ApiPrediction(Base):
     __tablename__ = "apiprediction"
     __table_args__ = {"schema": "noshow"}
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True, init=False)
+    id: Mapped[int] = mapped_column(
+        primary_key=True, index=True, init=False, unique=True
+    )
     appointment_id: Mapped[str] = mapped_column(String(50), index=True)
     prediction: Mapped[float] = mapped_column(Float, nullable=True)
     start_time: Mapped[datetime] = mapped_column(DateTime, index=True)
