@@ -237,7 +237,7 @@ def test_layout_functions(monkeypatch):
     render_patient_selection(["1", "2", "3"], FakeSessionMaker, False)  # type: ignore
     render_patient_info(FakeSessionMaker, call_response, sensitive_info, patient)  # type: ignore
     render_appointment_overview(
-        pd.DataFrame(columns=["id"]),
+        pd.DataFrame(columns=["id", "call_status"]),
         FakeSessionMaker,  # type: ignore
         "fake user",
         call_response,

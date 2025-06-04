@@ -174,6 +174,7 @@ def render_appointment_overview(
         If extra dev info should be displayed, by default False
     """
     st.header("Afspraakoverzicht")
+    all_predictions_df = all_predictions_df.drop(columns="call_status")
     if not enable_dev_mode:
         all_predictions_df = all_predictions_df.drop(columns="id")
     st.dataframe(
