@@ -7,10 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.0.3] - 2025-06-04
+## [2.0.4] - 2025-06-04
 
 ### Changed
 - Added a message to the calling dash if the current selected date is a holiday in the Netherlands
+
+## [2.0.3] - 2025-06-04
+
+### Changed
+- Call_status only displays a telephone icon to the corresponding prediction row in the calling dashboard.
 
 ## [2.0.2] - 2025-06-04
 

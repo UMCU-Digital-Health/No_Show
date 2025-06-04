@@ -142,17 +142,14 @@ def main():
         return
     last_updated = all_predictions_df["timestamp"].max()
     all_predictions_df = all_predictions_df.drop(columns="timestamp")
+
+    # Create a column for the call status icon
+    all_predictions_df["calling_icon"] = "🔴"
     all_predictions_df.loc[
-        all_predictions_df["call_status"] == "Gebeld", "call_status"
+        all_predictions_df["call_status"] == "Gebeld", "calling_icon"
     ] = "🟢"
-    if "Wordt gebeld" in all_predictions_df["call_status"].values:
-        all_predictions_df.loc[
-            ~(all_predictions_df["call_status"] == "🟢"), "call_status"
-        ] = "📞"
-    all_predictions_df.loc[
-        ~all_predictions_df["call_status"].isin(["🟢", "📞"]),
-        "call_status",
-    ] = "🔴"
+    if st.session_state["being_called"]:
+        all_predictions_df.at[st.session_state["pred_idx"], "calling_icon"] = "📞"
     pred_id = int(all_predictions_df.iat[st.session_state["pred_idx"], 0])
 
     # load information related to call history
