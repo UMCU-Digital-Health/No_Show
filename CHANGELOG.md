@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.2] - 2025-06-04
+
+### Changed
+- Updated the subagendas for Genetics department to remove locations outside of UMCU
+- Updated dependencies
+- Reran pipeline and retrained model on new export
+- Updated the postal code file to include the latest postal codes
+
 ## [2.0.1] - 2025-05-27
 
 ### Changed

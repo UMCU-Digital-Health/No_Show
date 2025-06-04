@@ -110,7 +110,7 @@ All data is extracted from the Data Platform maintained by the UMCU.
 #### Initial Data Collection and Normalization
 
 Data is collected using a SQL query which can be found [here](raw/data_export.sql).
-The postal codes are exported from [here](https://download.geonames.org/export/zip/NL.txt).
+The postal codes are exported from [here](https://download.geonames.org/export/zip/NL.zip).
 
 #### Who are the source data producers?
 
