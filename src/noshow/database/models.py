@@ -45,7 +45,10 @@ class ApiPrediction(Base):
     __tablename__ = "apiprediction"
     __table_args__ = {"schema": "noshow"}
 
-    id: Mapped[str] = mapped_column(String(50), primary_key=True, index=True)
+    id: Mapped[int] = mapped_column(
+        primary_key=True, index=True, init=False, unique=True
+    )
+    appointment_id: Mapped[str] = mapped_column(String(50), index=True)
     prediction: Mapped[float] = mapped_column(Float, nullable=True)
     start_time: Mapped[datetime] = mapped_column(DateTime, index=True)
     clinic_name: Mapped[str]
@@ -91,4 +94,4 @@ class ApiCallResponse(Base):
     call_status: Mapped[str]
     call_outcome: Mapped[str]
     remarks: Mapped[str]
-    prediction_id: Mapped[str] = mapped_column(String(50), ForeignKey(ApiPrediction.id))
+    prediction_id: Mapped[int] = mapped_column(ForeignKey(ApiPrediction.id))

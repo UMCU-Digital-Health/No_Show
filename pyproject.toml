@@ -4,10 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "noshow"
-version = "1.6.1"
+version = "2.0.2"
 authors = [
   { name="Ruben Peters", email="r.peters-7@umcutrecht.nl" },
-  { name="Eric Wolters", email="e.j.wolters-4@umcutrecht.nl" }
+  { name="Eric Wolters", email="e.j.wolters-4@umcutrecht.nl" },
+  { name="Welmoed Tjepkema", email="w.w.a.tjepkema@umcutrecht.nl" }
 ]
 description = "No-show prediction model to reduce the amount of no-shows at the clinics"
 readme = "README.md"
@@ -27,10 +28,9 @@ dependencies =[
     "dvclive~=3.41",
     "sqlalchemy~=2.0",
     "python-dotenv~=1.0",
-    "pymssql<2.3.3",
+    "pymssql>=2.3.3",
     "streamlit>=1.30",
     "relplot>=1.0",
-    "pygit2<1.17", # Version 1.18 has no available wheels yet
 ]
 
 [dependency-groups]
@@ -74,3 +74,6 @@ extend-immutable-calls = [
     "fastapi.params.Depends",
     "Security",
 ]
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "function"

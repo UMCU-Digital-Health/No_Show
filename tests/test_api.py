@@ -1,4 +1,3 @@
-import pandas as pd
 import pytest
 from sqlalchemy.orm import Session
 from test_noshow import (
@@ -19,6 +18,18 @@ class FakeExecute:
         print("requested all results...")
         return []
 
+    def fetchall(self):
+        print("requested all results...")
+        return []
+
+    def scalar(self):
+        print("requested scalar result...")
+        return None
+
+    def scalar_one_or_none(self):
+        print("requested scalar result or none...")
+        return None
+
 
 class FakeWhere:
     def where(self, stmt):
@@ -29,22 +40,23 @@ class FakeDB(Session):
     def commit(self):
         print("committed")
 
-    def merge(self, table):
-        print(f"{table} merged...")
+    def merge(self, instance, *args, **kwargs):
+        print(f"{instance} merged...")
 
-    def add(self, tmp):
-        print(f"{tmp} added")
+    def add(self, instance, *args, **kwargs):
+        print(f"{instance} added")
 
-    def execute(self, stmt):
-        print(f"{stmt} executed...")
+    def execute(self, statement, *args, **kwargs):
+        print(f"{statement} executed...")
+        return FakeExecute()
 
-    def scalars(self, stmt):
+    def scalars(self, statement, *args, **kwargs):
         execute_res = FakeExecute()
-        print(f"{stmt} executed (with scalars)...")
+        print(f"{statement} executed (with scalars)...")
         return execute_res
 
-    def get(self, table, index):
-        print(f"Requesting {table} at index {index}...")
+    def get(self, entity, ident, *args, **kwargs):
+        print(f"Requesting {entity} at index {ident}...")
         return None
 
 
@@ -65,8 +77,7 @@ async def test_predict_endpoint(monkeypatch):
     monkeypatch.setenv("X_API_KEY", "test")
 
     output = await predict(appointments_pydantic, "2024-07-16", FakeDB(), "test")
-    output_df = pd.DataFrame(output)
-    assert output_df.shape == (5, 17)
+    assert output == {"message": "5 predictions created and stored in db."}
 
 
 # teste empty appointments

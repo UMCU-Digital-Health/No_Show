@@ -1,3 +1,4 @@
+import logging
 import pickle
 from pathlib import Path
 from typing import Any, Optional
@@ -12,6 +13,8 @@ from noshow.preprocessing.load_data import (
     process_appointments,
     process_postal_codes,
 )
+
+logger = logging.getLogger(__name__)
 
 
 def create_prediction(
@@ -50,6 +53,10 @@ def create_prediction(
         featuretable = featuretable.sort_index().loc[
             (slice(None), slice(prediction_start_date, None)), :
         ]
+        logger.debug(
+            "Filtered featuretable to only include booked appointments after"
+            f" {prediction_start_date}"
+        )
     featuretable = select_feature_columns(featuretable)
     featuretable = featuretable.drop(columns="no_show")
 
@@ -75,6 +82,7 @@ def create_prediction(
             ]
         ]
         prediction_df = prediction_df.join(sensitive_info)
+        logger.info("Sensitive info added to predictions")
     return prediction_df
 
 
@@ -90,4 +98,3 @@ if __name__ == "__main__":
     ) as f:
         model = pickle.load(f)
     predictions = create_prediction(model, appointments_df, all_postal_codes)
-    print(predictions)

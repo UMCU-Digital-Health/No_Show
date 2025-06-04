@@ -1,4 +1,4 @@
-import os
+import logging
 from datetime import datetime, timedelta
 
 import altair as alt
@@ -8,6 +8,7 @@ import streamlit as st
 from dotenv import load_dotenv
 from sqlalchemy import Date, cast, select
 
+from noshow.config import setup_root_logger
 from noshow.dashboard.connection import init_session
 from noshow.database.models import (
     ApiCallResponse,
@@ -17,16 +18,12 @@ from noshow.database.models import (
 )
 from noshow.preprocessing.utils import add_working_days
 
-load_dotenv()
+load_dotenv(override=True)  # VS Code corrupts the .env file so override
+
+logger = logging.getLogger(__name__)
+setup_root_logger()
 
 date_3_days = add_working_days(datetime.today(), 3)
-
-# Global and env variables
-db_user = os.environ["DB_USER"]
-db_passwd = os.environ["DB_PASSWD"]
-db_host = os.environ["DB_HOST"]
-db_port = os.environ["DB_PORT"]
-db_database = os.environ["DB_DATABASE"]
 
 
 def calc_calling_percentage(
@@ -312,7 +309,7 @@ if __name__ == "__main__":
     st.set_page_config("No-Show Admin Dashboard", page_icon="📈", layout="wide")
     st.title("No-Show Admin Dashboard")
 
-    session_object = init_session(db_user, db_passwd, db_host, db_port, db_database)
+    session_object = init_session()
 
     with st.sidebar:
         date_input = st.date_input(
