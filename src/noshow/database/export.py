@@ -11,8 +11,6 @@ from sqlalchemy import text
 from noshow.config import setup_root_logger
 from noshow.database.connection import get_connection_string, get_engine
 
-load_dotenv(override=True)
-
 logger = logging.getLogger(__name__)
 console = Console()
 
@@ -75,5 +73,6 @@ def export_data(
 
 
 if __name__ == "__main__":
+    load_dotenv(override=True)
     setup_root_logger()
     export_data()

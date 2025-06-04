@@ -168,7 +168,7 @@ WHERE 1=1
             'ZH04222' -- Voortplanting & gynaecologie
         )
     AND APP.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
-    AND CONVERT(DATE, APP.start) >= CONVERT(DATE, DATEADD(YEAR, -8, GETDATE()))
+    AND APP.start >= DATEADD(YEAR, -8, CAST(GETDATE() AS DATE))
     AND APP.status <> 'booked'
     AND ENC.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
     AND ENC.type2_code NOT IN ('T', 'S', 'M')
