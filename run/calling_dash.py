@@ -136,8 +136,9 @@ def main():
     all_predictions_df = all_predictions_df.drop(columns="timestamp")
     all_predictions_df["call_status"] = all_predictions_df["call_status"].fillna("🔴")
     all_predictions_df["call_status"] = all_predictions_df["call_status"].replace(
-        {"Gebeld": "🟢", "Wordt gebeld": "📞"}
+        {"Gebeld": "🟢", "Wordt gebeld": "📞", "Niet gebeld": "❌"}
     )
+
     if (
         st.session_state["pred_idx"] != 0
         and all_predictions_df.at[st.session_state["pred_idx"], "call_status"] == "🔴"
