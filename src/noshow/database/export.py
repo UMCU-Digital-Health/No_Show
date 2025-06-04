@@ -4,11 +4,14 @@ import csv
 import logging
 from pathlib import Path
 
+from dotenv import load_dotenv
 from rich.console import Console
-from rich.logging import RichHandler
 from sqlalchemy import text
 
+from noshow.config import setup_root_logger
 from noshow.database.connection import get_connection_string, get_engine
+
+load_dotenv(override=True)
 
 logger = logging.getLogger(__name__)
 console = Console()
@@ -37,7 +40,9 @@ def export_data(
     batch_size : int, optional
         batch size for reading from query result and writing to csv, by default 1000
     """
-    connection_string = get_connection_string(db_database=db_database, db_host=db_host)
+    connection_string, _ = get_connection_string(
+        db_database=db_database, db_host=db_host
+    )
     with open(Path(__file__).parents[3] / "data/sql/data_export.sql") as f:
         sql_query = f.read()
 
@@ -46,7 +51,10 @@ def export_data(
     db_engine = get_engine(connection_string)
     with db_engine.connect() as conn:
         logger.info("Executing export query...")
-        result = conn.execution_options(stream_results=True).execute(text(sql_query))
+        with console.status("[bold green]Executing export query..."):
+            result = conn.execution_options(stream_results=True).execute(
+                text(sql_query)
+            )
         logger.info("Export query executed successfully")
 
         with console.status("[bold green]Exporting data to CSV..."):
@@ -67,11 +75,5 @@ def export_data(
 
 
 if __name__ == "__main__":
-    FORMAT = "%(message)s"
-    logging.basicConfig(
-        level="NOTSET",
-        format=FORMAT,
-        datefmt="[%X]",
-        handlers=[RichHandler(rich_tracebacks=True, markup=True)],
-    )
+    setup_root_logger()
     export_data()
