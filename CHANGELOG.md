@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.2] - 2025-06-04
 ### Changed
-- Call_status only displays an telephone icon to the corresponding prediction row in the calling dashboard.
+- Call_status only displays a telephone icon to the corresponding prediction row in the calling dashboard.
 
 ## [2.0.1] - 2025-05-27
 
