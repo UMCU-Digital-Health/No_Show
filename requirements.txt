@@ -169,6 +169,8 @@ gto==1.7.2
     # via
     #   dvc
     #   dvclive
+holidays==0.74
+    # via noshow
 hydra-core==1.3.2
     # via dvc
 idna==3.10
@@ -313,6 +315,7 @@ pyparsing==3.2.3
 python-dateutil==2.9.0.post0
     # via
     #   celery
+    #   holidays
     #   matplotlib
     #   pandas
 python-dotenv==1.1.0
