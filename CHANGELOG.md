@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ## [2.0.4] - 2025-06-11
 ### Changed
-- Columns 'cancelationReason_code', 'cancelationReason_display', and 'cancelationResason_system' in model Appointment are changed respectively to 'mutationReason_code', 'mutationReason_display', and 'mutationReason_system'. 
+- Columns 'cancelationReason_code', 'cancelationReason_display', and 'cancelationReason_system' in model Appointment are changed respectively to 'mutationReason_code', 'mutationReason_display', and 'mutationReason_system'. 
 
 ## [2.0.3] - 2025-06-04
 
