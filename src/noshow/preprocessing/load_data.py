@@ -93,7 +93,7 @@ def process_appointments(
 
     appointments_df["no_show"] = "show"
     appointments_df.loc[
-        appointments_df["cancelationReason_code"].isin(NO_SHOW_CODES), "no_show"
+        appointments_df["mutationReason_code"].isin(NO_SHOW_CODES), "no_show"
     ] = "no_show"
 
     # Some patients have multiple postal codes
