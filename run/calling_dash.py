@@ -5,6 +5,7 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import cast
 
+import holidays
 import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
@@ -86,6 +87,13 @@ def main():
 
     if not date_input:
         return None
+    holidays_nl = holidays.country_holidays("NL", language="nl")
+    if date_input in holidays_nl:
+        st.info(
+            f"Deze dag is een feestdag ({holidays_nl[date_input]}). "
+            "Er zijn waarschijnlijk weinig of geen afspraken gepland.",
+            icon="🎉",
+        )
     date_input = cast(date, date_input)
 
     # Retrieve data from application database
