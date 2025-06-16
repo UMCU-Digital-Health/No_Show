@@ -8,8 +8,8 @@ SELECT APP.identifier_value AS APP_ID
     ,APP.[end]
     ,APP.[status]
     ,APP.[status_code_original]
-    ,APP.[cancelationReason_code]
-    ,APP.[cancelationReason_display]
+    ,APP.[mutationReason_code]
+    ,APP.[mutationReason_display]
 FROM [DWH].[models].[HealthcareService] SUBAGENDA JOIN [DWH].[models].[HealthcareService] HOOFDAGENDA
         ON SUBAGENDA.partOf_HealthcareService_value = HOOFDAGENDA.identifier_value AND SUBAGENDA.partOf_HealthcareService_system = HOOFDAGENDA.identifier_system
     JOIN [DWH].[models].[Appointment] APP 

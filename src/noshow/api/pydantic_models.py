@@ -21,8 +21,8 @@ class Appointment(BaseModel):
     minutesDuration: int
     status: str | None
     status_code_original: str | None
-    cancelationReason_code: str | None
-    cancelationReason_display: str | None
+    mutationReason_code: str | None
+    mutationReason_display: str | None
     BIRTH_YEAR: int
     address_postalCodeNumbersNL: int | None
     name: str | None
