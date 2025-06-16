@@ -28,8 +28,8 @@ SELECT APP.identifier_value AS APP_ID
     ,APP.[minutesDuration]
     ,APP.[status]
     ,APP.[status_code_original]
-    ,APP.[cancelationReason_code]
-    ,APP.[cancelationReason_display]
+    ,APP.[mutationReason_code]
+    ,APP.[mutationReason_display]
     ,YEAR(PAT.[birthDate]) as BIRTH_YEAR
     ,ADDR.[address_postalCodeNumbersNL]
     ,LOC.[name]

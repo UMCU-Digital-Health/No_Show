@@ -39,8 +39,8 @@ The input data for the prediction is structured as follows:
   "minutesDuration": "30",
   "status": "fulfilled",
   "status_code_original": "J",
-  "cancelationReason_code": null,
-  "cancelationReason_display": null,
+  "mutationReason_code": null,
+  "mutationReason_display": null,
   "BIRTH_YEAR": "1994",
   "address_postalCodeNumbersNL": "3994",
   "name": "Q5",
@@ -73,8 +73,8 @@ Below you can find the datafields present in the dataset. The datafields are the
 - `minutesDuration`: integer indicating the duration of the appointment in minutes, for example: `30`
 - `status`: string with the status of the appointment, for example: `"booked"` or `"fulfilled"`.
 - `status_code_original`: string with the status of the appointent, for example: `"J"` or `"N"`
-- `cancelationReason_code`: string with the code of the reason of cancelation, for example `null` or `"N"`
-- `cancelationReason_display`: string with the reason of cancelation, for example: `"No Show"` or `null`
+- `mutationReason_code`: string with the code of the reason of mutation, for example `null` or `"N"`
+- `mutationReason_display`: string with the reason of mutation, for example: `"No Show"` or `null`
 - `BIRTH_YEAR`: integer containing the birthyear of the patient, for example `1991`
 - `address_postalCodeNumbersNL`: integer containing the first 4 digits of the postalcode of the patient, for example `3994`
 - `name`: Code of the outpatient clinic reception. The first letter usually represents the area in the UMCU, for example: `"Receptie 10A"` *only used during prediction* 
@@ -121,7 +121,7 @@ The data consists of all patients of the participating clinics at the UMC Utrech
 ### Annotations
 
 The target variable of no-shows should be inferred from the data as follows:
-If the appointment was cancelled and the cancellationReasonCode is `"N"` than the status is no-show. All other observations are `show`.
+If the appointment was cancelled and the mutationReason_code is `"N"` than the status is no-show. All other observations are `show`.
 
 Appointments that have status `booked` and are excluded from the train data. When predicting all appointments should have status `booked`, except for the historic predictions of the patients.
 
