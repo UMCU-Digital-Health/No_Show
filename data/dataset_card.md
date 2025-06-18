@@ -1,7 +1,7 @@
 ## Dataset Description
 
 - **Repository:** [https://github.com/UMCU-Digital-Health/No_Show](https://github.com/UMCU-Digital-Health/No_Show)
-- **Leaderboard:** Current best scores can be found [here](../output/dvclive/metrics.json)
+- **Leaderboard:** Current best model has an AUC of 0.76
 - **Point of Contact:** [Ruben Peters](mailto:r.peters-7@umcutrecht.nl)
 
 Based on the dataset card template from huggingface, which can be found [here](https://github.com/huggingface/datasets/blob/main/templates/README_guide.md#table-of-contents).
@@ -12,7 +12,7 @@ The dataset consists of all appointments created between January 2015 and June 2
 
 ### Supported Tasks and Leaderboards
 
-- `Classification`: The dataset can be used to train a model for classifying no-shows at the clinics in the UMCU. Success on this task is typically measured by achieving a high AUC score. The performance of the best model can be found in [output/dvclive/metrics.json](../output/dvclive/metrics.json).
+- `Classification`: The dataset can be used to train a model for classifying no-shows at the clinics in the UMCU. Success on this task is typically measured by achieving a high AUC score. The performance of the best model is currently around 0.76.
 
 ### Languages
 

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "noshow"
-version = "2.0.5"
+version = "2.1.0"
 authors = [
   { name="Ruben Peters", email="r.peters-7@umcutrecht.nl" },
   { name="Eric Wolters", email="e.j.wolters-4@umcutrecht.nl" },
@@ -21,17 +21,16 @@ dependencies =[
     "pandas~=2.0",
     "matplotlib~=3.7",
     "numpy>=1.24",
-    "scikit-learn>=1.3,<1.7",
+    "scikit-learn>=1.3",
     "pyarrow>=14.0",
     "fastapi~=0.109",
-    "dvc~=3.33",
-    "dvclive~=3.41",
     "sqlalchemy~=2.0",
     "python-dotenv~=1.0",
     "pymssql>=2.3.3",
     "streamlit>=1.30",
     "relplot>=1.0",
     "holidays>=0.74",
+    "mlflow>=3.1.0",
 ]
 
 [dependency-groups]
@@ -44,6 +43,7 @@ dev = [
     "pytest-cov>=5.0.0",
     "alembic>=1.13.3",
     "rsconnect-python>=1.24.0",
+    "dvc>=3.60.1",
 ]
 lint = [
     "ruff>=0.7.1",

@@ -10,7 +10,7 @@ SELECT ENC.identifier_value AS APP_ID
     ,ENC.[planned_end] AS [end]
     ,ENC.[arrival] AS gearriveerd
     ,ENC.[created]
-    ,DATEDIFF(MINUTE, ENC.[planned_start], ENC.[planned_end]) AS [minutesDuration]
+    ,DATEDIFF_BIG(MINUTE, ENC.[planned_start], ENC.[planned_end]) AS [minutesDuration]
     ,ENC.[status]
     ,ENC.[status_code_original]
     ,ENC.[mutationReason_code]
@@ -166,6 +166,7 @@ WHERE 1=1
             'ZH04222' -- Voortplanting & gynaecologie
         )
     AND ENC.[planned_start] >= DATEADD(YEAR, -8, CAST(GETDATE() AS DATE)) 
+    AND ENC.[planned_end] < GETDATE()
     AND ENC.status NOT IN ('planned', 'in-progress')
     AND ENC.identifier_system = 'https://metadata.umcutrecht.nl/ids/HixAgendaAfspraak'
     AND ENC.type2_code NOT IN ('T', 'S', 'M')
