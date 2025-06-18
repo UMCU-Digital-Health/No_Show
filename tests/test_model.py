@@ -62,7 +62,6 @@ def test_train_model():
         ]
     )
     with TemporaryDirectory() as tempdirname:
-        (Path(tempdirname) / "models").mkdir()
         train_cv_model(
             feature_table,
             tempdirname,
@@ -70,4 +69,4 @@ def test_train_model():
             param_grid={},
             save_exp=False,
         )
-        assert (Path(tempdirname) / "models" / "no_show_model_cv.pickle").is_file()
+        assert (Path(tempdirname) / "no_show_model_cv.pickle").is_file()

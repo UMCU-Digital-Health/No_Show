@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     model = HistGradientBoostingClassifier(categorical_features=["hour", "weekday"])
 
-    best_model = train_cv_model(
+    train_cv_model(
         featuretable=appointments_features,
         output_path=model_path,
         classifier=model,
