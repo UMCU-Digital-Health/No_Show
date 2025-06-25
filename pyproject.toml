@@ -34,6 +34,9 @@ dependencies =[
     "rich>=14.0.0",
 ]
 
+[project.scripts]
+train_no_show = "noshow.train_pipeline:train_pipeline"
+
 [dependency-groups]
 dev = [
     "ipykernel>=6.29.2",

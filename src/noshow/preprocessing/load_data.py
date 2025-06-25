@@ -52,19 +52,7 @@ def load_appointment_csv(csv_path: Union[str, Path]) -> pd.DataFrame:
     """
     appointments_df = pd.read_csv(
         csv_path,
-        parse_dates=["created"],
-        date_format="ISO8601",
-        dtype={"specialty_code": "object"},  # Avoids Dtype Mixed warning
-    )
-
-    appointments_df["start"] = pd.to_datetime(
-        appointments_df["start"], errors="coerce", format="ISO8601"
-    )
-    appointments_df["end"] = pd.to_datetime(
-        appointments_df["end"], errors="coerce", format="ISO8601"
-    )
-    appointments_df["gearriveerd"] = pd.to_datetime(
-        appointments_df["gearriveerd"], errors="coerce", format="ISO8601"
+        engine="pyarrow",
     )
 
     return appointments_df

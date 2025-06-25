@@ -24,7 +24,7 @@ We welcome issues or pull requests! The easiest way to use this repo in your own
 To install the noshow package use:
 
 ```bash
-pip install -e .
+pip install -r requirements.txt
 ```
 
 Or better use a package manager like [uv](https://docs.astral.sh/uv/), a modern Python package manager that simplifies dependency management and ensures reproducibility:
@@ -35,11 +35,10 @@ uv sync
 
 ## Run pipelines
 
-The no-show code uses DVC pipelines. To run the feature-building and model stages, use:
+To run the entire pipeline from data export to model training, you can use the `train_no_show` command (or `python src/noshow/train_pipeline.py`):
 
 ```bash
-dvc pull
-dvc exp run
+train_no_show --skip-export  # skip the export step if you already have the data
 ```
 
 For more information on data used, check the dataset card [here](data/dataset_card.md)
