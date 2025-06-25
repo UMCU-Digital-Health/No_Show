@@ -8,7 +8,7 @@ Based on the dataset card template from huggingface, which can be found [here](h
 
 ### Dataset Summary
 
-The dataset consists of all appointments created between January 2015 and June 2024. It combines data from different Data platform tables, namely Appointment, HealthCareService, Polyklinisch_consult, Patient and Patient_address. It uses HealthCareService specialtycodes to filter on clinic and excludes appointments that are booked.
+The dataset consists of all appointments created between January 2015 and June 2024. It combines data from different Data platform tables (modeled after FHIR), namely Encounter, HealthcareService, Location, Patient, and Patient_Address. It uses HealthCareService specialtycodes to filter on clinic and excludes appointments that are booked.
 
 ### Supported Tasks and Leaderboards
 
