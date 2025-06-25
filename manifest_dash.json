@@ -44,12 +44,6 @@
     "deploy.sh": {
       "checksum": "0de252d918314092524baf73e003c014"
     },
-    "dvc.lock": {
-      "checksum": "862a01ed24829ab773a883c2b26c2139"
-    },
-    "dvc.yaml": {
-      "checksum": "e14888b51b20aa7ed8d1a7a8d63e33a9"
-    },
     "manifest_api.json": {
       "checksum": "2dba93768018274c47a539775246bfac"
     },

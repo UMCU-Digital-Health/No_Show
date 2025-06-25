@@ -1,0 +1,5 @@
+outs:
+- md5: 1304c356629555a161c061edfb59bc44
+  size: 1956785
+  hash: md5
+  path: no_show_model_cv.pickle

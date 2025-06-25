@@ -117,7 +117,7 @@ def setup_root_logger() -> None:
             logging.Formatter("%(levelname)s: [%(name)s] - %(message)s")
         )
     else:
-        console_handler = RichHandler()
+        console_handler = RichHandler(rich_tracebacks=True)
         console_handler.setFormatter(
             logging.Formatter(
                 "%(message)s",

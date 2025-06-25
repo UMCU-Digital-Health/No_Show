@@ -1,18 +1,18 @@
 ## Dataset Description
 
 - **Repository:** [https://github.com/UMCU-Digital-Health/No_Show](https://github.com/UMCU-Digital-Health/No_Show)
-- **Leaderboard:** Current best scores can be found [here](../output/dvclive/metrics.json)
+- **Leaderboard:** Current best model has an AUC of 0.76
 - **Point of Contact:** [Ruben Peters](mailto:r.peters-7@umcutrecht.nl)
 
 Based on the dataset card template from huggingface, which can be found [here](https://github.com/huggingface/datasets/blob/main/templates/README_guide.md#table-of-contents).
 
 ### Dataset Summary
 
-The dataset consists of all appointments created between January 2015 and June 2024. It combines data from different Data platform tables, namely Appointment, HealthCareService, Polyklinisch_consult, Patient and Patient_address. It uses HealthCareService specialtycodes to filter on clinic and excludes appointments that are booked.
+The dataset consists of all appointments created between January 2015 and June 2024. It combines data from different Data platform tables (modeled after FHIR), namely Encounter, HealthcareService, Location, Patient, and Patient_Address. It uses HealthCareService specialtycodes to filter on clinic and excludes appointments that are booked.
 
 ### Supported Tasks and Leaderboards
 
-- `Classification`: The dataset can be used to train a model for classifying no-shows at the clinics in the UMCU. Success on this task is typically measured by achieving a high AUC score. The performance of the best model can be found in [output/dvclive/metrics.json](../output/dvclive/metrics.json).
+- `Classification`: The dataset can be used to train a model for classifying no-shows at the clinics in the UMCU. Success on this task is typically measured by achieving a high AUC score. The performance of the best model is currently around 0.76.
 
 ### Languages
 
@@ -37,7 +37,7 @@ The input data for the prediction is structured as follows:
   "gearriveerd": "1717232590000",
   "created": "1713366900000",
   "minutesDuration": "30",
-  "status": "fulfilled",
+  "status": "finished",
   "status_code_original": "J",
   "mutationReason_code": null,
   "mutationReason_display": null,
@@ -71,7 +71,7 @@ Below you can find the datafields present in the dataset. The datafields are the
 - `gearriveerd`: UNIX timestamp in ms with the date of arrival of the patient, for example: `1717232590000`
 - `created`: UNIX timestamp in ms with the creation date of the appointment, for example: `1713366900000`
 - `minutesDuration`: integer indicating the duration of the appointment in minutes, for example: `30`
-- `status`: string with the status of the appointment, for example: `"booked"` or `"fulfilled"`.
+- `status`: string with the status of the appointment, for example: `"planned"` or `"finished"`.
 - `status_code_original`: string with the status of the appointent, for example: `"J"` or `"N"`
 - `mutationReason_code`: string with the code of the reason of mutation, for example `null` or `"N"`
 - `mutationReason_display`: string with the reason of mutation, for example: `"No Show"` or `null`
@@ -123,7 +123,7 @@ The data consists of all patients of the participating clinics at the UMC Utrech
 The target variable of no-shows should be inferred from the data as follows:
 If the appointment was cancelled and the mutationReason_code is `"N"` than the status is no-show. All other observations are `show`.
 
-Appointments that have status `booked` and are excluded from the train data. When predicting all appointments should have status `booked`, except for the historic predictions of the patients.
+Appointments that have status `planned` or `in-progress` and are excluded from the train data. When predicting all appointments should have status `planned`, except for the historic predictions of the patients.
 
 ### Personal and Sensitive Information
 

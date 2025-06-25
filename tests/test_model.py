@@ -62,13 +62,11 @@ def test_train_model():
         ]
     )
     with TemporaryDirectory() as tempdirname:
-        (Path(tempdirname) / "models").mkdir()
         train_cv_model(
             feature_table,
             tempdirname,
             DummyClassifier(),
             param_grid={},
-            save_dvc_exp=False,
-            dvcyaml=None,  # Prevents writing to dvc.yaml
+            save_exp=False,
         )
-        assert (Path(tempdirname) / "models" / "no_show_model_cv.pickle").is_file()
+        assert (Path(tempdirname) / "no_show_model_cv.pickle").is_file()

@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2025-06-18
+
+### Changed
+- Updated the export query to only use Encounter and no longer Appointment
+- Updated the training pipeline to use Mlflow instead of DVCLive
+- Encounter.status has a different set of values, changed the code to use the new values (e.g. 'finished' instead of 'fullfilled' and 'planned' instead of 'booked')
+
+### Added
+- Added a pipeline for the entire training process, including data export, feature engineering, and model training
+
 ## [2.0.5] - 2025-06-04
 
 ### Changed

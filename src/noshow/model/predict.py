@@ -36,7 +36,7 @@ def create_prediction(
         Dataframe containing postalcodes
     prediction_start_date : Optional[str], optional
         Start date for the predictions, if given will only predict appointments
-        that have status 'booked' and occur after the start date, by default None
+        that have status 'planned' and occur after the start date, by default None
     add_sensitive_info : bool, optional
         If sensitive data should be added to the predictions
         for use in the api, by default False
@@ -49,7 +49,7 @@ def create_prediction(
     featuretable = create_features(appointments_df, all_postal_codes)
 
     if prediction_start_date:
-        featuretable = featuretable.loc[featuretable["status"] == "booked"]
+        featuretable = featuretable.loc[featuretable["status"] == "planned"]
         featuretable = featuretable.sort_index().loc[
             (slice(None), slice(prediction_start_date, None)), :
         ]
