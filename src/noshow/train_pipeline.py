@@ -4,6 +4,7 @@ the model."""
 import logging
 from pathlib import Path
 
+import click
 from dotenv import load_dotenv
 from sklearn.ensemble import HistGradientBoostingClassifier
 
@@ -19,19 +20,22 @@ from noshow.preprocessing.load_data import (
 
 logger = logging.getLogger(__name__)
 
-if __name__ == "__main__":
+
+@click.command()
+@click.option("--skip-export", is_flag=True, help="Skip data export from the database.")
+def train_pipeline(skip_export: bool) -> None:
+    """Main function to run the training pipeline for the no-show model."""
     load_dotenv(override=True)
     setup_root_logger()
 
-    data_path = Path(__file__).parents[1] / "data" / "raw"
-    output_path = Path(__file__).parents[1] / "data" / "processed"
-    model_path = Path(__file__).parents[1] / "output" / "models"
+    if not skip_export:
+        logger.info("Starting data export...")
+        export_data()
 
-    # Export the data from the database
-    logger.info("Starting data export...")
-    export_data()
+    data_path = Path(__file__).parents[2] / "data" / "raw"
+    output_path = Path(__file__).parents[2] / "data" / "processed"
+    model_path = Path(__file__).parents[2] / "output" / "models"
 
-    # Load the exported data
     logger.info("Processing data...")
     appointments_df = load_appointment_csv(data_path / "poliafspraken_no_show.csv")
     appointments_df = process_appointments(appointments_df, CLINIC_CONFIG)
@@ -58,3 +62,7 @@ if __name__ == "__main__":
             "learning_rate": [0.01, 0.05, 0.1],
         },
     )
+
+
+if __name__ == "__main__":
+    train_pipeline()

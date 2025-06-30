@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.1] - 2025-06-25
+
+### Changed
+- Updated the data loading for appointments to filter out appointments that are both finished and no-show (due to moving the original appointment for example) and filter out appointments that were cancelled on time (no no-show).
+- Improved the train pipeline script and made it available as a CLI command using click.
+- Improved the loading function for appointments to use the pyarrow backend, which results in faster loading times and better type inference.
+- Updated requirements
+
 ## [2.1.0] - 2025-06-18
 
 ### Changed
