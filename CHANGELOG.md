@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.2] - 2025-07-23
+
+### Added
+- Added Notebook 'performance_monitoring' to monitor the performance of the No-Show model over the group of patients who are not called in the past. 
+
+
 ## [2.1.1] - 2025-06-25
 
 ### Changed
