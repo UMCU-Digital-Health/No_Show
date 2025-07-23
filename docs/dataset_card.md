@@ -29,6 +29,8 @@ The input data for the prediction is structured as follows:
   "APP_ID": "5678",
   "pseudo_id": "1ch5k",
   "hoofdagenda": "Revalidatie en Sport",
+  "hoofdagenda_id": "ZH0435",
+  "subagenda_id": "S1",
   "specialty_code": "REV",
   "soort_consult": "Controle fysiek",
   "afspraak_code": "CG63",
@@ -46,6 +48,7 @@ The input data for the prediction is structured as follows:
   "name": "Q5",
   "description": "receptie op Q5",
   "name_text": "C. Kent",
+  "patient_id": "123456789",
   "name_given1_callMe": "Clark",
   "telecom1_value": "0683726384",
   "telecom2_value": "112",
@@ -63,12 +66,14 @@ Below you can find the datafields present in the dataset. The datafields are the
 - `APP_ID`: string with the identifier of the Appointment, for example `"1573125974"`
 - `pseudo_id`: string of the hashed patient id, for example `"JE994ND3Y30XN"`
 - `hoofdagenda`: string with the name of the main HiXagenda, for example `"Cardiologie"`
+- `hoofdagenda_id`: string with the id of the main HiXagenda, for example `"ZH0435"`
+- `subagenda_id`: string with the id of the subagenda, for example `"S1"`
 - `specialty_code`: string with the specialty code of the HealthCareService, for example: `"REV"`, `"KAP"`, `"SPO"`, `"LON"`
 - `soort_consult`: string with consult type, mainly used to filter out phone appointments, for example: `"Telefonisch"`, `"Controle fysiek"`
 - `afspraakcode`: string with the code for `soort_consult`, for example: `"GT91"`
-- `start`: UNIX timestamp in ms with the start date of the appointment, for example: `1717232400000`
-- `end`: UNIX timestamp in ms with the end date of the appointment, for example: `1717234200000`
-- `gearriveerd`: UNIX timestamp in ms with the date of arrival of the patient, for example: `1717232590000`
+- `start`: UNIX timestamp in ms or ISO8601 formatted datetime with the start date of the appointment, for example: `1717232400000`
+- `end`: UNIX timestamp in ms or ISO8601 formatted datetime with the end date of the appointment, for example: `1717234200000`
+- `gearriveerd`: UNIX timestamp in ms or ISO8601 formatted datetime with the date of arrival of the patient, for example: `1717232590000`
 - `created`: UNIX timestamp in ms with the creation date of the appointment, for example: `1713366900000`
 - `minutesDuration`: integer indicating the duration of the appointment in minutes, for example: `30`
 - `status`: string with the status of the appointment, for example: `"planned"` or `"finished"`.
@@ -80,11 +85,12 @@ Below you can find the datafields present in the dataset. The datafields are the
 - `name`: Code of the outpatient clinic reception. The first letter usually represents the area in the UMCU, for example: `"Receptie 10A"` *only used during prediction* 
 - `description`: Description of the outpatient clinic reception, for example `"receptie van cardiologie"` *only used during prediction*
 - `name_text`: The name of the patient, for example `"John H. Doe"` *only used during prediction*
+- `patient_id`: The patient identifier number, for example `"123456789"` *only used during prediction*
 - `name_given1_callMe`: The first name of the patient, for example `"John"` *only used during prediction*
 - `telecom1_value`: The mobile phone number of the patient (if known), for example: `"06-73496410"` *only used during prediction*
 - `telecom2_value`: The home phone number of the patient (if known), for example: `"0481-643995"` *only used during prediction*
 - `telecom3_value`: The other phone number of the patient (if known), for example: `null` *only used during prediction*
-- `birthDate`: UNIX timestamp in ms of the birthdate of the patient, needed for validation when calling, for example `679418100000` *only used during prediction*
+- `birthDate`: UNIX timestamp in ms or ISO8601 formatted datetime of the birthdate of the patient, needed for validation when calling, for example `679418100000` *only used during prediction*
 
 ### Data Splits
 
