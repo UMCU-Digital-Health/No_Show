@@ -1,17 +1,55 @@
-# Welcome to MkDocs
+# Getting started
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+Welcome to the documentation for the No-Show prediction model. This project aims to prevent no-shows by calling high-risk patients before their appointments.
 
-## Commands
+## Overview
+On this page, you will find information on how to install and use the No-Show prediction model.
+For information on the dataset used for training the model, please refer to the [Dataset Card](dataset_card.md).
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+## Install the No-Show package
 
-## Project layout
+To install the No-Show package, first clone the repository and install the package using a package manager like pip or uv.
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+clone the repository:
+
+```bash
+git clone https://github.com/UMCU-Digital-Health/No_Show.git
+cd No_Show
+```
+
+Then, install the package:
+
+```bash
+pip install -r requirements.txt
+```
+
+or using [uv](https://astral.sh/uv/):
+
+```bash
+uv sync
+```
+
+## Run pipelines
+
+To run the entire pipeline from data export to model training, you can use the `train_no_show` command (or `python src/noshow/train_pipeline.py`):
+
+```bash
+train_no_show --skip-export  # skip the export step if you already have the data
+```
+
+For more information on data used, check the dataset card [here](dataset_card.md)
+
+## Run the API
+
+To run the prediction API, which creates predictions for appointments, you can use the following command:
+
+```bash
+python run/app.py
+```
+
+## Run the Calling Dashboard
+The calling dashboard is a Streamlit application that allows users to view predictions and manage patient calls. To run the dashboard locally, use the following command:
+
+```bash
+streamlit run run/calling_dash.py
+```

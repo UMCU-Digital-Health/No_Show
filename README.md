@@ -41,7 +41,7 @@ To run the entire pipeline from data export to model training, you can use the `
 train_no_show --skip-export  # skip the export step if you already have the data
 ```
 
-For more information on data used, check the dataset card [here](data/dataset_card.md)
+For more information on data used, check the dataset card [here](docs/dataset_card.md)
 
 ## Deploying to PositConnect
 

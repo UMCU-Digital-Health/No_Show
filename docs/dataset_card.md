@@ -24,7 +24,7 @@ The dataset is mostly Dutch. However, some columns (that follow FHIR standards) 
 
 The input data for the prediction is structured as follows:
 
-```{json}
+```json
 {
   "APP_ID": "5678",
   "pseudo_id": "1ch5k",
