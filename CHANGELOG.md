@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.2] - 2025-07-23
+
+### Changed
+- Updated dependencies
+- Changed docs package from sphinx to mkdocs
+
+### Added
+- Added model card to documentation
+- Added a build pipeline to build the documentation and deploy it to GitHub Pages
+
 ## [2.1.1] - 2025-06-25
 
 ### Changed

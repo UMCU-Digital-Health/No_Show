@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "noshow"
-version = "2.1.1"
+version = "2.1.2"
 authors = [
   { name="Ruben Peters", email="r.peters-7@umcutrecht.nl" },
   { name="Eric Wolters", email="e.j.wolters-4@umcutrecht.nl" },
@@ -48,6 +48,10 @@ dev = [
     "alembic>=1.13.3",
     "rsconnect-python>=1.24.0",
     "dvc>=3.60.1",
+]
+docs = [
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.6.15",
 ]
 lint = [
     "ruff>=0.7.1",
