@@ -42,21 +42,21 @@ Users should be aware of potential biases and limitations. Furthermore, users sh
 
 To use the No-Show prediction model, you can follow these steps:
 1. **Install the package**: Use pip or uv to install the required dependencies.
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+pip install -r requirements.txt
+```
    or
-   ```bash
-   uv sync
-   ```
+```bash
+uv sync
+```
 2. **Run the training pipeline**: Execute the training pipeline to train the model on your data.
-   ```bash
-   train_no_show --skip-export  # skip the export step if you already have the data
-    ```
+```bash
+train_no_show --skip-export  # skip the export step if you already have the data
+```
 3. **Make predictions using the API**: Use the trained model to make predictions on new appointment data.
-    ```bash
-    python run/app.py
-    ```
+```bash
+python run/app.py
+```
 
 ## Training Details
 

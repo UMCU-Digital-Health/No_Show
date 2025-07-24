@@ -23,25 +23,3 @@ jobs:
       run: uv sync --only-group docs
     - name: Build Docs
       run: uv run mkdocs gh-deploy --force
-
-  deploy_mkdocs:
-    name: Deploy MkDocs to GitHub Pages
-    needs: build_mkdocs
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: '.'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
