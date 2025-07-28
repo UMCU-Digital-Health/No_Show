@@ -6,6 +6,11 @@ on:
       - main
     paths:
       - 'docs/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
 
 jobs:
   build_mkdocs:
@@ -23,3 +28,5 @@ jobs:
       run: uv sync --only-group docs
     - name: Build Docs
       run: uv run mkdocs gh-deploy --force
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
