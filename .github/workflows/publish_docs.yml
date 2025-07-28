@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - 'docs/**'
-  workflow_dispatch:
 
 jobs:
   build_mkdocs:
