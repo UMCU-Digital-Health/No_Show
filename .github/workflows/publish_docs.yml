@@ -7,6 +7,9 @@ on:
     paths:
       - 'docs/**'
       - 'mkdocs.yml'
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build_mkdocs:
