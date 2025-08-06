@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'docs/**'
+      - 'mkdocs.yml'
 
 jobs:
   build_mkdocs:
@@ -22,4 +23,10 @@ jobs:
     - name: Install dependencies
       run: uv sync --only-group docs
     - name: Build Docs
-      run: uv run mkdocs gh-deploy --force
+      env:
+        GH_TOKEN: ${{ secrets.publish-mkdocs-no-show }}
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+        git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
+        uv run mkdocs gh-deploy --force
