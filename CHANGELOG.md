@@ -12,7 +12,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Notebook 'performance_monitoring' to monitor the performance of the No-Show model over the group of patients who were not called.
 - Added PR request template.
 
-
 ## [2.1.2] - 2025-07-23
 
 ### Changed
@@ -22,8 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added model card to documentation
 - Added a build pipeline to build the documentation and deploy it to GitHub Pages
-
-
 
 ## [2.1.1] - 2025-06-25
 
