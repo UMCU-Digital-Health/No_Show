@@ -6,12 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-
-## [2.1.2] - 2025-07-23
+## [2.1.3] - 2025-08-13
 
 ### Added
 - Added Notebook 'performance_monitoring' to monitor the performance of the No-Show model over the group of patients who were not called.
 - Added PR request template.
+
+
+## [2.1.2] - 2025-07-23
+
+### Changed
+- Updated dependencies
+- Changed docs package from sphinx to mkdocs
+
+### Added
+- Added model card to documentation
+- Added a build pipeline to build the documentation and deploy it to GitHub Pages
+
+
 
 ## [2.1.1] - 2025-06-25
 
