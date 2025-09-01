@@ -10,6 +10,7 @@ on:
 
 jobs:
   build_mkdocs:
+    if: github.repository == 'UMCU-Digital-Health/No_Show'  # Only build on public repo
     name: Build and Publish Docs
     runs-on: ubuntu-latest
     steps:

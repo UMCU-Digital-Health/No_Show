@@ -16,6 +16,8 @@
 This repo contains the code for the No-Show prediction model, currently implemented at the UMC Utrecht and developed by the [AI For Health](https://github.com/UMCU-Digital-Health) team.
 For more information on implemented AI-tools, see <https://research.umcutrecht.nl/ai-applications-in-use>
 
+Note that all the internal development, including PRs is done in a separate private repo and synced to this repo when a new release is published.
+
 ## Contributing or using in your organisation
 We welcome issues or pull requests! The easiest way to use this repo in your own organisation is to fork the repo. You can then change the data pipelines to fit with your organisation. If you need help, either add an issue or send an e-mail to [AI for Health](datascience@umcutrecht.nl).
 

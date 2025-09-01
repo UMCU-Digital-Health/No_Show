@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.4] - 2025-08-28
+
+### Changed
+- Changed pipeline to work in dev repo and push to public on release
+
+## [2.1.3] - 2025-08-13
+
+### Added
+- Added Notebook 'performance_monitoring' to monitor the performance of the No-Show model over the group of patients who were not called.
+- Added PR request template.
+
 ## [2.1.2] - 2025-07-23
 
 ### Changed
