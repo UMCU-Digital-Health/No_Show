@@ -6,7 +6,7 @@ import streamlit as st
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session, sessionmaker
 
-from noshow.config import MUTE_PERIOD
+from noshow.config import MUTE_PERIOD, PREDICTION_THRESHOLD
 from noshow.database.connection import CastDate, get_engine
 from noshow.database.models import ApiCallResponse, ApiPatient, ApiPrediction
 
@@ -60,6 +60,7 @@ def get_patient_list(_session: Session, date_input: date) -> List[str]:
         .where(ApiPrediction.active)
         .where(ApiPatient.treatment_group >= 1)
         .where((ApiPatient.opt_out.is_(None)) | (ApiPatient.opt_out == 0))
+        .where(ApiPrediction.prediction >= PREDICTION_THRESHOLD)
         .group_by(
             ApiPrediction.patient_id,
             ApiPatient.treatment_group,

@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - 2025-10-15
+
+### Added
+- Added a limit in the dashboard for the predictions to only show patients with a predicted score >= 0.1, to prevent calling patients with a very low no-show risk.
+
+### Changed
+- Updated dependencies
+- Retrained model
+- Moved the prediction threshold to the config file
+
 ## [2.1.4] - 2025-08-28
 
 ### Changed

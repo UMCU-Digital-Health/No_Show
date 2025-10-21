@@ -30,11 +30,13 @@ class FeatureBuildingConfig(BaseModel):
 
 class DashboardConfig(BaseModel):
     """Dashboards configuration. contains how long a called patient should be
-    muted and how long sensitive data should be kept.
+    muted and how long sensitive data should be kept. It also contains the prediction
+    threshold for showing patients in the dashboard.
     """
 
     mute_period: int = 0
     keep_sensitive_data: int = 14
+    prediction_threshold: float = 0.1
 
 
 class ClinicConfig(BaseModel):
@@ -132,6 +134,7 @@ project_config = load_config(CONFIG_PATH)
 NO_SHOW_CODES = project_config.preprocess.no_show_codes
 MUTE_PERIOD = project_config.dashboard.mute_period
 KEEP_SENSITIVE_DATA = project_config.dashboard.keep_sensitive_data
+PREDICTION_THRESHOLD = project_config.dashboard.prediction_threshold
 
 MINUTES_EARLY_CUTOFF = project_config.feature_building.minutes_early_cutoff
 APPOINTMENTS_LAST_DAYS = project_config.feature_building.appointments_last_days
