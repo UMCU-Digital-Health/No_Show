@@ -1,0 +1,14 @@
+Generic single-database configuration.
+
+Used to run database migrations.
+
+To generate migration scripts use:
+```
+alembic revision --autogenerate -m "message"
+```
+
+Then to apply the migrations run:
+```
+alembic upgrade head
+```
+Though this should be part of the CI/CD or deploy pipeline

@@ -37,7 +37,6 @@ class ApiPatient(Base):
         index=True,
     )
     call_number: Mapped[int] = mapped_column(Integer, init=False, nullable=True)
-    last_call_date: Mapped[date] = mapped_column(Date, init=False, nullable=True)
     opt_out: Mapped[int] = mapped_column(Integer, init=False, nullable=True)
     treatment_group: Mapped[int] = mapped_column(Integer, init=False, nullable=True)
 
@@ -46,12 +45,16 @@ class ApiPrediction(Base):
     __tablename__ = "apiprediction"
     __table_args__ = {"schema": "noshow"}
 
-    id: Mapped[str] = mapped_column(String(50), primary_key=True, index=True)
+    id: Mapped[int] = mapped_column(
+        primary_key=True, index=True, init=False, unique=True
+    )
+    appointment_id: Mapped[str] = mapped_column(String(50), index=True)
     prediction: Mapped[float] = mapped_column(Float, nullable=True)
     start_time: Mapped[datetime] = mapped_column(DateTime, index=True)
     clinic_name: Mapped[str]
     clinic_reception: Mapped[str]
     clinic_phone_number: Mapped[str]
+    clinic_teleq_unit: Mapped[str] = mapped_column(String, nullable=True)
     request_id: Mapped[int] = mapped_column(
         Integer, ForeignKey(ApiRequest.id), init=False
     )
@@ -72,6 +75,7 @@ class ApiSensitiveInfo(Base):
     __table_args__ = {"schema": "noshow"}
 
     patient_id: Mapped[str] = mapped_column(String(64), primary_key=True, index=True)
+    hix_number: Mapped[str] = mapped_column(String(255), nullable=True)
     full_name: Mapped[str]
     first_name: Mapped[str] = mapped_column(String, nullable=True)
     birth_date: Mapped[date] = mapped_column(Date, nullable=True)
@@ -85,7 +89,9 @@ class ApiCallResponse(Base):
     __table_args__ = {"schema": "noshow"}
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, init=False)
+    timestamp: Mapped[datetime] = mapped_column(DateTime, nullable=True, init=False)
+    user: Mapped[str] = mapped_column(String(100), nullable=True, init=False)
     call_status: Mapped[str]
     call_outcome: Mapped[str]
     remarks: Mapped[str]
-    prediction_id: Mapped[str] = mapped_column(String(50), ForeignKey(ApiPrediction.id))
+    prediction_id: Mapped[int] = mapped_column(ForeignKey(ApiPrediction.id))

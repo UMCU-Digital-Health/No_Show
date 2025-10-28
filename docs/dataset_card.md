@@ -1,18 +1,18 @@
 ## Dataset Description
 
 - **Repository:** [https://github.com/UMCU-Digital-Health/No_Show](https://github.com/UMCU-Digital-Health/No_Show)
-- **Leaderboard:** Current best scores can be found [here](../output/dvclive/metrics.json)
+- **Leaderboard:** Current best model has an AUC of 0.76
 - **Point of Contact:** [Ruben Peters](mailto:r.peters-7@umcutrecht.nl)
 
 Based on the dataset card template from huggingface, which can be found [here](https://github.com/huggingface/datasets/blob/main/templates/README_guide.md#table-of-contents).
 
 ### Dataset Summary
 
-The dataset consists of all appointments created between January 2015 and June 2024. It combines data from different Data platform tables, namely Appointment, HealthCareService, Polyklinisch_consult, Patient and Patient_address. It uses HealthCareService specialtycodes to filter on clinic and excludes appointments that are booked.
+The dataset consists of all appointments created between January 2015 and June 2024. It combines data from different Data platform tables (modeled after FHIR), namely Encounter, HealthcareService, Location, Patient, and Patient_Address. It uses HealthCareService specialtycodes to filter on clinic and excludes appointments that are booked.
 
 ### Supported Tasks and Leaderboards
 
-- `Classification`: The dataset can be used to train a model for classifying no-shows at the clinics in the UMCU. Success on this task is typically measured by achieving a high AUC score. The performance of the best model can be found in [output/dvclive/metrics.json](../output/dvclive/metrics.json).
+- `Classification`: The dataset can be used to train a model for classifying no-shows at the clinics in the UMCU. Success on this task is typically measured by achieving a high AUC score. The performance of the best model is currently around 0.76.
 
 ### Languages
 
@@ -24,11 +24,13 @@ The dataset is mostly Dutch. However, some columns (that follow FHIR standards) 
 
 The input data for the prediction is structured as follows:
 
-```{json}
+```json
 {
   "APP_ID": "5678",
   "pseudo_id": "1ch5k",
   "hoofdagenda": "Revalidatie en Sport",
+  "hoofdagenda_id": "ZH0435",
+  "subagenda_id": "S1",
   "specialty_code": "REV",
   "soort_consult": "Controle fysiek",
   "afspraak_code": "CG63",
@@ -37,15 +39,16 @@ The input data for the prediction is structured as follows:
   "gearriveerd": "1717232590000",
   "created": "1713366900000",
   "minutesDuration": "30",
-  "status": "fulfilled",
+  "status": "finished",
   "status_code_original": "J",
-  "cancelationReason_code": null,
-  "cancelationReason_display": null,
+  "mutationReason_code": null,
+  "mutationReason_display": null,
   "BIRTH_YEAR": "1994",
   "address_postalCodeNumbersNL": "3994",
   "name": "Q5",
   "description": "receptie op Q5",
   "name_text": "C. Kent",
+  "patient_id": "123456789",
   "name_given1_callMe": "Clark",
   "telecom1_value": "0683726384",
   "telecom2_value": "112",
@@ -63,28 +66,31 @@ Below you can find the datafields present in the dataset. The datafields are the
 - `APP_ID`: string with the identifier of the Appointment, for example `"1573125974"`
 - `pseudo_id`: string of the hashed patient id, for example `"JE994ND3Y30XN"`
 - `hoofdagenda`: string with the name of the main HiXagenda, for example `"Cardiologie"`
+- `hoofdagenda_id`: string with the id of the main HiXagenda, for example `"ZH0435"`
+- `subagenda_id`: string with the id of the subagenda, for example `"S1"`
 - `specialty_code`: string with the specialty code of the HealthCareService, for example: `"REV"`, `"KAP"`, `"SPO"`, `"LON"`
 - `soort_consult`: string with consult type, mainly used to filter out phone appointments, for example: `"Telefonisch"`, `"Controle fysiek"`
 - `afspraakcode`: string with the code for `soort_consult`, for example: `"GT91"`
-- `start`: UNIX timestamp in ms with the start date of the appointment, for example: `1717232400000`
-- `end`: UNIX timestamp in ms with the end date of the appointment, for example: `1717234200000`
-- `gearriveerd`: UNIX timestamp in ms with the date of arrival of the patient, for example: `1717232590000`
+- `start`: UNIX timestamp in ms or ISO8601 formatted datetime with the start date of the appointment, for example: `1717232400000`
+- `end`: UNIX timestamp in ms or ISO8601 formatted datetime with the end date of the appointment, for example: `1717234200000`
+- `gearriveerd`: UNIX timestamp in ms or ISO8601 formatted datetime with the date of arrival of the patient, for example: `1717232590000`
 - `created`: UNIX timestamp in ms with the creation date of the appointment, for example: `1713366900000`
 - `minutesDuration`: integer indicating the duration of the appointment in minutes, for example: `30`
-- `status`: string with the status of the appointment, for example: `"booked"` or `"fulfilled"`.
+- `status`: string with the status of the appointment, for example: `"planned"` or `"finished"`.
 - `status_code_original`: string with the status of the appointent, for example: `"J"` or `"N"`
-- `cancelationReason_code`: string with the code of the reason of cancelation, for example `null` or `"N"`
-- `cancelationReason_display`: string with the reason of cancelation, for example: `"No Show"` or `null`
+- `mutationReason_code`: string with the code of the reason of mutation, for example `null` or `"N"`
+- `mutationReason_display`: string with the reason of mutation, for example: `"No Show"` or `null`
 - `BIRTH_YEAR`: integer containing the birthyear of the patient, for example `1991`
 - `address_postalCodeNumbersNL`: integer containing the first 4 digits of the postalcode of the patient, for example `3994`
 - `name`: Code of the outpatient clinic reception. The first letter usually represents the area in the UMCU, for example: `"Receptie 10A"` *only used during prediction* 
 - `description`: Description of the outpatient clinic reception, for example `"receptie van cardiologie"` *only used during prediction*
 - `name_text`: The name of the patient, for example `"John H. Doe"` *only used during prediction*
+- `patient_id`: The patient identifier number, for example `"123456789"` *only used during prediction*
 - `name_given1_callMe`: The first name of the patient, for example `"John"` *only used during prediction*
 - `telecom1_value`: The mobile phone number of the patient (if known), for example: `"06-73496410"` *only used during prediction*
 - `telecom2_value`: The home phone number of the patient (if known), for example: `"0481-643995"` *only used during prediction*
 - `telecom3_value`: The other phone number of the patient (if known), for example: `null` *only used during prediction*
-- `birthDate`: UNIX timestamp in ms of the birthdate of the patient, needed for validation when calling, for example `679418100000` *only used during prediction*
+- `birthDate`: UNIX timestamp in ms or ISO8601 formatted datetime of the birthdate of the patient, needed for validation when calling, for example `679418100000` *only used during prediction*
 
 ### Data Splits
 
@@ -109,8 +115,8 @@ All data is extracted from the Data Platform maintained by the UMCU.
 
 #### Initial Data Collection and Normalization
 
-Data is collected using a SQL query which can be found [here](raw/data_export.sql).
-The postal codes are exported from [here](https://download.geonames.org/export/zip/NL.txt).
+Data is collected using a SQL query which can be found [here](https://raw.githubusercontent.com/UMCU-Digital-Health/No_Show/refs/heads/main/data/sql/data_export.sql).
+The postal codes are exported from [here](https://download.geonames.org/export/zip/NL.zip).
 
 #### Who are the source data producers?
 
@@ -121,9 +127,9 @@ The data consists of all patients of the participating clinics at the UMC Utrech
 ### Annotations
 
 The target variable of no-shows should be inferred from the data as follows:
-If the appointment was cancelled and the cancellationReasonCode is `"N"` than the status is no-show. All other observations are `show`.
+If the appointment was cancelled and the mutationReason_code is `"N"` than the status is no-show. All other observations are `show`.
 
-Appointments that have status `booked` and are excluded from the train data. When predicting all appointments should have status `booked`, except for the historic predictions of the patients.
+Appointments that have status `planned` or `in-progress` and are excluded from the train data. When predicting all appointments should have status `planned`, except for the historic predictions of the patients.
 
 ### Personal and Sensitive Information
 

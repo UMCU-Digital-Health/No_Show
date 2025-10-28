@@ -32,7 +32,7 @@ def add_patient_features(
     )
 
     appointments_df["age"] = (
-        appointments_df.index.get_level_values("start").year
+        appointments_df.index.get_level_values("start").year  # type: ignore
         - appointments_df["BIRTH_YEAR"]
     )
     appointments_df = appointments_df.drop(columns=["latitude", "longitude"])

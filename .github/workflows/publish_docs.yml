@@ -1,0 +1,33 @@
+name: Publish Docs
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - 'mkdocs.yml'
+
+jobs:
+  build_mkdocs:
+    if: github.repository == 'UMCU-Digital-Health/No_Show'  # Only build on public repo
+    name: Build and Publish Docs
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - name: Install dependencies
+      run: uv sync --only-group docs
+    - name: Build Docs
+      env:
+        GH_TOKEN: ${{ secrets.publish-mkdocs-no-show }}
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+        git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
+        uv run mkdocs gh-deploy --force

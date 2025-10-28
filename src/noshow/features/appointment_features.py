@@ -41,8 +41,8 @@ def add_days_since_last_appointment(appointments_df: pd.DataFrame) -> pd.DataFra
     """Add the amount of days since the last appointment
 
     Note that the last appointment can also be an appointment that hasn't happened
-    yet (booked status) Therefore this function resturns the days since the last
-    (booked) appointment.
+    yet (planned status) Therefore this function resturns the days since the last
+    (planned) appointment.
 
     Parameters
     ----------
@@ -112,7 +112,7 @@ def add_appointments_same_day(appointments_df: pd.DataFrame) -> pd.DataFrame:
     pd.DataFrame
         The input dataframe with extra column `appointments_same_day`
     """
-    appointment_date = appointments_df.index.get_level_values("start").date
+    appointment_date = appointments_df.index.get_level_values("start").date  # type: ignore
     appointment_pseudo_id = appointments_df.index.get_level_values("pseudo_id")
     appointments_df["appointments_same_day"] = appointments_df.groupby(
         [appointment_pseudo_id, appointment_date]
@@ -147,7 +147,7 @@ def add_minutes_early(appointments_df: pd.DataFrame, cutoff: int = 60) -> pd.Dat
     appointments_df["minutes_early"] = (
         appointments_df.index.get_level_values(level="start")
         - appointments_df["gearriveerd"]
-    ).dt.total_seconds() / 60
+    ).dt.total_seconds() / 60  # type: ignore
 
     appointments_df.loc[appointments_df["gearriveerd"].isna(), "minutes_early"] = 0
     appointments_df.loc[appointments_df["minutes_early"] > cutoff, "minutes_early"] = (
@@ -184,7 +184,7 @@ def add_time_features(appointments_df: pd.DataFrame) -> pd.DataFrame:
     pd.DataFrame
         The input dataframe with extra columns: `weekday` and `hour`.
     """
-    appointments_df["weekday"] = appointments_df.index.get_level_values("start").weekday
-    appointments_df["hour"] = appointments_df.index.get_level_values("start").hour
+    appointments_df["weekday"] = appointments_df.index.get_level_values("start").weekday  # type: ignore
+    appointments_df["hour"] = appointments_df.index.get_level_values("start").hour  # type: ignore
 
     return appointments_df

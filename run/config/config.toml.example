@@ -1,0 +1,28 @@
+[preprocess]
+no_show_codes = ["N", "0000000012", "0000000013"]
+
+[feature_building]
+appointments_last_days = 14
+minutes_early_cutoff = 60
+
+[dashboard]
+mute_period = 2
+keep_sensitive_data = 14
+
+[clinic]
+
+[clinic.sport_en_revalidatie]
+include_rct = false
+phone_number = "58831"
+teleq_name = "Sport en Revalidatie"
+main_agenda_codes = [
+    "ZH0307", # RF&S Revalidatiegeneeskunde
+    "ZH0435", # RF&S Sportgeneeskunde
+]
+subagenda_exclude = true
+subagendas = []
+appcode_exclude = false
+appcodes = [
+    "CF15",
+    "CF30",
+]

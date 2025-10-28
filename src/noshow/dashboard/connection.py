@@ -1,48 +1,40 @@
+import logging
 from datetime import date, timedelta
 from typing import List
 
 import streamlit as st
-from sqlalchemy import Date, cast, create_engine, func, select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session, sessionmaker
 
 from noshow.config import MUTE_PERIOD
-from noshow.database.models import ApiPatient, ApiPrediction
+from noshow.database.connection import CastDate, get_engine
+from noshow.database.models import ApiCallResponse, ApiPatient, ApiPrediction
+
+logger = logging.getLogger(__name__)
 
 
 @st.cache_resource
-def init_session(user: str, passwd: str, host: str, port: str, db: str) -> sessionmaker:
+def init_session() -> sessionmaker:
     """Initialize the connection to the database and cache the resource
 
-    Parameters
-    ----------
-    user : str
-        Username of the service account
-    passwd : str
-        Password of the service account
-    host : str
-        Host of the database
-    port : int
-        Database port
-    db : str
-        Database name
+    Expects the database environment variables to be set in the environment.
+
 
     Returns
     -------
-    Engine
+    sessionmaker
         The returned SQLAlchemy engine used for queries
     """
-
-    CONNECTSTRING = rf"mssql+pymssql://{user}:{passwd}@{host}:{port}/{db}"
-    engine = create_engine(CONNECTSTRING)
+    engine = get_engine()
     session_object = sessionmaker(bind=engine)
     return session_object
 
 
-@st.cache_data(ttl=600)
+@st.cache_data
 def get_patient_list(_session: Session, date_input: date) -> List[str]:
-    """Get the patient list ordered by prediction
+    """Get the patient list ordered by prediction.
 
-    This function returns a list of patient ids who need to be called
+    This function returns a list of patient ids who need to be called.
 
     Parameters
     ----------
@@ -57,25 +49,49 @@ def get_patient_list(_session: Session, date_input: date) -> List[str]:
     List[str]
         List of unique patient ids, sorted by prediction
     """
-    # Calculate the threshold date for the last call
-    threshold_date = date.today() - timedelta(days=round(MUTE_PERIOD * 30.5))
 
-    call_list = _session.execute(
-        select(ApiPrediction.patient_id, func.max(ApiPrediction.prediction))
-        .where(ApiPrediction.start_time.cast(Date) == date_input)
-        .where(ApiPrediction.active)
-        .group_by(ApiPrediction.patient_id)
-        .order_by(func.max(ApiPrediction.prediction).desc())
-        .outerjoin(ApiPrediction.patient_relation)
-        # select rows where last_call_date is null, today or more than x months ago
-        .where(
-            (ApiPatient.last_call_date.is_(None))
-            | (ApiPatient.last_call_date <= cast(threshold_date, Date))
+    call_list_query = (
+        select(
+            ApiPrediction.patient_id,
+            ApiPrediction.clinic_name,
         )
-        # select the treatment group
-        .where(ApiPatient.treatment_group == 1)
+        .outerjoin(ApiPrediction.patient_relation)
+        .where(CastDate(ApiPrediction.start_time) == date_input)
+        .where(ApiPrediction.active)
+        .where(ApiPatient.treatment_group >= 1)
         .where((ApiPatient.opt_out.is_(None)) | (ApiPatient.opt_out == 0))
-    ).all()
+        .group_by(
+            ApiPrediction.patient_id,
+            ApiPatient.treatment_group,
+            ApiPrediction.clinic_name,
+        )
+        .order_by(ApiPatient.treatment_group, func.max(ApiPrediction.prediction).desc())
+    )
 
-    patient_ids = [x.patient_id for x in call_list]
+    call_list = _session.execute(call_list_query).all()
+    mute_set = _get_mute_set(_session)
+
+    seen = set()
+    patient_ids = []
+    for patient_id, clinic_name in call_list:
+        if (patient_id, clinic_name) not in mute_set and (patient_id not in seen):
+            seen.add(patient_id)
+            patient_ids.append(patient_id)
+
+    logger.info(f"Successfully retrieved {len(patient_ids)} patients from the database")
     return patient_ids
+
+
+def _get_mute_set(_session: Session) -> set:
+    """Fetch a set of patient-clinic pairs who have been called in the mute_period."""
+    threshold_date = date.today() - timedelta(days=round(MUTE_PERIOD * 30.5))
+    mute_query = (
+        select(ApiPrediction.patient_id, ApiPrediction.clinic_name)
+        .outerjoin(ApiPrediction.callresponse_relation)
+        .where(CastDate(ApiCallResponse.timestamp) >= threshold_date)
+        .where(CastDate(ApiCallResponse.timestamp) < date.today())
+        .where(ApiCallResponse.call_status.in_(["Gebeld", "Onbereikbaar"]))
+        .distinct()
+    )
+    mute_set = set(_session.execute(mute_query).fetchall())
+    return mute_set

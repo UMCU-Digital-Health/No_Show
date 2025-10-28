@@ -7,6 +7,330 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.4] - 2025-08-28
+
+### Changed
+- Changed pipeline to work in dev repo and push to public on release
+
+## [2.1.3] - 2025-08-13
+
+### Added
+- Added Notebook 'performance_monitoring' to monitor the performance of the No-Show model over the group of patients who were not called.
+- Added PR request template.
+
+## [2.1.2] - 2025-07-23
+
+### Changed
+- Updated dependencies
+- Changed docs package from sphinx to mkdocs
+
+### Added
+- Added model card to documentation
+- Added a build pipeline to build the documentation and deploy it to GitHub Pages
+
+## [2.1.1] - 2025-06-25
+
+### Changed
+- Updated the data loading for appointments to filter out appointments that are both finished and no-show (due to moving the original appointment for example) and filter out appointments that were cancelled on time (no no-show).
+- Improved the train pipeline script and made it available as a CLI command using click.
+- Improved the loading function for appointments to use the pyarrow backend, which results in faster loading times and better type inference.
+- Updated requirements
+
+## [2.1.0] - 2025-06-18
+
+### Changed
+- Updated the export query to only use Encounter and no longer Appointment
+- Updated the training pipeline to use Mlflow instead of DVCLive
+- Encounter.status has a different set of values, changed the code to use the new values (e.g. 'finished' instead of 'fullfilled' and 'planned' instead of 'booked')
+
+### Added
+- Added a pipeline for the entire training process, including data export, feature engineering, and model training
+
+## [2.0.5] - 2025-06-04
+
+### Changed
+- Added a message to the calling dash if the current selected date is a holiday in the Netherlands
+
+## [2.0.4] - 2025-06-11
+### Changed
+- Columns 'cancelationReason_code', 'cancelationReason_display', and 'cancelationReason_system' in model Appointment are changed respectively to 'mutationReason_code', 'mutationReason_display', and 'mutationReason_system'. 
+
+
+## [2.0.3] - 2025-06-04
+
+### Changed
+- Call_status only displays a telephone icon to the corresponding prediction row in the calling dashboard.
+
+## [2.0.2] - 2025-06-04
+
+### Changed
+- Updated the subagendas for Genetics department to remove locations outside of UMCU
+- Updated dependencies
+- Reran pipeline and retrained model on new export
+- Updated the postal code file to include the latest postal codes
+
+## [2.0.1] - 2025-05-27
+
+### Changed
+- Updated the database models to reflect result after the database migration
+
+## [2.0.0] - 2025-04-30
+
+Updated major version to 2.0.0 due to breaking changes in the API and database models.
+
+### Changed
+- Updated logging for dashboard and API, including better formatting
+- Updated code to work on both local SQLite and MSSQL databases, to enable local testing
+- Updated database models to use a new PK for predictions
+- Updated the API to save moved appointments as a new prediction (instead of overwriting the old one)
+- Changed the remove sensitive info script to use the start_date from the api instead of the current timestamp and increased the lookback period to 14 days
+- Predict API no longer returns the predictions, but only a message containing the number of predictions
+- Updated dependencies
+
+### Added
+- Added a local test dataset to use in the API, since the data in the tests folder requires a custom mock config
+
+## [1.6.1] - 2025-04-09
+
+### Changed
+- Updated unit tests coverage
+
+## [1.6.0] - 2025-04-08
+### Added
+- Button in calling dashboard to go to the first patiënt who has not yet been called.
+- Warning to first save results in the calling dashboard, to prevent that the call_status remains 'wordt gebeld'. 
+
+### Changed
+- Mute_list query to exclude patients who are called today, so that these patients are still visible in the calling dashboard. 
+
+### Removed
+- Selectbox for user of calling dashboard to select the call_status. 
+
+
+## [1.5.7] - 2025-04-15
+
+### Changed
+- Updated example .env file
+- Updated No-show codes to match recent changes in HiX and moved to config file
+- Moved from tomli to build-in tomllib
+- Updated requirements
+
+
+## [1.5.6] - 2025-03-31
+
+### Changed
+- Changed 'Bel me niet' from a selectbox option of 'Resultaat gesprek' to a separate checkbox. 
+
+### Added
+- Option to show the number of patients who were not called seperatly in the admin dashboard by selecting a checkbox. 
+
+
+## [1.5.5] - 2025-03-24
+
+### Changed
+- Changed data_export.sql and data_prediction.sql to remove appointment codes referring to family conversations. These type of appointments only occured twelve times in the raw data, therefore it is not necessary to train the model again. 
+
+## [1.5.4] - 2025-03-24
+### Changed
+- Reversed change from clinic_name in ApiPredidiction from clinic back to main agenda.
+
+## [1.5.3] - 2025-03-19
+### Added
+- Mute patients based on combination patient-clinic, instead of only the last call date of the patient
+
+### Changed
+- Changed clinic_name in ApiPrediction to actual clinic name instead of main agenda
+
+### Removed
+- Last call date column from ApiPatient table
+
+
+## [1.5.2] - 2025-02-05
+
+### Added
+- Added current username to saved message in calling dashboard
+
+### Changed
+- Changed information that fastapi runs once per day to every two hours in README.md
+
+## [1.5.1] - 2024-12-23
+
+### Added
+- Error warmings in case no appointments are provided
+- Added ssl-certificate fix in deploy script
+- Added unit tests for empty predictions
+
+### Changed
+- Saving of predictions is now located in helper function
+- Updated requirements to solve dependabot alert
+
+## [1.5.0] - 2024-12-10
+
+### Changed
+- Upgraded to Python 3.12 and updated all dependencies
+- Retrained model on all clinics
+
+### Added
+- Added last batch of agandas to config
+
+## [1.4.11] - 2024-12-03
+
+### Changed
+- Dashboard now displays a warning when a patient is currently being called, instead of preventing the user from going to the next patient
+- Dashboard will give an informative error when a prediction is no longer available, instead of crashing. Furthermore the user can still navigate to the next patient when this occurs
+- Patient selection buttons now moved to a separate function
+- Refactor render functions to new module
+
+## [1.4.10] - 2024-12-03
+
+### Changed
+- Updated agendas to next scale up step and rerun pipelines
+- Updated data export script to use data from 2016 instead of 2015 and use the PUB publication.
+
+### Added
+- Added a script to export data for model training
+
+## [1.4.9] - 2024-11-18
+
+### Changed
+- Updated agendas
+- Small fixes to data loading and importing dvclive module
+
+## [1.4.8] - 2024-11-13
+
+### Added
+- New clinics added to the queries and config
+
+### Changed
+- Updated dependencies
+
+### Removed
+- Removed deprecated setup.cfg file
+
+## [1.4.7] - 2024-11-04
+
+### Changed
+- Updated manifest files
+
+### Added
+- Username now also saved when filling in call response
+
+### Fixed
+- Alembic now applies ruff format before linter, to prevent errors when generating migrate scripts
+
+## [1.4.6] - 2024-10-29
+
+### Fixed
+- Removed TTL in patient list in calling dashboard and also show patient that were called today to prevent patients from disappearing during calls
+- Corrected database column types so databases are identical over different environments
+
+### Added
+- Added Alembic for database migrations
+- Added a timestamp for call response, so we can track when patients were called
+
+
+## [1.4.5] - 2024-10-21
+
+### Fixed
+- Removed 'sociale pediatrie' from subagendas
+- Set mute period to 2 months
+- Updated requirements to solve dependabot alert
+- Fix the arrived column rename in the dataplatform
+
+## [1.4.4] - 2024-10-21
+
+### Changed
+- Added SQL query for RCT export and notebook to export total dataset and small initial analysis
+
+## [1.4.3] - 2024-10-17
+
+### Fixed
+- Show predictions for the right treatment group in de monitoring tab of the admin dash
+- Fixed x-axis alignment of the monitoring tab graph
+
+### Changed
+- Updated KPIs in the KPI tab of the admin dash
+
+## [1.4.2] - 2024-10-14
+
+### Changed
+- Removed three subagendas from filtering for Allergologie
+- Kind-KNO is a separate agenda (not part of Poli Rood)
+
+## [1.4.1] - 2024-10-10
+
+### Fixed
+- Calling dash now both shows main agenda name and TeleQ name to prevent confusion when TeleQ name does not clearly indicate for which clinic the appointment is
+
+### Changed
+- clinic phone number is still stored in the database, but no longer shown in the calling dash, since any rescheduling needs to be done through TeleQ
+
+## [1.4.0] - 2024-10-08
+
+### Fixed
+- Updated pydantic model to allow empty string for postal code and update birthDate validator
+
+### Added
+- Added agenda codes for first scale-up phase
+
+### Changed
+- Moved queries to separate folder
+- Removed old pilot query and data
+- Retrained and deployed model
+
+## [1.3.2] - 2024-10-07
+
+### Fixed
+- Postal code is no longer required when using the API, empty postal codes will result in the appointment being dropped later during feature building
+
+## [1.3.1] - 2024-10-03
+
+### Changed
+- Use Pydantic for data validation in API
+- Updated unit tests to also use pydantic models
+
+## [1.3.0] - 2024-09-25
+
+### Fixed
+- admin dashboard now also shows clinics outside of RCT
+- moved sql filters to config
+- authentication now fails when X_API_KEY environment variable is not set
+
+### Changed
+- clinic_name used in dashboard now refers to TeleQ name
+- updated requirements
+
+
+## [1.2.14] - 2024-09-09
+
+### Added
+- patient_id to sql_query
+- patient id to sensitive info table as hix_number
+- showed patient id in dashboard
+
+## [1.2.13] - 2024-08-30
+
+### Fixed
+- Fixed issue where 'VELD' afspraken appeared in call list
+## [1.2.12] - 2024-08-07
+
+### Changed
+- Updated requirements
+- Added a format to data-loading functions to prevent pandas warnings
+
+### Fixed
+- Fixed dependency issue in fastapi preventing exceptions from being raised, resulting in internal server error for every possible exception
+
+## [1.2.11] - 2024-08-01
+
+### Added
+- Added a small agenda "Spieren voor Spieren" outside of the RCT
+- Added unit test for adding agendas outside RCT
+
+### Changed
+- Changed treatment group to 2 for agendas outside RCT
+- Removed unnecessary subagendas for Longziekten and Poli-blauw
+
 ## [1.2.10] - 2024-07-24
 
 ### Fixed

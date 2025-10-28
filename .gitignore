@@ -17,6 +17,9 @@ rsconnect-python/
 # Output images
 *.png
 
+# uv lock files (remove for now)
+uv.lock
+
 # Rye (remove for now)
 requirements.lock
 requirements-dev.lock
