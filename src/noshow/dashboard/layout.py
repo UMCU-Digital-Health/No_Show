@@ -179,7 +179,6 @@ def render_appointment_overview(
         all_predictions_df = all_predictions_df.drop(columns="id")
     st.dataframe(
         all_predictions_df.style.apply(highlight_row, axis=1),
-        use_container_width=True,
         hide_index=True,
     )
 

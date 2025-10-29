@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.1] - 2025-10-28
+
+### Fixed
+- Revert to streamlit <1.50 due to bug in selected value in selectbox not being set correctly
+- Removed the use_container_width=True parameter in streamlit, since this will be deprecated in future versions of streamlit
+
+### Changed
+- add_working_days now also accepts subtracting working days
+- Updated the _get_mute_set function to use 3 working days before selected day (the day when the calls are made) instead of today, resulting in correct mute period calculation when looking at older dates in the dashboard
+
+
 ## [2.2.0] - 2025-10-15
 
 ### Added

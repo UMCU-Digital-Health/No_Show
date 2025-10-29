@@ -1,10 +1,11 @@
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
 
-def add_working_days(start_date: datetime, n_days: int) -> datetime:
+def add_working_days(start_date: datetime | date, n_days: int) -> datetime | date:
     """Calculate date in `n_days` working days
 
     Function to calculate the date in n working days, excluding weekends
+    Also works for negative n_days
 
     Parameters
     ----------
@@ -19,8 +20,10 @@ def add_working_days(start_date: datetime, n_days: int) -> datetime:
         date in `n_days` working days
     """
     current_date = start_date
-    while n_days > 0:
-        current_date += timedelta(days=1)
+    step = 1 if n_days >= 0 else -1
+    days_remaining = abs(n_days)
+    while days_remaining > 0:
+        current_date += timedelta(days=step)
         if current_date.weekday() < 5:
-            n_days -= 1
+            days_remaining -= 1
     return current_date

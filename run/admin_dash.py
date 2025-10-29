@@ -227,7 +227,7 @@ def kpi_page():
             order=alt.Order("order:Q", sort="ascending"),
         )
     )
-    st.altair_chart(bar_chart, use_container_width=True)
+    st.altair_chart(bar_chart)
 
 
 def monitoring_page():
@@ -279,7 +279,7 @@ def monitoring_page():
                 y="runtime:Q",
             )
         )
-        st.altair_chart(runtime_chart, use_container_width=True)
+        st.altair_chart(runtime_chart)
 
         st.write("### response codes per dag")
         response_chart = (
@@ -291,7 +291,7 @@ def monitoring_page():
                 color="response_code:N",
             )
         )
-        st.altair_chart(response_chart, use_container_width=True)
+        st.altair_chart(response_chart)
 
         st.write("### Histogram van de voorspellingen")
         histogram_chart = (
@@ -302,7 +302,7 @@ def monitoring_page():
                 y="count()",
             )
         )
-        st.altair_chart(histogram_chart, use_container_width=True)
+        st.altair_chart(histogram_chart)
 
 
 if __name__ == "__main__":

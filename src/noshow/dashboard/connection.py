@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from noshow.config import MUTE_PERIOD, PREDICTION_THRESHOLD
 from noshow.database.connection import CastDate, get_engine
 from noshow.database.models import ApiCallResponse, ApiPatient, ApiPrediction
+from noshow.preprocessing.utils import add_working_days
 
 logger = logging.getLogger(__name__)
 
@@ -70,7 +71,7 @@ def get_patient_list(_session: Session, date_input: date) -> List[str]:
     )
 
     call_list = _session.execute(call_list_query).all()
-    mute_set = _get_mute_set(_session)
+    mute_set = _get_mute_set(_session, date_input)
 
     seen = set()
     patient_ids = []
@@ -83,14 +84,15 @@ def get_patient_list(_session: Session, date_input: date) -> List[str]:
     return patient_ids
 
 
-def _get_mute_set(_session: Session) -> set:
+def _get_mute_set(_session: Session, date_input: date) -> set:
     """Fetch a set of patient-clinic pairs who have been called in the mute_period."""
-    threshold_date = date.today() - timedelta(days=round(MUTE_PERIOD * 30.5))
+    date_min_3 = add_working_days(date_input, -3)
+    threshold_date = date_min_3 - timedelta(days=round(MUTE_PERIOD * 30.5))
     mute_query = (
         select(ApiPrediction.patient_id, ApiPrediction.clinic_name)
         .outerjoin(ApiPrediction.callresponse_relation)
         .where(CastDate(ApiCallResponse.timestamp) >= threshold_date)
-        .where(CastDate(ApiCallResponse.timestamp) < date.today())
+        .where(CastDate(ApiCallResponse.timestamp) < date_min_3)
         .where(ApiCallResponse.call_status.in_(["Gebeld", "Onbereikbaar"]))
         .distinct()
     )

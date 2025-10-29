@@ -150,7 +150,7 @@ def main():
     ] = "🟢"
     if st.session_state["being_called"]:
         all_predictions_df.at[st.session_state["pred_idx"], "calling_icon"] = "📞"
-    pred_id = int(all_predictions_df.iat[st.session_state["pred_idx"], 0])
+    pred_id = int(all_predictions_df.iat[st.session_state["pred_idx"], 0])  # type: ignore
 
     # load information related to call history
     with session_object() as session:
