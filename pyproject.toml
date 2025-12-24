@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "noshow"
-version = "2.2.1"
+version = "2.2.2"
 authors = [
   { name="Ruben Peters", email="r.peters-7@umcutrecht.nl" },
   { name="Eric Wolters", email="e.j.wolters-4@umcutrecht.nl" },
@@ -65,16 +65,33 @@ profile = "black"
 
 [tool.ruff]
 src = ["src"]
+exclude = [
+    "alembic/env.py",
+    "alembic/versions/*.py",
+]
 
 [tool.ruff.lint]
 select = [
-    "B",
-    "E",
-    "F",
-    "W",
-    "C90",
-    "I",
+    "B",    # flake8-bugbear
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "C90",  # mccabe complexity
+    "I",    # isort
+    "ERA",  # Eradicate (commented out code)
+    "A",    # flake8-builtins (overwriting python builtins)
+    "PTH",  # flake8-use-pathlib
+    "N",    # pep8-naming
+    "D101", # pydocstyle: Missing docstring in class
+    "D102", # pydocstyle: Missing docstring in method
+    "D103", # pydocstyle: Missing docstring in function
 ]
+
+[tool.ruff.lint.pep8-naming]
+ignore-names = ["X", "X_*"] # Allow the use of X as variable in scikit-learn
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["D101", "D102", "D103"] # Allow unit tests without docstring
 
 [tool.ruff.lint.flake8-bugbear]
 extend-immutable-calls = [
@@ -86,3 +103,5 @@ extend-immutable-calls = [
 
 [tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "function"
+
+

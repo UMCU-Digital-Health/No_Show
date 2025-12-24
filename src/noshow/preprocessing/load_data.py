@@ -11,12 +11,12 @@ from noshow.config import NO_SHOW_CODES, ClinicConfig
 logger = logging.getLogger(__name__)
 
 
-def load_appointment_pydantic(input: List[Appointment]) -> pd.DataFrame:
+def load_appointment_pydantic(appointments: List[Appointment]) -> pd.DataFrame:
     """Load prediction data from a list of Appointments
 
     Parameters
     ----------
-    input : List[Appointment]
+    appointments : List[Appointment]
         The input data as a list of Appointments
 
     Returns
@@ -24,7 +24,7 @@ def load_appointment_pydantic(input: List[Appointment]) -> pd.DataFrame:
     pd.DataFrame
         The loaded data as pandas dataframe
     """
-    appointments_df = pd.DataFrame([a.model_dump() for a in input])
+    appointments_df = pd.DataFrame([a.model_dump() for a in appointments])
     appointments_df = appointments_df.replace("", None)
 
     # Clinic name and description are sometimes unknown since HiX6.3

@@ -100,7 +100,7 @@ def train_cv_model(
             mlflow.log_figure(fig, "calibration_curve.png")
 
     model_path = Path(output_path) / "no_show_model_cv.pickle"
-    with open(model_path, "wb") as f:
+    with model_path.open("wb") as f:
         pickle.dump(grid.best_estimator_, f)
     logger.info(f"Model saved to {model_path}")
 

@@ -33,7 +33,7 @@ load_dotenv(override=True)  # VS Code corrupts the .env file so override
 logger = logging.getLogger(__name__)
 setup_root_logger()
 
-with open(Path(__file__).parents[1] / "pyproject.toml", "rb") as f:
+with (Path(__file__).parents[1] / "pyproject.toml").open("rb") as f:
     config = tomllib.load(f)
 
 VERSION = config["project"]["version"]

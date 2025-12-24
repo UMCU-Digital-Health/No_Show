@@ -76,7 +76,7 @@ def load_config(config_path: Path) -> ProjectConfig:
         The project configuration read from the toml file.
     """
     if config_path.exists():
-        with open(config_path, "rb") as f:
+        with config_path.open("rb") as f:
             config_dict = tomllib.load(f)
             return ProjectConfig(**config_dict)
 

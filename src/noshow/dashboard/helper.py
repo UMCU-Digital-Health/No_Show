@@ -46,12 +46,12 @@ def previous_preds():
         st.session_state["pred_idx"] -= 1
 
 
-def start_calling(Session: sessionmaker, call_response: ApiCallResponse):
+def start_calling(session_factory: sessionmaker, call_response: ApiCallResponse):
     """Log the call status as 'Wordt gebeld' and save the results
 
     Parameters
     ----------
-    Session : sessionmaker
+    session_factory : sessionmaker
         Session used to save the current call response
     call_response : ApiCallResponse
         call response object that needs to be edited
@@ -64,7 +64,7 @@ def start_calling(Session: sessionmaker, call_response: ApiCallResponse):
     st.session_state["being_called"] = True
     st.session_state["saved"] = False
 
-    with Session() as session:
+    with session_factory() as session:
         session.merge(call_response)
         session.commit()
         logger.info("Calling started")
@@ -72,7 +72,7 @@ def start_calling(Session: sessionmaker, call_response: ApiCallResponse):
 
 def next_preds(
     list_len: int,
-    Session: sessionmaker,
+    session_factory: sessionmaker,
     call_response: ApiCallResponse,
     current_patient: ApiPatient,
     user_name: str,
@@ -83,7 +83,7 @@ def next_preds(
     ----------
     list_len : int
         Length of the prediction list
-    Session : sessionmaker
+    session_factory : sessionmaker
         Session used to save the current call response
     call_response : ApiCallResponse
         call response object that needs to be edited
@@ -103,7 +103,7 @@ def next_preds(
     current_patient.call_number = st.session_state.number_input
     current_patient.opt_out = st.session_state.opt_out_checkbox
 
-    with Session() as session:
+    with session_factory() as session:
         session.merge(call_response)
         session.merge(current_patient)
         session.commit()
@@ -151,17 +151,17 @@ def navigate_patients(list_len: int, navigate_forward: bool = True):
             st.session_state["saved"] = False
 
 
-def navigate_uncalled(Session: sessionmaker, patient_ids: list[str]) -> None:
+def navigate_uncalled(session_factory: sessionmaker, patient_ids: list[str]) -> None:
     """Navigate to the first patient who has not been called today.
 
     Parameters
     ----------
-    Session : sessionmaker
+    session_factory : sessionmaker
         SQLAlchemy sessionmaker object
     patient_ids : list[str]
         List of patient IDs
     """
-    with Session() as session:
+    with session_factory() as session:
         query = (
             select(ApiPrediction.patient_id)
             .outerjoin(ApiPrediction.callresponse_relation)
@@ -196,20 +196,20 @@ def navigate_uncalled(Session: sessionmaker, patient_ids: list[str]) -> None:
 
 
 def search_number(
-    Session: sessionmaker, phone_number: str, patient_ids: list[str]
+    session_factory: sessionmaker, phone_number: str, patient_ids: list[str]
 ) -> None:
     """Search for a patient by phone number
 
     Parameters
     ----------
-    Session : sessionmaker
+    session_factory : sessionmaker
         SQLAlchemy sessionmaker object
     phone_number : str
         Phone number to search for
     patient_ids : list[str]
         List of patient ids
     """
-    with Session() as session:
+    with session_factory() as session:
         patient_id = session.execute(
             select(ApiSensitiveInfo.patient_id)
             .where(

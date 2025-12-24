@@ -40,7 +40,7 @@ load_dotenv()
 
 app = FastAPI()
 
-with open(Path(__file__).parents[3] / "pyproject.toml", "rb") as f:
+with (Path(__file__).parents[3] / "pyproject.toml").open("rb") as f:
     config = tomllib.load(f)
 
 API_VERSION = config["project"]["version"]
@@ -53,15 +53,30 @@ api_key_header = APIKeyHeader(name="X-API-KEY", auto_error=False)
 
 
 def get_bins():
-    with open(
-        Path(__file__).parents[3] / "data" / "processed" / "fixed_pred_score_bin.json",
-        "r",
-    ) as f:
+    """Load fixed prediction score bins from the project's processed data directory.
+
+    Returns
+    -------
+    dict
+        The fixed prediction score bins loaded from JSON.
+    """
+    with (
+        Path(__file__).parents[3] / "data" / "processed" / "fixed_pred_score_bin.json"
+    ).open("r") as f:
         fixed_bins = json.load(f)
     return fixed_bins
 
 
 def get_db():
+    """Yield a SQLAlchemy Session for FastAPI dependency injection
+    and ensure it is closed.
+
+    Yields
+    ------
+    Session
+        A SQLAlchemy Session instance to be used by request handlers.
+
+    """
     db = SessionLocal()
     try:
         yield db

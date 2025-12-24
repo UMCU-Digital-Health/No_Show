@@ -38,8 +38,10 @@ def fake_model(_=None):
 
 
 def datetime_to_float(date_str, include_time):
-    format = r"%Y-%m-%dT%H:%M:%S" if include_time else r"%Y-%m-%d"
-    return datetime.strptime(date_str, format).timestamp() * 1000  # timestamp in ms
+    date_format = r"%Y-%m-%dT%H:%M:%S" if include_time else r"%Y-%m-%d"
+    return (
+        datetime.strptime(date_str, date_format).timestamp() * 1000
+    )  # timestamp in ms
 
 
 def fake_bins():
@@ -47,7 +49,7 @@ def fake_bins():
 
 
 def fake_appointments() -> List[Appointment]:
-    with open(Path(__file__).parent / "data" / "test_appointments.json", "r") as f:
+    with (Path(__file__).parent / "data" / "test_appointments.json").open("r") as f:
         appointments_json = json.load(f)
     return [Appointment(**a) for a in appointments_json]
 

@@ -93,8 +93,8 @@ if __name__ == "__main__":
     appointments_df = load_appointment_csv(data_path / "poliafspraken_no_show.csv")
     appointments_df = process_appointments(appointments_df, CLINIC_CONFIG)
     all_postal_codes = process_postal_codes(data_path / "NL.txt")
-    with open(
-        project_folder / "output" / "models" / "no_show_model_cv.pickle", "rb"
+    with (project_folder / "output" / "models" / "no_show_model_cv.pickle").open(
+        "rb"
     ) as f:
         model = pickle.load(f)
     predictions = create_prediction(model, appointments_df, all_postal_codes)

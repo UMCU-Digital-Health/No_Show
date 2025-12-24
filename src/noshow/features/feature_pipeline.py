@@ -59,6 +59,19 @@ def create_features(
 
 
 def select_feature_columns(featuretable: pd.DataFrame) -> pd.DataFrame:
+    """Select and return the subset of columns used as features for the model.
+
+    Parameters
+    ----------
+    featuretable : pd.DataFrame
+        The full feature table containing all computed features.
+
+    Returns
+    -------
+    pd.DataFrame
+        A dataframe containing only the columns used as model inputs, in the
+        expected order.
+    """
     return featuretable[
         [
             "hour",

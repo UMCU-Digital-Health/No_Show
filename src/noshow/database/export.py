@@ -41,7 +41,7 @@ def export_data(
     connection_string, _ = get_connection_string(
         db_database=db_database, db_host=db_host
     )
-    with open(Path(__file__).parents[3] / "data/sql/data_export.sql") as f:
+    with (Path(__file__).parents[3] / "data/sql/data_export.sql").open("r") as f:
         sql_query = f.read()
 
     output_csv = Path(__file__).parents[3] / "data/raw" / output_path
@@ -56,7 +56,7 @@ def export_data(
         logger.info("Export query executed successfully")
 
         with console.status("[bold green]Exporting data to CSV..."):
-            with open(output_csv, "w", newline="") as csvfile:
+            with output_csv.open("w", newline="") as csvfile:
                 writer = csv.writer(csvfile)
 
                 # Write the header row

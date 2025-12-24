@@ -1,0 +1,5 @@
+outs:
+- md5: edc09f5a24202e398888f108280cda2d
+  size: 1694
+  hash: md5
+  path: fixed_pred_score_bin.json

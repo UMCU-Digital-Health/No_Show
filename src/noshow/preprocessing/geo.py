@@ -27,7 +27,7 @@ def haversine_distance(
     float
         The distance between both points in kilometers
     """
-    R = 6373.0  # approximate radius of Earth in km
+    r = 6373.0  # approximate radius of Earth in km
 
     lat1 = radians(lat1)
     lon1 = radians(lon1)
@@ -40,6 +40,6 @@ def haversine_distance(
     a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
     c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
-    distance = R * c
+    distance = r * c
 
     return distance

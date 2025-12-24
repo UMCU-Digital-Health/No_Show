@@ -95,11 +95,13 @@ class CastDate(expression.FunctionElement):
 
 @compiles(CastDate)
 def cast_date_default(element, compiler, **kw):
+    """Compile CastDate to a DATE cast for dialects like MSSQL."""
     date = compiler.process(element.clauses, **kw)
     return f"CAST({date} AS DATE)"
 
 
 @compiles(CastDate, "sqlite")
 def cast_date_sqlite(element, compiler, **kw):
+    """Compile CastDate for the SQLite dialect using the DATE() function."""
     date = compiler.process(element.clauses, **kw)
     return compiler.process(func.DATE(text(date)))

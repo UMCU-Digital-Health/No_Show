@@ -22,12 +22,28 @@ logger = logging.getLogger(__name__)
 
 
 def load_model(model_path: Union[str, Path, None] = None) -> Any:
+    """
+    Load a pickled machine-learning model from disk.
+
+    If no path is provided, loads the default model located in
+    `output/models/no_show_model_cv.pickle` relative to the project root.
+
+    Parameters
+    ----------
+    model_path : str | Path | None
+        Optional path to the pickled model file.
+
+    Returns
+    -------
+    Any
+        The deserialized model object.
+    """
     if model_path is None:
         model_path = (
             Path(__file__).parents[3] / "output" / "models" / "no_show_model_cv.pickle"
         )
 
-    with open(model_path, "rb") as f:
+    with Path(model_path).open("rb") as f:
         model = pickle.load(f)
 
     logger.info(f"Model loaded from {model_path}")
@@ -98,11 +114,24 @@ def fix_outdated_appointments(
     logger.info(f"Set {len(inactive_ids)} predictions to inactive")
 
 
-# Function to apply the appropriate bin edges to each group
 def apply_bins(group, bin_dict):
+    """
+    Assign score bins to a grouped DataFrame using group-specific bin edges.
+
+    Parameters
+    ----------
+    group : pandas.DataFrame
+        A subset of the original DataFrame corresponding to one group.
+    bin_dict : dict
+        Dictionary mapping group names to their bin-edge definitions.
+
+    Returns
+    -------
+    pandas.DataFrame
+        The input group with an added column `score_bin` indicating the
+        assigned bin index for each prediction value.
+    """
     edges = bin_dict[group.name]
-    # Use pd.cut to segment the prediction values into bins based on the edges
-    # 'labels=False' will return the indices of the bins from 0 to n_bins-1
     group["score_bin"] = pd.cut(
         group["prediction"], bins=[0] + list(edges.values())[1:] + [1], labels=False
     )
