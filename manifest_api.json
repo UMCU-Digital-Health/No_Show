@@ -20,7 +20,7 @@
   },
   "files": {
     "requirements.txt": {
-      "checksum": "35b1e09a38d3ec6adf58393175cf6016"
+      "checksum": "85ad0f8e7fb60802b77c19978b4e055b"
     },
     ".dvcignore": {
       "checksum": "34659c119a2634fe318cd6a4822df435"
@@ -38,7 +38,7 @@
       "checksum": "99594759045ead1f8535775e35169a3d"
     },
     "CHANGELOG.md": {
-      "checksum": "3d418cb70804f43882c63a9e3138baed"
+      "checksum": "157704f3bac1902c677c1e53f73db9c3"
     },
     "LICENSE": {
       "checksum": "770bb10345b6c86b9f5dc743de74aadf"
@@ -51,6 +51,9 @@
     },
     "data/processed/fixed_pred_score_bin.json": {
       "checksum": "edc09f5a24202e398888f108280cda2d"
+    },
+    "data/processed/fixed_pred_score_bin.json.dvc": {
+      "checksum": "9abda5535347992e8f3ffd2d1a6b0023"
     },
     "data/raw/NL.txt": {
       "checksum": "4be730428c3d0501115f5a28d56d54cd"
@@ -65,7 +68,7 @@
       "checksum": "8221e03c7bee877eb4a223969c90759f"
     },
     "manifest_api.json": {
-      "checksum": "67802b61127941848868184eb7212da7"
+      "checksum": "e9ebbf6617b06db33639f102379d4e42"
     },
     "manifest_dash.json": {
       "checksum": "0c7158768374758217b17dbd7eeb391e"
@@ -73,8 +76,17 @@
     "mkdocs.yml": {
       "checksum": "1ea07f5f545065fa52a5cd609559443b"
     },
+    "output/models/.gitkeep": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "output/models/no_show_model_cv.pickle": {
+      "checksum": "4273e641d076a7f1b28644042028777c"
+    },
+    "output/models/no_show_model_cv.pickle.dvc": {
+      "checksum": "965c719f599d6e09a0395bac53e827eb"
+    },
     "pyproject.toml": {
-      "checksum": "e5ba9dae11adfdbd00e9b38efd44e5ab"
+      "checksum": "8c3448323913c7bef31524110615099b"
     },
     "run/admin_dash.py": {
       "checksum": "65ccf6d57fd8b5d048b38f7c9474666f"
@@ -101,7 +113,7 @@
       "checksum": "497bcef2db6faf89dbc6d3bd2aec1b4f"
     },
     "src/noshow/api/app_helpers.py": {
-      "checksum": "723d751ed9d85366c48eb4a5a0fc3ef3"
+      "checksum": "f8a743991cabf0ca6cbd7f883b3da1c5"
     },
     "src/noshow/api/pydantic_models.py": {
       "checksum": "aeaa0d4c2496f27d442ec2155f7e112d"
@@ -131,7 +143,7 @@
       "checksum": "a22cca2ef701688992636ce783ab7b16"
     },
     "src/noshow/database/models.py": {
-      "checksum": "fedd7ca8c115416ea93036cc294857bb"
+      "checksum": "65cffef7d6cd4cc64961eb9a06ef8485"
     },
     "src/noshow/features/appointment_features.py": {
       "checksum": "97efed259f3d7b74d124efb771e5d015"
@@ -179,7 +191,7 @@
       "checksum": "4bc6f06a7afb732c57147c4f011256d3"
     },
     "uv.lock": {
-      "checksum": "f736d2b825ce9b05b4e3bf599b0ebcbe"
+      "checksum": "0e9fd658578bbc1a809bd97d6d3dcd87"
     }
   }
 }

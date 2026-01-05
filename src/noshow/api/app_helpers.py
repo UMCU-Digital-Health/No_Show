@@ -305,6 +305,7 @@ def store_predictions(
                 clinic_reception=row["description"],
                 clinic_phone_number=CLINIC_CONFIG[row["clinic"]].phone_number,
                 clinic_teleq_unit=CLINIC_CONFIG[row["clinic"]].teleq_name,
+                clinic_actual_name=row["clinic"],
                 active=True,
             )
             db.add(apiprediction)
@@ -319,6 +320,7 @@ def store_predictions(
                 row["clinic"]
             ].phone_number
             apiprediction.clinic_teleq_unit = CLINIC_CONFIG[row["clinic"]].teleq_name
+            apiprediction.clinic_actual_name = row["clinic"]
             apiprediction.active = True
 
         db.commit()

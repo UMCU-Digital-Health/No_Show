@@ -195,6 +195,7 @@ WHERE 1=1
     AND ENC.type1_display NOT LIKE '%telefo%'
     AND ENC.type1_display NOT LIKE 'TC%'
     AND ENC.without_patient <> 1
+    AND PAT.deceasedBoolean = 0
     AND ADDR.address_active = 1
     AND ENC.[subject_Patient_value] IN (
         SELECT ENC2.[subject_Patient_value]

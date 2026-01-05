@@ -174,5 +174,6 @@ WHERE 1=1
     AND ENC.type1_display NOT LIKE 'TC%'
     AND ENC.type1_code NOT IN ('FAMF', 'FAMT', 'FAMS')
     AND ENC.without_patient <> 1
+    AND PAT.deceasedBoolean = 0
     AND ADDR.address_active = 1
 ORDER BY HOOFDAGENDA.name, SUBAGENDA.name, ENC.planned_start

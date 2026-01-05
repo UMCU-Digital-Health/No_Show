@@ -6,10 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.2.3] - 2025-12-24
+
+### Fixed
+- Added an extra filter to filter out deceased patients (shouldn't be necessary in practice, since that would mean there are appointments scheduled for deceased patients, but just as an extra precaution)
+
+### Added
+- Save the clinic name as stored in the config which can be used in the future instead of the main agenda name for the mute period.
+
+### Changed
+- Updated dependencies
+- Reran data training pipeline
+
 ## [2.2.2] - 2025-12-02
+
 ### Changed
 - Updated linting rules in pyproject.toml and fixed new linting errors. 
-
 
 ## [2.2.1] - 2025-10-28
 
